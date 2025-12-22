@@ -1,0 +1,44 @@
+{
+  "muscles": [
+    { "name": "Chest", "slug": "chest", "muscleGroup": "chest" },
+    { "name": "Upper Chest", "slug": "upper-chest", "muscleGroup": "chest" },
+    { "name": "Lower Chest", "slug": "lower-chest", "muscleGroup": "chest" },
+
+    { "name": "Lats", "slug": "lats", "muscleGroup": "back" },
+    { "name": "Upper Back", "slug": "upper-back", "muscleGroup": "back" },
+    { "name": "Middle Back", "slug": "middle-back", "muscleGroup": "back" },
+    { "name": "Lower Back", "slug": "lower-back", "muscleGroup": "back" },
+    { "name": "Rhomboids", "slug": "rhomboids", "muscleGroup": "back" },
+    { "name": "Traps", "slug": "traps", "muscleGroup": "back" },
+    { "name": "Erector Spinae", "slug": "erector-spinae", "muscleGroup": "back" },
+
+    { "name": "Shoulders", "slug": "shoulders", "muscleGroup": "shoulders" },
+    { "name": "Front Delts", "slug": "front-delts", "muscleGroup": "shoulders" },
+    { "name": "Side Delts", "slug": "side-delts", "muscleGroup": "shoulders" },
+    { "name": "Rear Delts", "slug": "rear-delts", "muscleGroup": "shoulders" },
+    { "name": "Rotator Cuff", "slug": "rotator-cuff", "muscleGroup": "shoulders" },
+
+    { "name": "Biceps", "slug": "biceps", "muscleGroup": "arms" },
+    { "name": "Triceps", "slug": "triceps", "muscleGroup": "arms" },
+    { "name": "Brachialis", "slug": "brachialis", "muscleGroup": "arms" },
+    { "name": "Forearms", "slug": "forearms", "muscleGroup": "arms" },
+
+    { "name": "Core", "slug": "core", "muscleGroup": "core" },
+    { "name": "Abs", "slug": "abs", "muscleGroup": "core" },
+    { "name": "Rectus Abdominis", "slug": "rectus-abdominis", "muscleGroup": "core" },
+    { "name": "Transverse Abdominis", "slug": "transverse-abdominis", "muscleGroup": "core" },
+    { "name": "Obliques", "slug": "obliques", "muscleGroup": "core" },
+    { "name": "Hip Flexors", "slug": "hip-flexors", "muscleGroup": "core" },
+
+    { "name": "Quads", "slug": "quads", "muscleGroup": "legs" },
+    { "name": "Hamstrings", "slug": "hamstrings", "muscleGroup": "legs" },
+    { "name": "Calves", "slug": "calves", "muscleGroup": "legs" },
+    { "name": "Adductors", "slug": "adductors", "muscleGroup": "legs" },
+    { "name": "Tibialis", "slug": "tibialis", "muscleGroup": "legs" },
+
+    { "name": "Glutes", "slug": "glutes", "muscleGroup": "glutes" },
+    { "name": "Glute Max", "slug": "glute-max", "muscleGroup": "glutes" },
+    { "name": "Glute Med", "slug": "glute-med", "muscleGroup": "glutes" },
+    { "name": "Glute Min", "slug": "glute-min", "muscleGroup": "glutes" }
+  ]
+}
