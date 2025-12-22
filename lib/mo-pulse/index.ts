@@ -18,8 +18,15 @@
 // MoMove - Activity Vertical
 // ============================================
 
-// Currently implemented in API routes
-// Future: Move session management here
+export {
+  // MoWarmup
+  getWarmupTemplate,
+  startWarmup,
+  updateWarmupProgress,
+  completeWarmup,
+  skipWarmup,
+  getWarmupLog,
+} from './move';
 
 // ============================================
 // MoBody - Body Metrics Vertical

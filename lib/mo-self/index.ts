@@ -28,13 +28,33 @@ export {
 } from './identity';
 
 // ============================================
-// MoPrefs - Preferences Vertical (Future)
+// MoPrefs - Preferences Vertical
 // ============================================
 
-// export { ... } from './preferences';
+export {
+  getPreferences,
+  updatePreferences,
+  getEquipmentLevel,
+  getWeightUnit,
+  shouldSkipWarmup,
+  getAvailableEquipment,
+  getTrainingGoals,
+} from './preferences';
 
 // ============================================
-// MoHistory - History Vertical (Future)
+// MoHistory - History Vertical
 // ============================================
 
-// export { ... } from './history';
+export {
+  // MoStreaks
+  getStreak,
+  updateStreakOnWorkout,
+  getStreakStats,
+  // MoRecords
+  checkAndRecordPR,
+  getAllPRs,
+  getExercisePRHistory,
+  getCurrentPR,
+  getRecentPRs,
+  calculateEstimated1RM,
+} from './history';

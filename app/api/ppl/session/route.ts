@@ -9,7 +9,7 @@ import {
   userExerciseDefaults,
   userPreferences,
 } from '@/lib/db/schema';
-import { getCurrentUser } from '@/lib/mo-self';
+import { getCurrentUser, updateStreakOnWorkout } from '@/lib/mo-self';
 import { eq, and, sql } from 'drizzle-orm';
 import { z } from 'zod';
 
@@ -213,6 +213,9 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
+    // Update streak (MoStreaks)
+    const streak = await updateStreakOnWorkout(user.id);
+
     return NextResponse.json({
       session: updatedSession,
       metrics: {
@@ -221,6 +224,7 @@ export async function PATCH(request: NextRequest) {
         avgRpe,
         durationMinutes,
       },
+      streak,
     });
   } catch (error) {
     console.error('Error completing session:', error);

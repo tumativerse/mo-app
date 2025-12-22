@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { sessionSets, sessionExercises, workoutSessions } from '@/lib/db/schema';
-import { getCurrentUser } from '@/lib/mo-self';
+import { getCurrentUser, checkAndRecordPR } from '@/lib/mo-self';
 import { eq, and } from 'drizzle-orm';
 import { z } from 'zod';
 
@@ -101,7 +101,22 @@ export async function POST(request: NextRequest) {
         .returning();
     }
 
-    return NextResponse.json({ set }, { status: existingSet ? 200 : 201 });
+    // Check for PR if this is a working set with weight and reps
+    let prResult = null;
+    if (!isWarmup && weight && reps && weight > 0 && reps > 0) {
+      prResult = await checkAndRecordPR(
+        user.id,
+        sessionExercise.exerciseId,
+        weight,
+        reps,
+        set.id
+      );
+    }
+
+    return NextResponse.json({
+      set,
+      pr: prResult?.isNewPR ? prResult : null,
+    }, { status: existingSet ? 200 : 201 });
   } catch (error) {
     console.error('Error logging set:', error);
     return NextResponse.json({ error: 'Failed to log set' }, { status: 500 });
