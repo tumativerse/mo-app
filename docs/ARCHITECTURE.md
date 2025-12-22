@@ -101,7 +101,7 @@ MO:SELF is the foundation layer that stores user identity, preferences, and hist
 
 | System | Name | Description | Status |
 |--------|------|-------------|--------|
-| MoSettings | *"The Configurator"* | App settings, units, display preferences | ⚠️ Partial |
+| MoSettings | *"The Customizer"* | Training prefs, equipment level, units, warmup settings | ✅ Built |
 | MoGear | *"The Inventory"* | Available equipment, gym setup | ✅ Built |
 | MoAlerts | *"The Notifier"* | Notification preferences, reminders | ❌ Future |
 
@@ -109,9 +109,9 @@ MO:SELF is the foundation layer that stores user identity, preferences, and hist
 
 | System | Name | Description | Status |
 |--------|------|-------------|--------|
-| MoRecords | *"The Archivist"* | Personal records (PRs), all-time bests | ✅ Built |
+| MoRecords | *"The Historian"* | Personal records with auto-detection, estimated 1RM | ✅ Built |
 | MoBadges | *"The Trophy Case"* | Achievements, milestones, badges | ❌ Future |
-| MoStreaks | *"The Flame Keeper"* | Workout streaks, consistency tracking | ✅ Built |
+| MoStreaks | *"The Motivator"* | Workout streaks (48hr window), auto-update on completion | ✅ Built |
 
 ### MO:SELF Data Model
 
@@ -150,8 +150,9 @@ MO:PULSE captures all user activity and health data. It's the primary input laye
 |--------|------|-------------|--------|
 | MoStrength | *"The Iron Counter"* | Weight training, sets, reps, RPE | ✅ Built |
 | MoCardio | *"The Distance Tracker"* | Running, cycling, swimming, rowing | ❌ Future |
-| MoMobility | *"The Flexibility Guide"* | Warmups, stretching, yoga | ✅ Built |
+| MoMobility | *"The Flexibility Guide"* | Stretching, yoga, mobility work | ⚠️ Partial |
 | MoSession | *"The Workout Manager"* | Active session state, timers, flow | ✅ Built |
+| MoWarmup | *"The Preparer"* | Warmup templates, phase tracking, skip/complete | ✅ Built |
 
 #### MoBody — *"I watch your transformation"*
 
@@ -531,8 +532,8 @@ interface MoConnectInterface {
 
 | Domain | Verticals | Systems | Completion |
 |--------|-----------|---------|------------|
-| MO:SELF | 3/3 | 6/9 | 67% |
-| MO:PULSE | 3/4 | 6/12 | 50% |
+| MO:SELF | 3/3 | 7/9 | 78% |
+| MO:PULSE | 3/4 | 8/13 | 62% |
 | MO:COACH | 2/3 | 5/9 | 56% |
 | MO:CONNECT | 1/3 | 2/9 | 22% |
 
@@ -543,32 +544,33 @@ interface MoConnectInterface {
 
 MO:SELF
 ├── MoIdentity
-│   ├── ✅ MoAuth
-│   ├── ✅ MoProfile
-│   └── ⚠️ MoGoals
+│   ├── ✅ MoAuth          → lib/mo-self/identity/auth.ts
+│   ├── ✅ MoProfile       → DB schema + user API
+│   └── ⚠️ MoGoals         → DB schema only
 ├── MoPrefs
-│   ├── ⚠️ MoSettings
-│   ├── ✅ MoGear
+│   ├── ✅ MoSettings      → lib/mo-self/preferences/settings.ts + /api/preferences
+│   ├── ✅ MoGear          → DB schema + preferences API
 │   └── ❌ MoAlerts
 └── MoHistory
-    ├── ✅ MoRecords
+    ├── ✅ MoRecords       → lib/mo-self/history/records.ts + /api/records
     ├── ❌ MoBadges
-    └── ✅ MoStreaks
+    └── ✅ MoStreaks       → lib/mo-self/history/streaks.ts + /api/streaks
 
 MO:PULSE
 ├── MoMove
-│   ├── ✅ MoStrength
+│   ├── ✅ MoStrength      → /api/ppl/session/sets
 │   ├── ❌ MoCardio
-│   ├── ✅ MoMobility
-│   └── ✅ MoSession
+│   ├── ⚠️ MoMobility      → DB schema only
+│   ├── ✅ MoSession       → /api/ppl/session
+│   └── ✅ MoWarmup        → lib/mo-pulse/move/warmup.ts + /api/warmup
 ├── MoBody
-│   ├── ✅ MoWeight
+│   ├── ✅ MoWeight        → /api/weight
 │   ├── ❌ MoMeasure
 │   └── ❌ MoComposition
 ├── MoRecover
-│   ├── ✅ MoSleep
-│   ├── ✅ MoEnergy
-│   ├── ✅ MoSoreness
+│   ├── ✅ MoSleep         → /api/recovery
+│   ├── ✅ MoEnergy        → /api/recovery
+│   ├── ✅ MoSoreness      → /api/recovery
 │   └── ❌ MoStrain
 └── MoFuel
     ├── ❌ MoMeals
@@ -577,17 +579,17 @@ MO:PULSE
 
 MO:COACH
 ├── MoInsight
-│   ├── ⚠️ MoTrends
+│   ├── ⚠️ MoTrends        → In /api/progression
 │   ├── ❌ MoReports
 │   └── ❌ MoPatterns
 ├── MoAdapt
-│   ├── ✅ MoFatigue
-│   ├── ✅ MoProgress
-│   ├── ✅ MoDeload
-│   └── ✅ MoSuggest
+│   ├── ✅ MoFatigue       → lib/mo-coach/adapt/fatigue.ts
+│   ├── ✅ MoProgress      → lib/mo-coach/adapt/progression.ts
+│   ├── ✅ MoDeload        → lib/mo-coach/adapt/deload.ts
+│   └── ✅ MoSuggest       → lib/mo-coach/adapt/suggestions.ts
 └── MoChat
     ├── ❌ MoVoice
-    ├── ⚠️ MoAdvice
+    ├── ⚠️ MoAdvice        → In progression recommendations
     └── ❌ MoEducate
 
 MO:CONNECT
@@ -600,8 +602,8 @@ MO:CONNECT
 │   ├── ❌ MoHealth
 │   └── ❌ MoAPIs
 └── MoLibrary
-    ├── ✅ MoExercises
-    ├── ✅ MoPrograms
+    ├── ✅ MoExercises     → /api/exercises
+    ├── ✅ MoPrograms      → /api/programs + /api/ppl/today
     └── ❌ MoLearn
 ```
 
@@ -609,29 +611,49 @@ MO:CONNECT
 
 ## Code Organization
 
-### Current Structure → Mo Architecture Mapping
+### Current Structure (Mo Universe Architecture)
 
 ```
 /lib
-├── /auth                    → MO:SELF / MoIdentity / MoAuth
-├── /db
-│   ├── schema.ts            → All domains (data models)
-│   ├── seed-*.ts            → MO:CONNECT / MoLibrary
-│   └── index.ts             → Database connection
-└── /training-logic          → MO:COACH / MoAdapt
-    ├── fatigue.ts           → MoFatigue
-    ├── progression.ts       → MoProgress
-    ├── deload.ts            → MoDeload
-    ├── suggestions.ts       → MoSuggest
-    └── index.ts             → Exports
+├── /mo-self                 → MO:SELF domain
+│   ├── /identity
+│   │   └── auth.ts          → MoAuth - Authentication
+│   ├── /preferences
+│   │   └── settings.ts      → MoSettings - User preferences
+│   ├── /history
+│   │   ├── streaks.ts       → MoStreaks - Workout streaks
+│   │   └── records.ts       → MoRecords - Personal records
+│   └── index.ts             → Domain exports
+├── /mo-pulse                → MO:PULSE domain
+│   ├── /move
+│   │   └── warmup.ts        → MoWarmup - Warmup tracking
+│   └── index.ts             → Domain exports
+├── /mo-coach                → MO:COACH domain
+│   ├── /adapt
+│   │   ├── fatigue.ts       → MoFatigue - Fatigue calculation
+│   │   ├── progression.ts   → MoProgress - Progression gates
+│   │   ├── deload.ts        → MoDeload - Deload detection
+│   │   └── suggestions.ts   → MoSuggest - Weight suggestions
+│   └── index.ts             → Domain exports
+├── /mo-connect              → MO:CONNECT domain (placeholder)
+│   └── index.ts
+└── /db
+    ├── schema.ts            → All domains (data models)
+    ├── seed-*.ts            → MO:CONNECT / MoLibrary
+    └── index.ts             → Database connection
 
 /app/api
 ├── /dashboard               → Cross-domain aggregation
 ├── /ppl                     → MO:PULSE / MoMove
 │   ├── /today               → MoSession (get today's workout)
 │   └── /session             → MoSession (active workout)
+│       └── /sets            → Set logging with PR detection
 ├── /weight                  → MO:PULSE / MoBody / MoWeight
 ├── /recovery                → MO:PULSE / MoRecover
+├── /warmup                  → MO:PULSE / MoMove / MoWarmup
+├── /streaks                 → MO:SELF / MoHistory / MoStreaks
+├── /records                 → MO:SELF / MoHistory / MoRecords
+├── /preferences             → MO:SELF / MoPrefs / MoSettings
 ├── /progression             → MO:COACH / MoAdapt / MoProgress
 ├── /training
 │   ├── /status              → MO:COACH / MoAdapt (aggregated)
@@ -654,27 +676,17 @@ MO:CONNECT
 └── ...
 ```
 
-### Future Structure (Recommended)
+### Import Patterns
 
-```
-/lib
-├── /mo-self                 → MO:SELF domain
-│   ├── /identity
-│   ├── /preferences
-│   └── /history
-├── /mo-pulse                → MO:PULSE domain
-│   ├── /move
-│   ├── /body
-│   ├── /recover
-│   └── /fuel
-├── /mo-coach                → MO:COACH domain
-│   ├── /insight
-│   ├── /adapt
-│   └── /chat
-└── /mo-connect              → MO:CONNECT domain
-    ├── /community
-    ├── /sync
-    └── /library
+```typescript
+// MO:SELF imports
+import { getCurrentUser, getPreferences, getStreak } from '@/lib/mo-self';
+
+// MO:PULSE imports
+import { startWarmup, completeWarmup } from '@/lib/mo-pulse';
+
+// MO:COACH imports
+import { calculateFatigue, checkProgressionGates } from '@/lib/mo-coach';
 ```
 
 ---
@@ -746,5 +758,13 @@ Share → Post results (MO:CONNECT)
 
 ---
 
-*Last updated: December 2024*
-*Version: 1.0*
+*Last updated: December 22, 2024*
+*Version: 1.1*
+
+### Recent Updates (v1.1)
+- Added MoWarmup system to MO:PULSE/MoMove
+- Completed MoSettings (was partial) with full preferences API
+- Added MoRecords with auto-PR detection and Brzycki 1RM formula
+- Added MoStreaks with 48-hour window and auto-update on workout completion
+- Reorganized codebase into Mo Universe directory structure (/lib/mo-*)
+- Added import patterns documentation

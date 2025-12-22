@@ -211,7 +211,7 @@ warmup_logs
 | **ORM** | Drizzle | ✅ Schema + Migrations |
 | **Auth** | Clerk | ✅ Configured |
 | **Charts** | Recharts | ✅ Installed |
-| **Hosting** | Vercel | 🔲 Deploy later |
+| **Hosting** | Vercel | ✅ Deployed |
 
 ---
 
@@ -222,40 +222,61 @@ mo-app/
 ├── app/
 │   ├── (app)/                    # Authenticated routes
 │   │   ├── dashboard/            # Home with today's workout
-│   │   ├── workout/[id]/         # Active workout logging
+│   │   ├── workout/              # Active workout logging
 │   │   ├── history/              # Past workouts
-│   │   └── progress/             # Charts & PRs
+│   │   ├── progress/             # Charts & PRs
+│   │   ├── weight/               # Weight tracking
+│   │   └── programs/             # Program selection
 │   ├── (auth)/                   # Login/signup
 │   └── api/
 │       ├── ppl/
-│       │   ├── today/route.ts    # GET today's workout
-│       │   └── session/
-│       │       ├── route.ts      # POST/PATCH session
-│       │       └── sets/route.ts # POST/DELETE sets
-│       ├── exercises/
-│       │   └── alternatives/route.ts
-│       ├── recovery/route.ts     # GET/POST recovery logs
-│       └── progression/route.ts  # GET progression data
+│       │   ├── today/            # GET today's workout
+│       │   └── session/          # POST/PATCH session + sets
+│       ├── exercises/alternatives/
+│       ├── training/status/      # Fatigue & deload status
+│       ├── training/suggest/     # Weight suggestions
+│       ├── progression/          # Progression analysis
+│       ├── recovery/             # Recovery logging
+│       ├── weight/               # Weight tracking
+│       ├── streaks/              # Streak data
+│       ├── records/              # Personal records
+│       ├── preferences/          # User preferences
+│       └── warmup/               # Warmup tracking
 ├── components/
-│   ├── ui/                       # Base components
+│   ├── ui/                       # Base components (shadcn)
 │   ├── dashboard-stats.tsx
-│   ├── today-workout-card.tsx
+│   ├── recovery-checkin.tsx
 │   ├── weight-chart.tsx
 │   └── strength-chart.tsx
 ├── lib/
+│   ├── mo-self/                  # MO:SELF domain
+│   │   ├── identity/auth.ts      # MoAuth
+│   │   ├── preferences/settings.ts # MoSettings
+│   │   ├── history/streaks.ts    # MoStreaks
+│   │   ├── history/records.ts    # MoRecords
+│   │   └── index.ts
+│   ├── mo-pulse/                 # MO:PULSE domain
+│   │   ├── move/warmup.ts        # MoWarmup
+│   │   └── index.ts
+│   ├── mo-coach/                 # MO:COACH domain
+│   │   ├── adapt/fatigue.ts      # MoFatigue
+│   │   ├── adapt/progression.ts  # MoProgress
+│   │   ├── adapt/deload.ts       # MoDeload
+│   │   ├── adapt/suggestions.ts  # MoSuggest
+│   │   └── index.ts
+│   ├── mo-connect/               # MO:CONNECT domain (placeholder)
+│   │   └── index.ts
 │   ├── db/
 │   │   ├── index.ts              # Drizzle client
-│   │   ├── schema.ts             # Full schema (~1100 lines)
+│   │   ├── schema.ts             # Full schema (~1190 lines)
 │   │   ├── migrations/           # SQL migrations
 │   │   ├── seed-exercises.ts     # Exercise library (~500 exercises)
 │   │   ├── seed-ppl-template.ts  # PPL template (6 days, 36 slots)
-│   │   ├── seed-warmup-exercise-library.ts  # Warmup exercises (30)
-│   │   └── seed-warmup-exercises.ts         # Link warmups to phases
-│   ├── auth/
-│   │   └── index.ts              # Clerk helpers
+│   │   └── seed-warmup-*.ts      # Warmup templates
 │   └── utils.ts
 └── docs/
-    └── MVP.md                    # This file
+    ├── MVP.md                    # This file
+    └── ARCHITECTURE.md           # Mo Universe architecture
 ```
 
 ---
@@ -540,11 +561,67 @@ New analytics page:
 
 ---
 
-### Phase 6: Deploy & Iterate 🔲
-- [ ] Deploy to Vercel
+### Phase 6: Deploy & Iterate ✅
+- [x] Deploy to Vercel
 - [ ] Use for 2 weeks
 - [ ] Adjust fatigue thresholds based on real usage
 - [ ] Fine-tune progression rules
+
+---
+
+### Phase 7: Mo Universe Architecture ✅
+
+Reorganized codebase into domain-based architecture and wired up previously built database schemas.
+
+#### Architecture Reorganization
+- [x] Created Mo Universe directory structure (`/lib/mo-*`)
+- [x] Moved auth to `/lib/mo-self/identity/`
+- [x] Moved training-logic to `/lib/mo-coach/adapt/`
+- [x] Created barrel exports for clean imports
+- [x] Updated all 15+ API route imports
+
+#### New Systems Wired Up
+
+**MoStreaks** (`/lib/mo-self/history/streaks.ts`)
+- 48-hour window for streak maintenance
+- Auto-updates on workout completion
+- Motivational messages by streak status
+- `GET /api/streaks` - Current streak + stats
+
+**MoRecords** (`/lib/mo-self/history/records.ts`)
+- Auto-detects PRs when sets are logged
+- Brzycki formula for estimated 1RM
+- PR history per exercise
+- `GET /api/records` - All PRs
+
+**MoSettings** (`/lib/mo-self/preferences/settings.ts`)
+- Training preferences (frequency, duration, goals)
+- Equipment level (full_gym/home_gym/bodyweight)
+- Warmup settings
+- `GET/PATCH /api/preferences`
+
+**MoWarmup** (`/lib/mo-pulse/move/warmup.ts`)
+- Start/progress/complete/skip warmup
+- Template integration by day type
+- Phase completion tracking
+- `GET/POST /api/warmup`
+
+#### Auto-hooks Added
+- Streak updates on session completion (`PATCH /api/ppl/session`)
+- PR detection on set logging (`POST /api/ppl/session/sets`)
+
+#### Phase 7 Files Summary
+
+| File | Lines | Description |
+|------|-------|-------------|
+| `/lib/mo-self/history/streaks.ts` | ~230 | Streak tracking + motivation |
+| `/lib/mo-self/history/records.ts` | ~250 | PR detection + history |
+| `/lib/mo-self/preferences/settings.ts` | ~180 | User preferences |
+| `/lib/mo-pulse/move/warmup.ts` | ~220 | Warmup tracking |
+| `/app/api/streaks/route.ts` | ~30 | Streaks endpoint |
+| `/app/api/records/route.ts` | ~30 | PRs endpoint |
+| `/app/api/preferences/route.ts` | ~65 | Preferences endpoint |
+| `/app/api/warmup/route.ts` | ~110 | Warmup endpoint |
 
 ---
 
