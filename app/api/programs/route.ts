@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { programs, userPrograms } from "@/lib/db/schema";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/mo-self";
 import { eq, and } from "drizzle-orm";
 
 // GET /api/programs - Get all available programs

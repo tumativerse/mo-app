@@ -1,3 +1,13 @@
+/**
+ * MoDeload - "The Healer"
+ * Part of MO:COACH / MoAdapt
+ *
+ * "I know when you need rest"
+ *
+ * Detects when deload is needed based on fatigue patterns,
+ * manages deload periods, and applies training modifiers.
+ */
+
 import { db } from '@/lib/db';
 import { deloadPeriods, workoutSessions } from '@/lib/db/schema';
 import { eq, desc, and, gte, lte } from 'drizzle-orm';

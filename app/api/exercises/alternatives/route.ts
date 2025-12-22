@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { exercises, exerciseRelationships, userExerciseDefaults } from '@/lib/db/schema';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/mo-self';
 import { eq, and, ne, inArray, or } from 'drizzle-orm';
 
 // GET /api/exercises/alternatives - Get alternative exercises for a slot

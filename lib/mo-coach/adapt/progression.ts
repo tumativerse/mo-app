@@ -1,3 +1,13 @@
+/**
+ * MoProgress - "The Challenger"
+ * Part of MO:COACH / MoAdapt
+ *
+ * "I push you when you're ready"
+ *
+ * Manages progression gates, readiness checks, and plateau detection.
+ * Different rules for compound vs isolation exercises.
+ */
+
 import { db } from '@/lib/db';
 import { exercises, sessionSets, sessionExercises, workoutSessions, userExerciseDefaults } from '@/lib/db/schema';
 import { eq, desc, and, gte } from 'drizzle-orm';

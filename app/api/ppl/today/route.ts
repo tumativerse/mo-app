@@ -11,7 +11,7 @@ import {
   userExerciseDefaults,
   warmupTemplates,
 } from '@/lib/db/schema';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/mo-self';
 import { eq, and, desc, inArray } from 'drizzle-orm';
 import {
   calculateFatigue,
@@ -19,7 +19,7 @@ import {
   checkDeloadNeeded,
   getActiveDeload,
   suggestWeight,
-} from '@/lib/training-logic';
+} from '@/lib/mo-coach';
 
 // GET /api/ppl/today - Get today's PPL workout based on rotation
 export async function GET(request: NextRequest) {

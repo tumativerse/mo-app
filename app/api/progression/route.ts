@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { workoutSessions, recoveryLogs } from '@/lib/db/schema';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/mo-self';
 import { eq, and, desc, gte } from 'drizzle-orm';
 import {
   calculateFatigue,
@@ -12,7 +12,7 @@ import {
   getPlateauedExercises,
   checkDeloadNeeded,
   getActiveDeload,
-} from '@/lib/training-logic';
+} from '@/lib/mo-coach';
 
 // GET /api/progression - Get progression status and recommendations
 export async function GET(request: NextRequest) {

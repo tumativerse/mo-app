@@ -7,7 +7,7 @@ import {
   userPrograms,
   programDays,
 } from "@/lib/db/schema";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/mo-self";
 import { eq, and, gte, desc } from "drizzle-orm";
 
 // GET /api/dashboard - Get dashboard stats

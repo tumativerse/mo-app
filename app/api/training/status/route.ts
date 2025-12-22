@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/mo-self';
 import {
   calculateFatigue,
   checkDeloadNeeded,
@@ -7,7 +7,7 @@ import {
   startDeload,
   endDeload,
   type DeloadDecision,
-} from '@/lib/training-logic';
+} from '@/lib/mo-coach';
 
 // GET /api/training/status - Get current training status (fatigue, deload, etc.)
 export async function GET(request: NextRequest) {

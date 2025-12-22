@@ -1,3 +1,13 @@
+/**
+ * MoSuggest - "The Advisor"
+ * Part of MO:COACH / MoAdapt
+ *
+ * "I recommend your next move"
+ *
+ * Provides weight suggestions, set recommendations, warmup progressions,
+ * and rest timer configurations based on training data.
+ */
+
 import { db } from '@/lib/db';
 import { exercises, userExerciseDefaults, templateSlots } from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';

@@ -1,10 +1,24 @@
+/**
+ * MO:COACH - "Your smart trainer"
+ * The Intelligence Domain
+ *
+ * "I think so you don't have to"
+ *
+ * MO:COACH analyzes data from MO:PULSE, applies training science,
+ * and provides personalized guidance for optimal training.
+ *
+ * Verticals:
+ * - MoInsight: Trends, reports, pattern recognition
+ * - MoAdapt: Fatigue, progression, deload, suggestions
+ * - MoChat: AI coach interface (future)
+ */
+
 // ============================================
-// TRAINING LOGIC LIBRARY
-// Phase 5: Auto-Regulation & Intelligent Training
+// MoAdapt - Adaptation Vertical
 // ============================================
 
-// Fatigue calculation and tracking
 export {
+  // MoFatigue
   calculateFatigue,
   getFatigueStatus,
   logFatigue,
@@ -13,10 +27,8 @@ export {
   type FatigueFactors,
   type FatigueStatus,
   type FatigueResult,
-} from './fatigue';
 
-// Progression gates and recommendations
-export {
+  // MoProgress
   checkProgressionGates,
   getProgressionRecommendation,
   getPlateauStrategies,
@@ -26,10 +38,8 @@ export {
   type ProgressionRecommendation,
   type ExercisePerformance,
   type ProgressionRule,
-} from './progression';
 
-// Deload detection and management
-export {
+  // MoDeload
   checkDeloadNeeded,
   startDeload,
   endDeload,
@@ -39,10 +49,8 @@ export {
   type DeloadType,
   type DeloadDecision,
   type ActiveDeload,
-} from './deload';
 
-// Weight and set suggestions
-export {
+  // MoSuggest
   suggestWeight,
   getSuggestionAfterSet,
   getWarmupProgression,
@@ -53,4 +61,16 @@ export {
   type SetSuggestion,
   type WarmupSuggestion,
   type RestTimerConfig,
-} from './suggestions';
+} from './adapt';
+
+// ============================================
+// MoInsight - Analytics Vertical (Future)
+// ============================================
+
+// export { ... } from './insight';
+
+// ============================================
+// MoChat - AI Coach Vertical (Future)
+// ============================================
+
+// export { ... } from './chat';

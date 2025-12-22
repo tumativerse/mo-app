@@ -10,7 +10,7 @@ import {
   workoutSets,
   userExerciseDefaults,
 } from "@/lib/db/schema";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/mo-self";
 import { eq, and, desc, inArray } from "drizzle-orm";
 import { z } from "zod";
 

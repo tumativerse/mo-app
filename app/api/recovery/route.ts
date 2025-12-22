@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { recoveryLogs } from '@/lib/db/schema';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/mo-self';
 import { eq, and, desc, gte, lte } from 'drizzle-orm';
 import { z } from 'zod';
 

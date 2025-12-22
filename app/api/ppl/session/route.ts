@@ -9,7 +9,7 @@ import {
   userExerciseDefaults,
   userPreferences,
 } from '@/lib/db/schema';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/mo-self';
 import { eq, and, sql } from 'drizzle-orm';
 import { z } from 'zod';
 

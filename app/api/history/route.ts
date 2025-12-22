@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { workouts, workoutSets, programDays } from "@/lib/db/schema";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/mo-self";
 import { eq, desc, and, gte } from "drizzle-orm";
 
 // GET /api/history - Get workout history

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/mo-self';
 import {
   suggestWeight,
   getSuggestionAfterSet,
   getWarmupSets,
   getRestTimerConfig,
-} from '@/lib/training-logic';
+} from '@/lib/mo-coach';
 
 // GET /api/training/suggest - Get weight/set suggestions
 export async function GET(request: NextRequest) {

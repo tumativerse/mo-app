@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db, weightEntries } from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/mo-self";
 import { eq, desc, and, gte } from "drizzle-orm";
 import { z } from "zod";
 

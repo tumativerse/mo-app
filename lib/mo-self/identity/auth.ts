@@ -1,12 +1,24 @@
+/**
+ * MoAuth - "The Gatekeeper"
+ * Part of MO:SELF / MoIdentity
+ *
+ * "I know who you are"
+ *
+ * Handles authentication, user creation, and identity management
+ * using Clerk as the auth provider.
+ */
+
 import { auth, currentUser } from '@clerk/nextjs/server';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
-// Get current auth state
+// Re-export Clerk auth functions
 export { auth, currentUser };
 
-// Get or create user in database from Clerk auth
+/**
+ * Get or create user in database from Clerk auth
+ */
 export async function getOrCreateUser() {
   const { userId } = await auth();
 
@@ -60,14 +72,18 @@ export async function getOrCreateUser() {
   return newUser;
 }
 
-// Get user by Clerk ID
+/**
+ * Get user by Clerk ID
+ */
 export async function getUserByClerkId(clerkId: string) {
   return db.query.users.findFirst({
     where: eq(users.clerkId, clerkId),
   });
 }
 
-// Check if user is authenticated
+/**
+ * Check if user is authenticated
+ */
 export async function requireAuth() {
   const { userId } = await auth();
 
@@ -78,7 +94,9 @@ export async function requireAuth() {
   return userId;
 }
 
-// Get current user with full database record
+/**
+ * Get current user with full database record
+ */
 export async function getCurrentUser() {
   const user = await getOrCreateUser();
 

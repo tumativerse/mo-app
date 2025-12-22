@@ -1,5 +1,15 @@
+/**
+ * MoFatigue - "The Guardian"
+ * Part of MO:COACH / MoAdapt
+ *
+ * "I protect you from overtraining"
+ *
+ * Calculates fatigue score (0-10) based on multiple factors
+ * and provides recommendations for training adjustments.
+ */
+
 import { db } from '@/lib/db';
-import { workoutSessions, sessionSets, sessionExercises, recoveryLogs, fatigueLogs } from '@/lib/db/schema';
+import { workoutSessions, recoveryLogs, fatigueLogs } from '@/lib/db/schema';
 import { eq, desc, gte, and } from 'drizzle-orm';
 
 // ============================================
