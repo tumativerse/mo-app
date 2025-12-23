@@ -247,21 +247,48 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    // Get total completed sessions for rotation info
+    const allCompletedSessions = await db.query.workoutSessions.findMany({
+      where: and(
+        eq(workoutSessions.userId, user.id),
+        eq(workoutSessions.status, 'completed')
+      ),
+    });
+
     return NextResponse.json({
+      // Template info
       template: {
         id: template.id,
         name: template.name,
       },
-      today: {
+      // Today's template day (renamed from 'today' to match frontend)
+      templateDay: {
         id: todayDay.id,
+        dayNumber: todayDay.dayOrder,
         name: todayDay.name,
         dayType: todayDay.dayType,
-        variation: todayDay.variation,
-        dayOrder: todayDay.dayOrder,
-        estimatedDuration: todayDay.estimatedDuration,
         targetMuscles: todayDay.targetMuscles,
-        slots: slotsWithSuggestions,
+        estimatedDuration: todayDay.estimatedDuration,
+        notes: todayDay.notes,
       },
+      // Slots at root level (moved from today.slots)
+      slots: slotsWithSuggestions.map((slot) => ({
+        id: slot.id,
+        slotOrder: slot.order,
+        slotType: slot.type,
+        movementPattern: slot.movementPattern,
+        targetMuscles: slot.targetMuscles,
+        sets: slot.sets,
+        repRangeMin: slot.repMin,
+        repRangeMax: slot.repMax,
+        rpeTarget: slot.rpeTarget,
+        restSeconds: slot.restSeconds,
+        notes: slot.notes,
+        isOptional: slot.isOptional,
+        suggestedExercise: slot.suggestedExercise,
+        alternatives: slot.alternatives,
+      })),
+      // Warmup template
       warmup: warmupTemplate
         ? {
             id: warmupTemplate.id,
@@ -284,19 +311,23 @@ export async function GET(request: NextRequest) {
             })),
           }
         : null,
-      session: existingSession
+      // Existing session (renamed from 'session')
+      existingSession: existingSession
         ? {
             id: existingSession.id,
             status: existingSession.status,
             startedAt: existingSession.startedAt,
             completedAt: existingSession.completedAt,
             exercises: existingSession.exercises,
+            sets: existingSession.exercises.flatMap((ex) => ex.sets || []),
           }
         : null,
       equipmentLevel,
+      // Rotation info (renamed currentDay to dayNumber)
       rotation: {
-        currentDay: todayDayOrder,
+        dayNumber: todayDayOrder,
         totalDays: template.daysPerWeek,
+        sessionsCompleted: allCompletedSessions.length,
         lastWorkout: lastSession?.templateDay?.name || null,
         daysSinceLastWorkout,
         message: rotationMessage,
