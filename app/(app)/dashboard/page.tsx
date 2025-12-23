@@ -189,8 +189,8 @@ export default function DashboardPage() {
                 <Dumbbell className="h-6 w-6 text-blue-400" />
               </div>
               <div>
-                <p className="font-semibold text-lg">Get Started</p>
-                <p className="text-sm text-zinc-300">
+                <p className="font-semibold text-lg text-zinc-100">Get Started</p>
+                <p className="text-sm text-zinc-400">
                   Enroll in a training program to begin
                 </p>
               </div>
