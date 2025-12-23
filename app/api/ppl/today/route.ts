@@ -267,9 +267,9 @@ export async function GET(request: NextRequest) {
         dayNumber: todayDay.dayOrder,
         name: todayDay.name,
         dayType: todayDay.dayType,
-        targetMuscles: todayDay.targetMuscles,
-        estimatedDuration: todayDay.estimatedDuration,
-        notes: todayDay.notes,
+        targetMuscles: todayDay.targetMuscles || [],
+        estimatedDuration: todayDay.estimatedDuration || 60,
+        notes: null,
       },
       // Slots at root level (moved from today.slots)
       slots: slotsWithSuggestions.map((slot) => ({
