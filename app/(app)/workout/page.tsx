@@ -281,12 +281,13 @@ export default function WorkoutPage() {
       // Build exercises from slot selections
       const exercises = data.slots
         .filter(slot => slotSelections[slot.id])
-        .map((slot, index) => ({
+        .map((slot) => ({
           slotId: slot.id,
           exerciseId: slotSelections[slot.id].id,
-          exerciseOrder: index + 1,
           targetSets: slot.sets,
-          targetReps: slot.repRangeMax,
+          targetRepMin: slot.repRangeMin,
+          targetRepMax: slot.repRangeMax,
+          targetRpe: slot.rpeTarget ? parseFloat(slot.rpeTarget) : undefined,
         }));
 
       const res = await fetch("/api/ppl/session", {
@@ -294,13 +295,18 @@ export default function WorkoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           templateDayId: data.templateDay.id,
+          equipmentLevel: data.equipmentLevel || "full_gym",
           exercises,
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to start workout");
+      const responseData = await res.json();
 
-      const { session } = await res.json();
+      if (!res.ok) {
+        throw new Error(responseData.details ? JSON.stringify(responseData.details) : "Failed to start workout");
+      }
+
+      const { session } = responseData;
       setSessionId(session.id);
       setSessionExercises(session.exercises || []);
       setWorkoutStartTime(new Date());
@@ -321,7 +327,6 @@ export default function WorkoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           sessionId,
-          action: "complete",
           notes: workoutNotes || undefined,
         }),
       });
@@ -329,7 +334,15 @@ export default function WorkoutPage() {
       if (!res.ok) throw new Error("Failed to complete workout");
 
       const result = await res.json();
-      setSummary(result.summary);
+      // Map API response to WorkoutSummary format
+      const workoutSummary: WorkoutSummary = {
+        duration: (result.metrics?.durationMinutes || 0) * 60,
+        totalSets: result.metrics?.totalSets || 0,
+        totalVolume: result.metrics?.totalVolume || 0,
+        avgRpe: result.metrics?.avgRpe || 0,
+        exercises: [], // API doesn't return exercise breakdown yet
+      };
+      setSummary(workoutSummary);
       setShowSummary(true);
       setWorkoutStartTime(null);
       setRestTimer(null);
