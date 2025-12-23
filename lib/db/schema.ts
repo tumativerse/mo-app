@@ -378,7 +378,10 @@ export const equipmentItems = pgTable('equipment_items', {
 });
 
 // ============================================
-// PROGRAMS
+// PROGRAMS (DEPRECATED - Use programTemplates instead)
+// These tables are from the old simple program system.
+// The new PPL system uses: programTemplates, templateDays, templateSlots
+// TODO: Remove these tables after confirming no data migration needed
 // ============================================
 
 export const programs = pgTable('programs', {
@@ -440,7 +443,10 @@ export const userPrograms = pgTable('user_programs', {
 });
 
 // ============================================
-// WORKOUTS (Completed Sessions)
+// WORKOUTS (DEPRECATED - Use workoutSessions instead)
+// These tables are from the old simple workout system.
+// The new PPL system uses: workoutSessions, sessionExercises, sessionSets
+// TODO: Remove these tables after confirming no data migration needed
 // ============================================
 
 export const workouts = pgTable('workouts', {

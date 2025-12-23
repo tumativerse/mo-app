@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool } from '@neondatabase/serverless';
+import { eq } from 'drizzle-orm';
+import * as schema from './schema';
 import {
   programTemplates,
   templateDays,
@@ -10,7 +12,7 @@ import {
 } from './schema';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const db = drizzle(pool);
+const db = drizzle(pool, { schema });
 
 // ============================================
 // PPL TEMPLATE DATA
@@ -637,9 +639,11 @@ async function seedPPLTemplate() {
 
     if (!template) {
       console.log('  ⚠️  Template already exists, fetching...');
-      const existing = await db.query.programTemplates.findFirst({
-        where: (t, { eq }) => eq(t.slug, PPL_TEMPLATE.slug),
-      });
+      const [existing] = await db
+        .select()
+        .from(programTemplates)
+        .where(eq(programTemplates.slug, PPL_TEMPLATE.slug))
+        .limit(1);
       if (!existing) {
         throw new Error('Could not find or create template');
       }

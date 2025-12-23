@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import {
-  workouts,
+  workoutSessions,
   weightEntries,
   streaks,
-  userPrograms,
-  programDays,
+  programTemplates,
+  templateDays,
 } from "@/lib/db/schema";
 import { getCurrentUser } from "@/lib/mo-self";
 import { eq, and, gte, desc } from "drizzle-orm";
@@ -27,12 +27,12 @@ export async function GET() {
     monday.setDate(now.getDate() + mondayOffset);
     monday.setHours(0, 0, 0, 0);
 
-    // Get workouts this week
-    const weekWorkouts = await db.query.workouts.findMany({
+    // Get completed sessions this week (NEW system)
+    const weekSessions = await db.query.workoutSessions.findMany({
       where: and(
-        eq(workouts.userId, user.id),
-        eq(workouts.status, "completed"),
-        gte(workouts.completedAt, monday)
+        eq(workoutSessions.userId, user.id),
+        eq(workoutSessions.status, "completed"),
+        gte(workoutSessions.completedAt, monday)
       ),
     });
 
@@ -53,34 +53,77 @@ export async function GET() {
       where: eq(streaks.userId, user.id),
     });
 
-    // Get active program
-    const activeProgram = await db.query.userPrograms.findFirst({
-      where: and(
-        eq(userPrograms.userId, user.id),
-        eq(userPrograms.status, "active")
-      ),
+    // Check if PPL template exists (NEW system)
+    const pplTemplate = await db.query.programTemplates.findFirst({
+      where: eq(programTemplates.slug, "ppl-recomp-6"),
       with: {
-        program: true,
+        days: {
+          orderBy: (d, { asc }) => [asc(d.dayOrder)],
+        },
       },
     });
 
-    // Get today's workout info
+    // Get today's workout info based on rotation
     let todayWorkout = null;
-    if (activeProgram) {
-      const todayProgramDay = await db.query.programDays.findFirst({
+    let programInfo = null;
+
+    if (pplTemplate) {
+      // Get the user's last completed session to determine rotation
+      const lastSession = await db.query.workoutSessions.findFirst({
         where: and(
-          eq(programDays.programId, activeProgram.programId),
-          eq(programDays.dayNumber, activeProgram.currentDay || 1)
+          eq(workoutSessions.userId, user.id),
+          eq(workoutSessions.status, "completed")
+        ),
+        orderBy: [desc(workoutSessions.completedAt)],
+        with: {
+          templateDay: true,
+        },
+      });
+
+      // Calculate days since last workout
+      let daysSinceLastWorkout = 999;
+      if (lastSession?.completedAt) {
+        const lastDate = new Date(lastSession.completedAt);
+        const today = new Date();
+        daysSinceLastWorkout = Math.floor(
+          (today.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+      }
+
+      // Determine today's day in rotation
+      let todayDayOrder: number;
+      if (!lastSession?.templateDay || daysSinceLastWorkout >= 7) {
+        todayDayOrder = 1;
+      } else {
+        const lastDayOrder = lastSession.templateDay.dayOrder;
+        todayDayOrder = lastDayOrder >= pplTemplate.daysPerWeek ? 1 : lastDayOrder + 1;
+      }
+
+      const todayDay = pplTemplate.days.find((d) => d.dayOrder === todayDayOrder);
+
+      if (todayDay) {
+        todayWorkout = {
+          name: todayDay.name,
+          type: todayDay.dayType,
+          isRestDay: false, // PPL doesn't have rest days in rotation
+        };
+      }
+
+      // Calculate current "week" based on total completed sessions
+      const totalSessions = await db.query.workoutSessions.findMany({
+        where: and(
+          eq(workoutSessions.userId, user.id),
+          eq(workoutSessions.status, "completed")
         ),
       });
 
-      if (todayProgramDay) {
-        todayWorkout = {
-          name: todayProgramDay.name,
-          type: todayProgramDay.workoutType,
-          isRestDay: todayProgramDay.isRestDay,
-        };
-      }
+      const currentWeek = Math.floor(totalSessions.length / pplTemplate.daysPerWeek) + 1;
+
+      programInfo = {
+        name: pplTemplate.name,
+        week: currentWeek,
+        day: todayDayOrder,
+      };
     }
 
     // Calculate week average weight
@@ -94,18 +137,12 @@ export async function GET() {
         : null;
 
     return NextResponse.json({
-      workoutsThisWeek: weekWorkouts.length,
+      workoutsThisWeek: weekSessions.length,
       weekAvgWeight,
       currentWeight: latestWeight ? parseFloat(latestWeight.weight) : null,
       streak: userStreak?.currentStreak || 0,
-      hasProgram: !!activeProgram,
-      program: activeProgram?.program
-        ? {
-            name: activeProgram.program.name,
-            week: activeProgram.currentWeek,
-            day: activeProgram.currentDay,
-          }
-        : null,
+      hasProgram: !!pplTemplate,
+      program: programInfo,
       todayWorkout,
     });
   } catch (error) {

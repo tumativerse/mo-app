@@ -179,25 +179,19 @@ export default function DashboardPage() {
           </div>
         </Link>
       ) : (
-        <Link
-          href="/programs"
-          className="block bg-gradient-to-br from-blue-950/30 to-blue-900/10 rounded-xl border border-blue-900/50 p-5 transition-colors hover:border-blue-800"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center">
-                <Dumbbell className="h-6 w-6 text-blue-400" />
-              </div>
-              <div>
-                <p className="font-semibold text-lg text-zinc-100">Get Started</p>
-                <p className="text-sm text-zinc-400">
-                  Enroll in a training program to begin
-                </p>
-              </div>
+        <div className="bg-gradient-to-br from-yellow-950/30 to-yellow-900/10 rounded-xl border border-yellow-900/50 p-5">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-yellow-500/10 flex items-center justify-center">
+              <Dumbbell className="h-6 w-6 text-yellow-400" />
             </div>
-            <ArrowRight className="h-5 w-5 text-blue-400" />
+            <div>
+              <p className="font-semibold text-lg text-zinc-100">Setup Required</p>
+              <p className="text-sm text-zinc-400">
+                Run database seed to create the PPL program template
+              </p>
+            </div>
           </div>
-        </Link>
+        </div>
       )}
 
       {/* Fatigue Indicator - Phase 5 */}
@@ -398,14 +392,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Getting Started - show only if no program */}
+      {/* Getting Started - show only if no program template */}
       {!data?.hasProgram && (
-        <div className="bg-blue-950/30 border border-blue-900/50 rounded-xl p-6">
-          <h3 className="font-semibold text-blue-400 mb-2">Getting Started</h3>
+        <div className="bg-yellow-950/30 border border-yellow-900/50 rounded-xl p-6">
+          <h3 className="font-semibold text-yellow-400 mb-2">Setup Instructions</h3>
           <ul className="text-sm text-zinc-300 space-y-2">
-            <li>1. Log your current weight to establish a baseline</li>
-            <li>2. Enroll in the PPL Recomp program</li>
-            <li>3. Track daily to see your progress over time</li>
+            <li>1. Run <code className="bg-zinc-800 px-1 rounded">npm run db:seed</code> to create the PPL template</li>
+            <li>2. Refresh this page</li>
+            <li>3. Start your first workout!</li>
           </ul>
         </div>
       )}
