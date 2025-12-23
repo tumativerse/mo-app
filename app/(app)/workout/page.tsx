@@ -115,6 +115,7 @@ interface PPLTodayData {
   };
   templateDay: TemplateDay;
   slots: TemplateSlot[];
+  equipmentLevel: "full_gym" | "home_gym" | "bodyweight";
   warmup: {
     id: string;
     name: string;
