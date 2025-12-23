@@ -366,6 +366,10 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching PPL workout:', error);
-    return NextResponse.json({ error: 'Failed to fetch workout' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({
+      error: 'Failed to fetch workout',
+      details: message,
+    }, { status: 500 });
   }
 }
