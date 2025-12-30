@@ -14,6 +14,7 @@ import { EquipmentTab } from "@/components/settings/equipment-tab";
 import { LifestyleTab } from "@/components/settings/lifestyle-tab";
 import { PreferencesTab } from "@/components/settings/preferences-tab";
 import { pageTransition, staggerContainer, staggerItem } from "@/lib/animations";
+import { useTheme } from "@/lib/contexts/theme-context";
 
 interface SettingsData {
   profile: any;
@@ -21,6 +22,7 @@ interface SettingsData {
 }
 
 export default function SettingsPage() {
+  const { setTheme, setAccentColor } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState<SettingsData | null>(null);
@@ -56,6 +58,14 @@ export default function SettingsPage() {
         // Initialize local state for editing
         setProfile(profileData.profile);
         setPreferences(preferencesData.preferences);
+
+        // Sync theme context with user preferences
+        if (preferencesData.preferences?.theme) {
+          setTheme(preferencesData.preferences.theme);
+        }
+        if (preferencesData.preferences?.accentColor) {
+          setAccentColor(preferencesData.preferences.accentColor);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
         toast.error("Failed to load settings");
@@ -65,7 +75,7 @@ export default function SettingsPage() {
     }
 
     fetchData();
-  }, []);
+  }, [setTheme, setAccentColor]);
 
   // Handle profile field changes
   const handleProfileChange = (field: string, value: any) => {
@@ -75,6 +85,13 @@ export default function SettingsPage() {
   // Handle preferences field changes
   const handlePreferencesChange = (field: string, value: any) => {
     setPreferences((prev: any) => ({ ...prev, [field]: value }));
+
+    // Apply theme changes immediately for live preview
+    if (field === "theme") {
+      setTheme(value);
+    } else if (field === "accentColor") {
+      setAccentColor(value);
+    }
   };
 
   // Validate required fields

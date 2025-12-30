@@ -641,6 +641,10 @@ export const userPreferences = pgTable('user_preferences', {
   // Units
   weightUnit: varchar('weight_unit', { length: 10 }).default('lbs'),
 
+  // Theme Settings
+  theme: varchar('theme', { length: 10 }).default('dark'),
+  accentColor: varchar('accent_color', { length: 7 }).default('#10b981'),
+
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

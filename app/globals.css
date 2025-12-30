@@ -58,6 +58,7 @@
 
 :root {
   --radius: 0.625rem;
+  --user-accent-color: #10b981; /* Default accent color */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -99,21 +100,21 @@
   --card-foreground: #fafafa;
   --popover: #1a1a1a;
   --popover-foreground: #fafafa;
-  --primary: #10b981;
+  --primary: var(--user-accent-color, #10b981);
   --primary-foreground: #000000;
   --secondary: #27272a;
   --secondary-foreground: #fafafa;
   --muted: #27272a;
   --muted-foreground: #a1a1aa;
-  --accent: #10b981;
+  --accent: var(--user-accent-color, #10b981);
   --accent-foreground: #000000;
   --destructive: #ef4444;
   --border: #27272a;
   --input: #27272a;
-  --ring: #10b981;
+  --ring: var(--user-accent-color, #10b981);
 
   /* Chart colors */
-  --chart-1: #10b981;
+  --chart-1: var(--user-accent-color, #10b981);
   --chart-2: #3b82f6;
   --chart-3: #f59e0b;
   --chart-4: #8b5cf6;
@@ -122,14 +123,14 @@
   /* Sidebar */
   --sidebar: #1a1a1a;
   --sidebar-foreground: #fafafa;
-  --sidebar-primary: #10b981;
+  --sidebar-primary: var(--user-accent-color, #10b981);
   --sidebar-primary-foreground: #000000;
   --sidebar-accent: #27272a;
   --sidebar-accent-foreground: #fafafa;
   --sidebar-border: #27272a;
-  --sidebar-ring: #10b981;
+  --sidebar-ring: var(--user-accent-color, #10b981);
 
-  /* Custom fitness colors */
+  /* Custom fitness colors - Keep fixed for semantic consistency */
   --fitness-push: #10b981;
   --fitness-pull: #3b82f6;
   --fitness-legs: #ef4444;

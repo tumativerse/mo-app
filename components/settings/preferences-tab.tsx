@@ -1,7 +1,8 @@
 "use client";
 
-import { Save, Loader2, Ruler, Scale } from "lucide-react";
+import { Save, Loader2, Ruler, Scale, Sun, Moon } from "lucide-react";
 import { SingleSelectDropdown } from "@/components/ui/single-select-dropdown";
+import { ColorPicker } from "@/components/ui/color-picker";
 
 interface PreferencesTabProps {
   profile: any;
@@ -136,18 +137,54 @@ export function PreferencesTab({
           Display
         </h3>
 
-        <div className="p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-zinc-300">Theme</p>
-              <p className="text-xs text-zinc-500 mt-1">Dark mode (default)</p>
-            </div>
-            <div className="px-3 py-1 bg-zinc-900 border border-zinc-800 rounded text-xs text-zinc-400">
-              Coming soon
-            </div>
+        {/* Theme Selection */}
+        <div>
+          <label className="block text-sm font-medium text-zinc-300 mb-2">
+            App Theme
+          </label>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => onPreferencesChange("theme", "light")}
+              className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all ${
+                preferences?.theme === "light"
+                  ? "border-green-500 bg-zinc-800"
+                  : "border-zinc-700 bg-zinc-800/50 hover:bg-zinc-800"
+              }`}
+            >
+              <Sun className="h-5 w-5 text-zinc-300" />
+              <div className="text-left">
+                <p className="text-sm font-medium text-zinc-300">Light</p>
+                <p className="text-xs text-zinc-500">Bright theme</p>
+              </div>
+            </button>
+            <button
+              type="button"
+              onClick={() => onPreferencesChange("theme", "dark")}
+              className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all ${
+                preferences?.theme === "dark"
+                  ? "border-green-500 bg-zinc-800"
+                  : "border-zinc-700 bg-zinc-800/50 hover:bg-zinc-800"
+              }`}
+            >
+              <Moon className="h-5 w-5 text-zinc-300" />
+              <div className="text-left">
+                <p className="text-sm font-medium text-zinc-300">Dark</p>
+                <p className="text-xs text-zinc-500">Default theme</p>
+              </div>
+            </button>
           </div>
         </div>
 
+        {/* Accent Color Picker */}
+        <div>
+          <ColorPicker
+            value={preferences?.accentColor || "#10b981"}
+            onChange={(color) => onPreferencesChange("accentColor", color)}
+          />
+        </div>
+
+        {/* Notifications - Coming Soon */}
         <div className="p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg">
           <div className="flex items-center justify-between">
             <div>

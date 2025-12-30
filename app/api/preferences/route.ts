@@ -73,6 +73,10 @@ const updatePreferencesSchema = z.object({
   skipGeneralWarmup: z.boolean().optional(),
   includeMobilityWork: z.boolean().optional(),
   weightUnit: z.enum(["lbs", "kg"]).optional(),
+
+  // Theme settings
+  theme: z.enum(["light", "dark"]).optional(),
+  accentColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(), // Hex color validation
 });
 
 // PATCH /api/preferences - Update user preferences

@@ -44,6 +44,10 @@ export interface UserPreferences {
   skipGeneralWarmup: boolean;
   includeMobilityWork: boolean;
   weightUnit: string;
+
+  // Theme settings (NOT encrypted)
+  theme: "light" | "dark";
+  accentColor: string;
 }
 
 export interface UpdatePreferencesInput {
@@ -74,6 +78,10 @@ export interface UpdatePreferencesInput {
   skipGeneralWarmup?: boolean;
   includeMobilityWork?: boolean;
   weightUnit?: string;
+
+  // Theme settings
+  theme?: "light" | "dark";
+  accentColor?: string;
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -104,6 +112,10 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   skipGeneralWarmup: false,
   includeMobilityWork: true,
   weightUnit: "lbs",
+
+  // Theme settings
+  theme: "dark",
+  accentColor: "#10b981",
 };
 
 /**
@@ -197,6 +209,10 @@ function decryptPreferencesFromDb(prefs: any): UserPreferences {
     skipGeneralWarmup: prefs.skipGeneralWarmup || false,
     includeMobilityWork: prefs.includeMobilityWork !== undefined ? prefs.includeMobilityWork : true,
     weightUnit: prefs.weightUnit || "lbs",
+
+    // Theme settings (NOT encrypted)
+    theme: prefs.theme || "dark",
+    accentColor: prefs.accentColor || "#10b981",
   };
 }
 
@@ -216,6 +232,8 @@ export async function updatePreferences(
   if (updates.skipGeneralWarmup !== undefined) nonEncryptedUpdates.skipGeneralWarmup = updates.skipGeneralWarmup;
   if (updates.includeMobilityWork !== undefined) nonEncryptedUpdates.includeMobilityWork = updates.includeMobilityWork;
   if (updates.weightUnit !== undefined) nonEncryptedUpdates.weightUnit = updates.weightUnit;
+  if (updates.theme !== undefined) nonEncryptedUpdates.theme = updates.theme;
+  if (updates.accentColor !== undefined) nonEncryptedUpdates.accentColor = updates.accentColor;
 
   // Ensure preferences record exists
   const existing = await db.query.userPreferences.findFirst({
@@ -234,6 +252,8 @@ export async function updatePreferences(
       skipGeneralWarmup: nonEncryptedUpdates.skipGeneralWarmup ?? DEFAULT_PREFERENCES.skipGeneralWarmup,
       includeMobilityWork: nonEncryptedUpdates.includeMobilityWork ?? DEFAULT_PREFERENCES.includeMobilityWork,
       weightUnit: nonEncryptedUpdates.weightUnit || DEFAULT_PREFERENCES.weightUnit,
+      theme: nonEncryptedUpdates.theme || DEFAULT_PREFERENCES.theme,
+      accentColor: nonEncryptedUpdates.accentColor || DEFAULT_PREFERENCES.accentColor,
       updatedAt: new Date(),
     });
   } else {
