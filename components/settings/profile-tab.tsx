@@ -12,7 +12,7 @@ interface ProfileTabProps {
 }
 
 export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = false }: ProfileTabProps) {
-  const [heightUnit, setHeightUnit] = useState<"cm" | "inches" | "ft_in">("cm");
+  const [heightUnit, setHeightUnit] = useState<"cm" | "ft_in">("cm");
   const [displayHeight, setDisplayHeight] = useState<string>("");
   const [displayHeightFeet, setDisplayHeightFeet] = useState<string>("");
   const [displayHeightInches, setDisplayHeightInches] = useState<string>("");
@@ -61,14 +61,13 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
   }, [profile, profile?.units, profile?.heightCm, profile?.currentWeight, profile?.goalWeight]);
 
   // Handle height change with unit conversion
-  const handleHeightChange = (value: string, unit: "cm" | "inches") => {
+  const handleHeightChange = (value: string) => {
     setDisplayHeight(value);
     const numValue = parseFloat(value);
 
     if (!isNaN(numValue)) {
       // Always store in cm
-      const heightInCm = unit === "inches" ? Math.round(numValue * 2.54) : numValue;
-      onChange("heightCm", heightInCm);
+      onChange("heightCm", Math.round(numValue));
     }
   };
 
@@ -92,17 +91,12 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
   };
 
   const toggleHeightUnit = () => {
-    const unitCycle: Array<"cm" | "inches" | "ft_in"> = ["cm", "ft_in", "inches"];
-    const currentIndex = unitCycle.indexOf(heightUnit);
-    const newUnit = unitCycle[(currentIndex + 1) % unitCycle.length];
+    const newUnit = heightUnit === "cm" ? "ft_in" : "cm";
     setHeightUnit(newUnit);
 
     if (displayHeight || profile?.heightCm) {
       const currentCm = profile?.heightCm || 0;
-      if (newUnit === "inches") {
-        const inches = Math.round(currentCm / 2.54);
-        setDisplayHeight(String(inches));
-      } else if (newUnit === "ft_in") {
+      if (newUnit === "ft_in") {
         const totalInches = Math.round(currentCm / 2.54);
         const feet = Math.floor(totalInches / 12);
         const inches = totalInches % 12;
@@ -240,50 +234,50 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Height <span className="text-red-400">*</span>
           </label>
-          <div className="flex gap-3">
-            {heightUnit === "ft_in" ? (
-              <div className="flex-1 flex gap-3">
-                <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
-                  <p className="text-xs text-zinc-500 text-center mb-1">Feet</p>
+          <div className="flex gap-2">
+            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2">
+              {heightUnit === "ft_in" ? (
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <p className="text-xs text-zinc-500 text-center mb-1">Feet</p>
+                    <NumberPicker
+                      value={parseInt(displayHeightFeet) || 5}
+                      onChange={(val) => handleFeetChange(String(val))}
+                      min={3}
+                      max={8}
+                      step={1}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-zinc-500 text-center mb-1">Inches</p>
+                    <NumberPicker
+                      value={parseInt(displayHeightInches) || 0}
+                      onChange={(val) => handleInchesChange(String(val))}
+                      min={0}
+                      max={11}
+                      step={1}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-xs text-zinc-500 text-center mb-1">Centimeters</p>
                   <NumberPicker
-                    value={parseInt(displayHeightFeet) || 5}
-                    onChange={(val) => handleFeetChange(String(val))}
-                    min={3}
-                    max={8}
+                    value={parseInt(displayHeight) || 170}
+                    onChange={(val) => handleHeightChange(String(val))}
+                    min={100}
+                    max={250}
                     step={1}
                   />
                 </div>
-                <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
-                  <p className="text-xs text-zinc-500 text-center mb-1">Inches</p>
-                  <NumberPicker
-                    value={parseInt(displayHeightInches) || 0}
-                    onChange={(val) => handleInchesChange(String(val))}
-                    min={0}
-                    max={11}
-                    step={1}
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
-                <p className="text-xs text-zinc-500 text-center mb-1">
-                  {heightUnit === "cm" ? "Centimeters" : "Inches"}
-                </p>
-                <NumberPicker
-                  value={parseInt(displayHeight) || (heightUnit === "cm" ? 170 : 67)}
-                  onChange={(val) => handleHeightChange(String(val), heightUnit === "cm" ? "cm" : "inches")}
-                  min={heightUnit === "cm" ? 100 : 40}
-                  max={heightUnit === "cm" ? 250 : 98}
-                  step={1}
-                />
-              </div>
-            )}
+              )}
+            </div>
             <button
               type="button"
               onClick={toggleHeightUnit}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[90px] shrink-0 self-start"
+              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px] shrink-0"
             >
-              {heightUnit === "ft_in" ? "ft/in" : heightUnit}
+              {heightUnit === "ft_in" ? "ft/in" : "cm"}
             </button>
           </div>
         </div>
@@ -293,8 +287,8 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Current Weight
           </label>
-          <div className="flex gap-3">
-            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+          <div className="flex gap-2">
+            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2">
               <p className="text-xs text-zinc-500 text-center mb-1">
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
@@ -309,7 +303,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={() => onChange("units", profile?.units === "imperial" ? "metric" : "imperial")}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px] shrink-0 self-start"
+              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px] shrink-0"
             >
               {profile?.units === "imperial" ? "lbs" : "kg"}
             </button>
@@ -321,8 +315,8 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Goal Weight <span className="text-zinc-500">(Optional)</span>
           </label>
-          <div className="flex gap-3">
-            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+          <div className="flex gap-2">
+            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2">
               <p className="text-xs text-zinc-500 text-center mb-1">
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
@@ -337,7 +331,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={() => onChange("units", profile?.units === "imperial" ? "metric" : "imperial")}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px] shrink-0 self-start"
+              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px] shrink-0"
             >
               {profile?.units === "imperial" ? "lbs" : "kg"}
             </button>

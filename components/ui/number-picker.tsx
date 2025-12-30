@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 interface NumberPickerProps {
   value: number;
@@ -21,116 +21,55 @@ export function NumberPicker({
   unit = "",
   className = "",
 }: NumberPickerProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
+  const increment = () => {
+    const newValue = Math.min(value + step, max);
+    onChange(newValue);
+  };
 
-  const numbers: number[] = [];
-  for (let i = min; i <= max; i += step) {
-    numbers.push(i);
-  }
+  const decrement = () => {
+    const newValue = Math.max(value - step, min);
+    onChange(newValue);
+  };
 
-  const ITEM_HEIGHT = 40;
-
-  useEffect(() => {
-    if (scrollRef.current && !isScrolling) {
-      const index = numbers.indexOf(value);
-      if (index !== -1) {
-        scrollRef.current.scrollTop = index * ITEM_HEIGHT;
-      }
-    }
-  }, [value, isScrolling]);
-
-  const handleScroll = () => {
-    if (!scrollRef.current) return;
-
-    setIsScrolling(true);
-    const scrollTop = scrollRef.current.scrollTop;
-    const index = Math.round(scrollTop / ITEM_HEIGHT);
-    const newValue = numbers[Math.max(0, Math.min(index, numbers.length - 1))];
-
-    if (newValue !== value) {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = parseFloat(e.target.value);
+    if (!isNaN(newValue) && newValue >= min && newValue <= max) {
       onChange(newValue);
     }
   };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (scrollRef.current && isScrolling) {
-        const index = numbers.indexOf(value);
-        if (index !== -1) {
-          scrollRef.current.scrollTo({
-            top: index * ITEM_HEIGHT,
-            behavior: 'smooth'
-          });
-        }
-        setIsScrolling(false);
-      }
-    }, 150);
-
-    return () => clearTimeout(timer);
-  }, [value, isScrolling]);
-
   return (
-    <div className={`relative ${className}`}>
-      {/* Top fade overlay */}
-      <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-zinc-900 to-transparent pointer-events-none z-10" />
-
-      {/* Selection indicator */}
-      <div className="absolute top-1/2 left-0 right-0 h-10 -mt-5 border-y-2 border-green-500/30 bg-green-500/5 pointer-events-none z-10" />
-
-      {/* Scrollable container */}
-      <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="h-40 overflow-y-scroll scrollbar-hide snap-y snap-mandatory"
-        style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        }}
+    <div className={`flex items-center gap-2 ${className}`}>
+      <button
+        type="button"
+        onClick={decrement}
+        disabled={value <= min}
+        className="p-2 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg transition-colors"
       >
-        {/* Top padding */}
-        <div style={{ height: `${ITEM_HEIGHT * 2}px` }} />
+        <ChevronDown className="h-5 w-5 text-zinc-300" />
+      </button>
 
-        {/* Numbers */}
-        {numbers.map((num) => (
-          <div
-            key={num}
-            className={`
-              flex items-center justify-center transition-all snap-center
-              ${num === value
-                ? 'text-green-400 font-semibold text-lg'
-                : 'text-zinc-500 text-sm'
-              }
-            `}
-            style={{ height: `${ITEM_HEIGHT}px` }}
-            onClick={() => {
-              onChange(num);
-              if (scrollRef.current) {
-                const index = numbers.indexOf(num);
-                scrollRef.current.scrollTo({
-                  top: index * ITEM_HEIGHT,
-                  behavior: 'smooth'
-                });
-              }
-            }}
-          >
-            {step < 1 ? num.toFixed(1) : num}{unit && ` ${unit}`}
-          </div>
-        ))}
-
-        {/* Bottom padding */}
-        <div style={{ height: `${ITEM_HEIGHT * 2}px` }} />
+      <div className="flex-1 flex items-center justify-center gap-1">
+        <input
+          type="number"
+          value={step < 1 ? value.toFixed(1) : value}
+          onChange={handleInputChange}
+          min={min}
+          max={max}
+          step={step}
+          className="w-20 text-center text-lg font-semibold bg-transparent text-green-400 focus:outline-none"
+        />
+        {unit && <span className="text-sm text-zinc-500">{unit}</span>}
       </div>
 
-      {/* Bottom fade overlay */}
-      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-zinc-900 to-transparent pointer-events-none z-10" />
-
-      {/* Hide scrollbar */}
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+      <button
+        type="button"
+        onClick={increment}
+        disabled={value >= max}
+        className="p-2 bg-zinc-700 hover:bg-zinc-600 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg transition-colors"
+      >
+        <ChevronUp className="h-5 w-5 text-zinc-300" />
+      </button>
     </div>
   );
 }
