@@ -78,7 +78,10 @@ export function CustomDropdown({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div ref={menuRef} className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+        <div
+          ref={menuRef}
+          className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-dropdown-menu"
+        >
           {options.map((option) => (
             <button
               key={String(option.value)}
@@ -96,6 +99,16 @@ export function CustomDropdown({
           ))}
         </div>
       )}
+
+      <style jsx>{`
+        .custom-dropdown-menu {
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE and Edge */
+        }
+        .custom-dropdown-menu::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, Opera */
+        }
+      `}</style>
     </div>
   );
 }

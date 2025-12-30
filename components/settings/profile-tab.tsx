@@ -132,12 +132,12 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-4">
       <div>
-        <h2 className="text-xl font-semibold text-zinc-100 mb-2">
+        <h2 className="text-lg sm:text-xl font-semibold text-zinc-100 mb-2">
           Personal Information
         </h2>
-        <p className="text-sm text-zinc-400 mb-6">
+        <p className="text-sm text-zinc-400 mb-4 sm:mb-6">
           🔒 All personal data is encrypted and stored securely
         </p>
       </div>
@@ -158,7 +158,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             value={profile?.fullName || ""}
             onChange={(e) => onChange("fullName", e.target.value)}
             placeholder="Enter your full name"
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-base placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
         </div>
@@ -172,7 +172,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             type="email"
             value={profile?.email || ""}
             disabled
-            className="w-full px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-500 cursor-not-allowed"
+            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-500 text-base cursor-not-allowed"
           />
           <p className="text-xs text-zinc-500 mt-1">
             Email is managed through your account settings
@@ -260,7 +260,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={toggleHeightUnit}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
+              className="px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
             >
               {heightUnit === "ft_in" ? "ft/in" : "cm"}
             </button>
@@ -288,7 +288,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={() => onChange("units", profile?.units === "imperial" ? "metric" : "imperial")}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
+              className="px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
             >
               {profile?.units === "imperial" ? "lbs" : "kg"}
             </button>
@@ -316,7 +316,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={() => onChange("units", profile?.units === "imperial" ? "metric" : "imperial")}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
+              className="px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
             >
               {profile?.units === "imperial" ? "lbs" : "kg"}
             </button>
@@ -346,7 +346,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             placeholder="e.g., Lower back pain, knee issues, shoulder injury..."
             rows={3}
             maxLength={1000}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-base placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
           />
         </div>
 
@@ -361,7 +361,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             placeholder="e.g., Asthma, diabetes, hypertension..."
             rows={3}
             maxLength={1000}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-base placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
           />
         </div>
 
@@ -376,7 +376,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             placeholder="e.g., Beta blockers, blood thinners, supplements..."
             rows={3}
             maxLength={1000}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-base placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
           />
         </div>
       </div>
@@ -387,7 +387,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           type="button"
           onClick={onCancel}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto px-6 py-3 text-base bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
         >
           Cancel
         </button>
@@ -395,7 +395,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           type="button"
           onClick={onSave}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full sm:w-auto px-6 py-3 text-base bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 touch-manipulation"
         >
           {isSaving ? (
             <>
