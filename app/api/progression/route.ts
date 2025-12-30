@@ -306,6 +306,37 @@ async function getFatigueHistory(userId: string, days: number) {
 async function getWeeklyVolume(userId: string, sessions: typeof workoutSessions.$inferSelect[]) {
   if (sessions.length === 0) return [];
 
+  // OPTIMIZED: Fetch all sets for all sessions in ONE query instead of N queries
+  const sessionIds = sessions.map(s => s.id);
+
+  const allSets = await db.query.sessionSets.findMany({
+    where: and(
+      sql`${sessionSets.sessionExerciseId} IN (
+        SELECT id FROM session_exercises WHERE session_id = ANY(${sessionIds})
+      )`,
+      eq(sessionSets.isWarmup, false)
+    ),
+    with: {
+      sessionExercise: {
+        columns: {
+          sessionId: true,
+        },
+      },
+    },
+  });
+
+  // Group sets by session ID for quick lookup
+  const setsBySession = new Map<string, typeof allSets>();
+  for (const set of allSets) {
+    const sessionId = set.sessionExercise?.sessionId;
+    if (!sessionId) continue;
+
+    if (!setsBySession.has(sessionId)) {
+      setsBySession.set(sessionId, []);
+    }
+    setsBySession.get(sessionId)!.push(set);
+  }
+
   // Group sessions by week
   const weekMap = new Map<string, { volume: number; count: number }>();
 
@@ -321,16 +352,8 @@ async function getWeeklyVolume(userId: string, sessions: typeof workoutSessions.
 
     const weekKey = weekStart.toISOString().split('T')[0];
 
-    // Get session volume
-    const sets = await db.query.sessionSets.findMany({
-      where: and(
-        eq(sessionSets.sessionExerciseId, sql`ANY(
-          SELECT id FROM session_exercises WHERE session_id = ${session.id}
-        )`),
-        eq(sessionSets.isWarmup, false)
-      ),
-    });
-
+    // Get session volume from pre-fetched sets
+    const sets = setsBySession.get(session.id) || [];
     const sessionVolume = sets.reduce((sum, set) => {
       const weight = parseFloat(set.weight || '0');
       const reps = set.reps || 0;
