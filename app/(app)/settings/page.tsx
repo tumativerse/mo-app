@@ -19,6 +19,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState<SettingsData | null>(null);
   const [activeTab, setActiveTab] = useState<"profile" | "training" | "equipment" | "lifestyle" | "preferences">("profile");
+  const [tabLoading, setTabLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Local state for form changes (not yet saved)
@@ -60,6 +61,19 @@ export default function SettingsPage() {
 
     fetchData();
   }, []);
+
+  // Handle tab change with loading animation
+  const handleTabChange = (tabId: "profile" | "training" | "equipment" | "lifestyle" | "preferences") => {
+    if (tabId === activeTab) return;
+
+    setTabLoading(true);
+    setActiveTab(tabId);
+
+    // Show animation for 1.5 seconds (faster than initial load)
+    setTimeout(() => {
+      setTabLoading(false);
+    }, 1500);
+  };
 
   // Handle profile field changes
   const handleProfileChange = (field: string, value: any) => {
@@ -155,7 +169,10 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <ProfileLoadingAnimation gender={data?.profile?.gender} />
+        <ProfileLoadingAnimation
+          gender={data?.profile?.gender}
+          loadingContext="profile"
+        />
       </div>
     );
   }
@@ -201,10 +218,12 @@ export default function SettingsPage() {
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
+                disabled={tabLoading}
                 className={`
                   px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors
                   border-b-2 -mb-px
+                  disabled:opacity-50 disabled:cursor-not-allowed
                   ${
                     activeTab === tab.id
                       ? "border-green-500 text-green-500"
@@ -221,29 +240,41 @@ export default function SettingsPage() {
 
         {/* Tab Content */}
         <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-6">
-          {activeTab === "profile" && (
-            <ProfileTab profile={profile} onChange={handleProfileChange} />
-          )}
+          {tabLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <ProfileLoadingAnimation
+                gender={data?.profile?.gender}
+                loadingContext={activeTab}
+                minDisplayTime={1500}
+              />
+            </div>
+          ) : (
+            <>
+              {activeTab === "profile" && (
+                <ProfileTab profile={profile} onChange={handleProfileChange} />
+              )}
 
-          {activeTab === "training" && (
-            <TrainingTab preferences={preferences} onChange={handlePreferencesChange} />
-          )}
+              {activeTab === "training" && (
+                <TrainingTab preferences={preferences} onChange={handlePreferencesChange} />
+              )}
 
-          {activeTab === "equipment" && (
-            <EquipmentTab preferences={preferences} onChange={handlePreferencesChange} />
-          )}
+              {activeTab === "equipment" && (
+                <EquipmentTab preferences={preferences} onChange={handlePreferencesChange} />
+              )}
 
-          {activeTab === "lifestyle" && (
-            <LifestyleTab preferences={preferences} onChange={handlePreferencesChange} />
-          )}
+              {activeTab === "lifestyle" && (
+                <LifestyleTab preferences={preferences} onChange={handlePreferencesChange} />
+              )}
 
-          {activeTab === "preferences" && (
-            <PreferencesTab
-              profile={profile}
-              preferences={preferences}
-              onProfileChange={handleProfileChange}
-              onPreferencesChange={handlePreferencesChange}
-            />
+              {activeTab === "preferences" && (
+                <PreferencesTab
+                  profile={profile}
+                  preferences={preferences}
+                  onProfileChange={handleProfileChange}
+                  onPreferencesChange={handlePreferencesChange}
+                />
+              )}
+            </>
           )}
         </div>
 
