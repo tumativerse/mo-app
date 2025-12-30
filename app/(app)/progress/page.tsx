@@ -65,7 +65,7 @@ export default function ProgressPage() {
   const [data, setData] = useState<ProgressionData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [days, setDays] = useState(14);
-  const isMinTimeElapsed = useMinimumLoadingTime(3000);
+  const isMinTimeElapsed = useMinimumLoadingTime(3500);
 
   useEffect(() => {
     fetchProgression();

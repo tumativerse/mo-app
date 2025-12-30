@@ -37,7 +37,7 @@ export default function WeightPage() {
   const [stats, setStats] = useState<WeightStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const isMinTimeElapsed = useMinimumLoadingTime(3000);
+  const isMinTimeElapsed = useMinimumLoadingTime(3500);
 
   useEffect(() => {
     fetchEntries();

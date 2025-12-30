@@ -187,7 +187,7 @@ export default function WorkoutPage() {
   const [data, setData] = useState<PPLTodayData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const isMinTimeElapsed = useMinimumLoadingTime(3000);
+  const isMinTimeElapsed = useMinimumLoadingTime(3500);
 
   // Session state
   const [sessionId, setSessionId] = useState<string | null>(null);

@@ -45,7 +45,7 @@ export default function HistoryPage() {
   const [stats, setStats] = useState<HistoryStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedWorkout, setExpandedWorkout] = useState<string | null>(null);
-  const isMinTimeElapsed = useMinimumLoadingTime(3000);
+  const isMinTimeElapsed = useMinimumLoadingTime(3500);
 
   useEffect(() => {
     fetchHistory();

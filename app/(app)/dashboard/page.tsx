@@ -72,7 +72,7 @@ export default function DashboardPage() {
   const [trainingStatus, setTrainingStatus] = useState<TrainingStatus | null>(null);
   const [showRecoveryForm, setShowRecoveryForm] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const isMinTimeElapsed = useMinimumLoadingTime(3000); // 3 second minimum
+  const isMinTimeElapsed = useMinimumLoadingTime(3500); // Match animation duration
 
   useEffect(() => {
     fetchDashboard();
