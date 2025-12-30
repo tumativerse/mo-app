@@ -226,7 +226,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
                   <div className="flex-1">
                     <p className="text-xs text-zinc-500 text-center mb-1">Feet</p>
                     <NumberPicker
-                      value={parseInt(displayHeightFeet) || 5}
+                      value={parseInt(displayHeightFeet) || 6}
                       onChange={(val) => handleFeetChange(String(val))}
                       min={3}
                       max={8}
@@ -248,7 +248,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
                 <div>
                   <p className="text-xs text-zinc-500 text-center mb-1">Centimeters</p>
                   <NumberPicker
-                    value={parseInt(displayHeight) || 170}
+                    value={parseInt(displayHeight) || 183}
                     onChange={(val) => handleHeightChange(String(val))}
                     min={100}
                     max={250}
@@ -278,7 +278,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
               <NumberPicker
-                value={parseFloat(displayCurrentWeight) || (profile?.units === "imperial" ? 150 : 70)}
+                value={parseFloat(displayCurrentWeight) || (profile?.units === "imperial" ? 160 : 72.5)}
                 onChange={(val) => handleWeightChange(String(val), "currentWeight")}
                 min={profile?.units === "imperial" ? 50 : 20}
                 max={profile?.units === "imperial" ? 500 : 230}

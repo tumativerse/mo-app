@@ -22,6 +22,8 @@ export function CustomDropdown({
 }: CustomDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const selectedButtonRef = useRef<HTMLButtonElement>(null);
 
   const selectedOption = options.find((opt) => opt.value === value);
 
@@ -43,6 +45,20 @@ export function CustomDropdown({
     };
   }, [isOpen]);
 
+  // Auto-scroll to selected option when dropdown opens
+  useEffect(() => {
+    if (isOpen && menuRef.current && selectedButtonRef.current) {
+      const menu = menuRef.current;
+      const selectedButton = selectedButtonRef.current;
+      const menuHeight = menu.clientHeight;
+      const buttonTop = selectedButton.offsetTop;
+      const buttonHeight = selectedButton.clientHeight;
+
+      // Center the selected item in the viewport
+      menu.scrollTop = buttonTop - (menuHeight / 2) + (buttonHeight / 2);
+    }
+  }, [isOpen]);
+
   const handleSelect = (selectedValue: number | string) => {
     onChange(selectedValue);
     setIsOpen(false);
@@ -62,10 +78,11 @@ export function CustomDropdown({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+        <div ref={menuRef} className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl max-h-60 overflow-y-auto">
           {options.map((option) => (
             <button
               key={String(option.value)}
+              ref={option.value === value ? selectedButtonRef : null}
               type="button"
               onClick={() => handleSelect(option.value)}
               className={`w-full px-3 py-2 text-sm text-left transition-colors ${

@@ -12,11 +12,11 @@ export function DatePicker({ value, onChange, className = "" }: DatePickerProps)
   // Parse the date string
   const parseDate = (dateStr: string) => {
     if (!dateStr) {
-      const today = new Date();
+      // Default to July 15, 2000
       return {
-        year: today.getFullYear() - 25,
-        month: today.getMonth() + 1,
-        day: today.getDate(),
+        year: 2000,
+        month: 7,
+        day: 15,
       };
     }
     const [year, month, day] = dateStr.split("-").map(Number);
