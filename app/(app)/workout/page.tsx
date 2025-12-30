@@ -120,14 +120,19 @@ interface PPLTodayData {
   warmup: {
     id: string;
     name: string;
+    durationMinutes: number;
     phases: Array<{
       id: string;
       name: string;
+      phaseType: 'general' | 'dynamic' | 'movement_prep';
+      durationSeconds: number | null;
       exercises: Array<{
-        name: string;
+        id: string;
+        exerciseName: string;
         sets: number;
         reps: number | null;
         durationSeconds: number | null;
+        notes: string | null;
       }>;
     }>;
   } | null;
@@ -735,7 +740,7 @@ function OverviewMode({
                   <div className="space-y-1">
                     {phase.exercises.map((ex, idx) => (
                       <div key={idx} className="flex justify-between text-sm">
-                        <span className="text-zinc-400">{ex.name}</span>
+                        <span className="text-zinc-400">{ex.exerciseName}</span>
                         <span className="text-zinc-500">
                           {ex.durationSeconds
                             ? `${ex.durationSeconds}s`

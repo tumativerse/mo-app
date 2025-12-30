@@ -34,6 +34,7 @@
     "node_modules",
     "lib/db/seed*.ts",
     "lib/db/analyze*.ts",
-    "lib/db/check*.ts"
+    "lib/db/check*.ts",
+    "scripts/**/*.ts"
   ]
 }

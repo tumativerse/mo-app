@@ -287,7 +287,7 @@ async function getFatigueHistory(userId: string, days: number) {
   });
 
   return logs.map(log => {
-    const score = Number(log.score) || 0;
+    const score = Number(log.fatigueScore) || 0;
     let level: 'fresh' | 'manageable' | 'accumulating' | 'high';
     if (score < 4) level = 'fresh';
     else if (score < 6) level = 'manageable';
