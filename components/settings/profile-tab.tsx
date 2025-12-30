@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { NumberPicker } from "@/components/ui/number-picker";
+import { DatePicker } from "@/components/ui/date-picker";
+import { OptionSelector } from "@/components/ui/option-selector";
 
 interface ProfileTabProps {
   profile: any;
@@ -182,12 +184,9 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Date of Birth <span className="text-red-400">*</span>
           </label>
-          <input
-            type="date"
+          <DatePicker
             value={profile?.dateOfBirth || ""}
-            onChange={(e) => onChange("dateOfBirth", e.target.value)}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
-            required
+            onChange={(value) => onChange("dateOfBirth", value)}
           />
         </div>
 
@@ -196,30 +195,16 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Gender <span className="text-red-400">*</span>
           </label>
-          <div className="flex flex-wrap gap-2">
-            {[
+          <OptionSelector
+            value={profile?.gender || "male"}
+            options={[
               { value: "male", label: "Male" },
               { value: "female", label: "Female" },
               { value: "non_binary", label: "Non-binary" },
               { value: "prefer_not_to_say", label: "Prefer not to say" },
-            ].map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => onChange("gender", option.value)}
-                className={`
-                  px-4 py-2 rounded-lg border transition-all text-sm font-medium
-                  ${
-                    profile?.gender === option.value
-                      ? "border-green-500 bg-green-500/10 text-green-400"
-                      : "border-zinc-700 bg-zinc-800 text-zinc-300 hover:border-zinc-600"
-                  }
-                `}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
+            ]}
+            onChange={(value) => onChange("gender", value)}
+          />
         </div>
       </div>
 
@@ -234,10 +219,10 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Height <span className="text-red-400">*</span>
           </label>
-          <div className="flex gap-2">
-            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-2 sm:px-3 py-2">
               {heightUnit === "ft_in" ? (
-                <div className="flex gap-4">
+                <div className="flex gap-2 sm:gap-4">
                   <div className="flex-1">
                     <p className="text-xs text-zinc-500 text-center mb-1">Feet</p>
                     <NumberPicker
@@ -275,7 +260,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={toggleHeightUnit}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px] shrink-0"
+              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
             >
               {heightUnit === "ft_in" ? "ft/in" : "cm"}
             </button>
@@ -287,8 +272,8 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Current Weight
           </label>
-          <div className="flex gap-2">
-            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-2 sm:px-3 py-2">
               <p className="text-xs text-zinc-500 text-center mb-1">
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
@@ -303,7 +288,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={() => onChange("units", profile?.units === "imperial" ? "metric" : "imperial")}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px] shrink-0"
+              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
             >
               {profile?.units === "imperial" ? "lbs" : "kg"}
             </button>
@@ -315,8 +300,8 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Goal Weight <span className="text-zinc-500">(Optional)</span>
           </label>
-          <div className="flex gap-2">
-            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2">
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-2 sm:px-3 py-2">
               <p className="text-xs text-zinc-500 text-center mb-1">
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
@@ -331,7 +316,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={() => onChange("units", profile?.units === "imperial" ? "metric" : "imperial")}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px] shrink-0"
+              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
             >
               {profile?.units === "imperial" ? "lbs" : "kg"}
             </button>
