@@ -19,7 +19,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { pageTransition, staggerContainer, staggerItem, animateNumber } from "@/lib/animations";
-import { vibrateDevice, celebrateSimple } from "@/lib/celebrations";
+import { vibrateDevice, celebrateSimple, celebrateWeightMilestone } from "@/lib/celebrations";
+import { playSuccess } from "@/lib/sounds";
 
 interface WeightEntry {
   id: string;
@@ -113,7 +114,16 @@ export default function WeightPage() {
 
       // Success feedback
       toast.success("Weight logged!");
-      celebrateSimple();
+      playSuccess();
+
+      // Check if it's a milestone (divisible by 5 lbs)
+      const weightNum = parseFloat(weight);
+      if (weightNum % 5 === 0) {
+        celebrateWeightMilestone();
+      } else {
+        celebrateSimple();
+      }
+
       vibrateDevice([50, 50, 100]);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 2000);

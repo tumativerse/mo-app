@@ -203,3 +203,144 @@ export function celebrateWithHaptics(type: 'workout' | 'pr' | 'set' | 'streak') 
       break;
   }
 }
+
+// New celebration: Weight milestone (every 5 lbs lost/gained)
+export function celebrateWeightMilestone() {
+  confetti({
+    particleCount: 75,
+    spread: 60,
+    origin: { y: 0.7 },
+    colors: ['#3b82f6', '#10b981', '#f59e0b'],
+    startVelocity: 30,
+    ticks: 100,
+  });
+}
+
+// New celebration: First workout ever
+export function celebrateFirstWorkout() {
+  const duration = 5000;
+  const animationEnd = Date.now() + duration;
+
+  const interval: any = setInterval(function() {
+    const timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    confetti({
+      particleCount: 2,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors: ['#10b981', '#3b82f6', '#f59e0b'],
+    });
+    confetti({
+      particleCount: 2,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors: ['#10b981', '#3b82f6', '#f59e0b'],
+    });
+  }, 100);
+}
+
+// New celebration: Session milestone (10, 25, 50, 100 workouts)
+export function celebrateSessionMilestone(count: number) {
+  // Epic celebration for major milestones
+  const colors = count >= 100 ? ['#ffd700', '#ff6b6b', '#4ecdc4'] :
+                 count >= 50 ? ['#10b981', '#3b82f6', '#f59e0b'] :
+                 ['#3b82f6', '#10b981'];
+
+  celebrateCannon();
+
+  setTimeout(() => {
+    confetti({
+      particleCount: 100,
+      spread: 160,
+      origin: { y: 0.6 },
+      colors,
+      startVelocity: 45,
+      shapes: ['circle', 'square'],
+      ticks: 200,
+    });
+  }, 500);
+
+  // Add number confetti
+  setTimeout(() => {
+    confetti({
+      particleCount: 3,
+      spread: 40,
+      origin: { y: 0.5 },
+      scalar: 4,
+      shapes: [confetti.shapeFromText({ text: String(count) })],
+    });
+  }, 1000);
+}
+
+// New celebration: Exercise variety achievement
+export function celebrateExerciseVariety() {
+  confetti({
+    particleCount: 50,
+    spread: 70,
+    origin: { y: 0.6 },
+    colors: ['#8b5cf6', '#ec4899', '#f59e0b'],
+    shapes: ['circle'],
+    startVelocity: 35,
+  });
+}
+
+// New celebration: Volume PR (most weight lifted in a session)
+export function celebrateVolumePR() {
+  // Multiple bursts
+  for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+      confetti({
+        particleCount: 40,
+        angle: 60 + (i * 30),
+        spread: 55,
+        origin: { x: 0.3 + (i * 0.2), y: 0.7 },
+        colors: ['#ef4444', '#f59e0b', '#10b981'],
+      });
+    }, i * 200);
+  }
+}
+
+// New celebration: Perfect week (all planned workouts completed)
+export function celebratePerfectWeek() {
+  const end = Date.now() + 3000;
+  const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
+
+  (function frame() {
+    confetti({
+      particleCount: 5,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors,
+    });
+    confetti({
+      particleCount: 5,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors,
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  }());
+
+  // Add star confetti
+  setTimeout(() => {
+    confetti({
+      particleCount: 10,
+      spread: 80,
+      origin: { y: 0.5 },
+      colors: ['#ffd700'],
+      shapes: ['star'],
+      scalar: 2,
+    });
+  }, 1500);
+}

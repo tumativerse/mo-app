@@ -5,11 +5,16 @@ import { useState, useEffect } from "react";
 interface ProfileTabProps {
   profile: any;
   onChange: (field: string, value: any) => void;
+  onSave: () => void;
+  onCancel: () => void;
+  isSaving?: boolean;
 }
 
-export function ProfileTab({ profile, onChange }: ProfileTabProps) {
-  const [heightUnit, setHeightUnit] = useState<"cm" | "inches">("cm");
+export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = false }: ProfileTabProps) {
+  const [heightUnit, setHeightUnit] = useState<"cm" | "inches" | "ft_in">("cm");
   const [displayHeight, setDisplayHeight] = useState<string>("");
+  const [displayHeightFeet, setDisplayHeightFeet] = useState<string>("");
+  const [displayHeightInches, setDisplayHeightInches] = useState<string>("");
   const [displayCurrentWeight, setDisplayCurrentWeight] = useState<string>("");
   const [displayGoalWeight, setDisplayGoalWeight] = useState<string>("");
 
@@ -17,9 +22,13 @@ export function ProfileTab({ profile, onChange }: ProfileTabProps) {
   useEffect(() => {
     if (profile?.heightCm) {
       if (profile.units === "imperial") {
-        setHeightUnit("inches");
-        const inches = Math.round(profile.heightCm / 2.54);
-        setDisplayHeight(String(inches));
+        setHeightUnit("ft_in");
+        const totalInches = Math.round(profile.heightCm / 2.54);
+        const feet = Math.floor(totalInches / 12);
+        const inches = totalInches % 12;
+        setDisplayHeightFeet(String(feet));
+        setDisplayHeightInches(String(inches));
+        setDisplayHeight(String(totalInches));
       } else {
         setHeightUnit("cm");
         setDisplayHeight(String(profile.heightCm));
@@ -32,7 +41,7 @@ export function ProfileTab({ profile, onChange }: ProfileTabProps) {
         const lbs = (profile.currentWeight * 2.20462).toFixed(1);
         setDisplayCurrentWeight(lbs);
       } else {
-        setDisplayCurrentWeight(String(profile.currentWeight));
+        setDisplayCurrentWeight(profile.currentWeight.toFixed(1));
       }
     } else {
       setDisplayCurrentWeight("");
@@ -43,12 +52,12 @@ export function ProfileTab({ profile, onChange }: ProfileTabProps) {
         const lbs = (profile.goalWeight * 2.20462).toFixed(1);
         setDisplayGoalWeight(lbs);
       } else {
-        setDisplayGoalWeight(String(profile.goalWeight));
+        setDisplayGoalWeight(profile.goalWeight.toFixed(1));
       }
     } else {
       setDisplayGoalWeight("");
     }
-  }, [profile]);
+  }, [profile, profile?.units, profile?.heightCm, profile?.currentWeight, profile?.goalWeight]);
 
   // Handle height change with unit conversion
   const handleHeightChange = (value: string, unit: "cm" | "inches") => {
@@ -62,22 +71,44 @@ export function ProfileTab({ profile, onChange }: ProfileTabProps) {
     }
   };
 
+  // Handle feet/inches separately
+  const handleFeetChange = (value: string) => {
+    setDisplayHeightFeet(value);
+    const feet = parseInt(value) || 0;
+    const inches = parseInt(displayHeightInches) || 0;
+    const totalInches = (feet * 12) + inches;
+    const heightInCm = Math.round(totalInches * 2.54);
+    onChange("heightCm", heightInCm);
+  };
+
+  const handleInchesChange = (value: string) => {
+    setDisplayHeightInches(value);
+    const feet = parseInt(displayHeightFeet) || 0;
+    const inches = parseInt(value) || 0;
+    const totalInches = (feet * 12) + inches;
+    const heightInCm = Math.round(totalInches * 2.54);
+    onChange("heightCm", heightInCm);
+  };
+
   const toggleHeightUnit = () => {
-    const newUnit = heightUnit === "cm" ? "inches" : "cm";
+    const unitCycle: Array<"cm" | "inches" | "ft_in"> = ["cm", "ft_in", "inches"];
+    const currentIndex = unitCycle.indexOf(heightUnit);
+    const newUnit = unitCycle[(currentIndex + 1) % unitCycle.length];
     setHeightUnit(newUnit);
 
-    if (displayHeight) {
-      const currentValue = parseFloat(displayHeight);
-      if (!isNaN(currentValue)) {
-        if (newUnit === "inches") {
-          // cm to inches
-          const inches = Math.round(currentValue / 2.54);
-          setDisplayHeight(String(inches));
-        } else {
-          // inches to cm
-          const cm = Math.round(currentValue * 2.54);
-          setDisplayHeight(String(cm));
-        }
+    if (displayHeight || profile?.heightCm) {
+      const currentCm = profile?.heightCm || 0;
+      if (newUnit === "inches") {
+        const inches = Math.round(currentCm / 2.54);
+        setDisplayHeight(String(inches));
+      } else if (newUnit === "ft_in") {
+        const totalInches = Math.round(currentCm / 2.54);
+        const feet = Math.floor(totalInches / 12);
+        const inches = totalInches % 12;
+        setDisplayHeightFeet(String(feet));
+        setDisplayHeightInches(String(inches));
+      } else {
+        setDisplayHeight(String(currentCm));
       }
     }
   };
@@ -160,7 +191,7 @@ export function ProfileTab({ profile, onChange }: ProfileTabProps) {
             type="date"
             value={profile?.dateOfBirth || ""}
             onChange={(e) => onChange("dateOfBirth", e.target.value)}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full max-w-xs px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
         </div>
@@ -210,22 +241,55 @@ export function ProfileTab({ profile, onChange }: ProfileTabProps) {
             Height <span className="text-red-400">*</span>
           </label>
           <div className="flex gap-2">
-            <input
-              type="number"
-              value={displayHeight}
-              onChange={(e) => handleHeightChange(e.target.value, heightUnit)}
-              placeholder={heightUnit === "cm" ? "170" : "67"}
-              min={heightUnit === "cm" ? "50" : "20"}
-              max={heightUnit === "cm" ? "300" : "118"}
-              className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
+            {heightUnit === "ft_in" ? (
+              <>
+                <div className="flex-1 flex gap-2">
+                  <div className="flex-1">
+                    <input
+                      type="number"
+                      value={displayHeightFeet}
+                      onChange={(e) => handleFeetChange(e.target.value)}
+                      placeholder="5"
+                      min="3"
+                      max="8"
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+                      required
+                    />
+                    <p className="text-xs text-zinc-500 mt-1 text-center">ft</p>
+                  </div>
+                  <div className="flex-1">
+                    <input
+                      type="number"
+                      value={displayHeightInches}
+                      onChange={(e) => handleInchesChange(e.target.value)}
+                      placeholder="8"
+                      min="0"
+                      max="11"
+                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+                      required
+                    />
+                    <p className="text-xs text-zinc-500 mt-1 text-center">in</p>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <input
+                type="number"
+                value={displayHeight}
+                onChange={(e) => handleHeightChange(e.target.value, heightUnit === "cm" ? "cm" : "inches")}
+                placeholder={heightUnit === "cm" ? "170" : "67"}
+                min={heightUnit === "cm" ? "50" : "20"}
+                max={heightUnit === "cm" ? "300" : "118"}
+                className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+                required
+              />
+            )}
             <button
               type="button"
               onClick={toggleHeightUnit}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px]"
+              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[90px] shrink-0"
             >
-              {heightUnit}
+              {heightUnit === "ft_in" ? "ft/in" : heightUnit}
             </button>
           </div>
         </div>
@@ -330,6 +394,36 @@ export function ProfileTab({ profile, onChange }: ProfileTabProps) {
             className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
           />
         </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-zinc-800">
+        <button
+          type="button"
+          onClick={onCancel}
+          disabled={isSaving}
+          className="w-full sm:w-auto px-6 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={onSave}
+          disabled={isSaving}
+          className="w-full sm:w-auto px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        >
+          {isSaving ? (
+            <>
+              <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Saving...
+            </>
+          ) : (
+            "Save Changes"
+          )}
+        </button>
       </div>
     </div>
   );

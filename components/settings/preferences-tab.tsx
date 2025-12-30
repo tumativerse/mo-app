@@ -1,10 +1,15 @@
 "use client";
 
+import { Save, Loader2 } from "lucide-react";
+
 interface PreferencesTabProps {
   profile: any;
   preferences: any;
   onProfileChange: (field: string, value: any) => void;
   onPreferencesChange: (field: string, value: any) => void;
+  onSave: () => void;
+  onCancel: () => void;
+  isSaving?: boolean;
 }
 
 export function PreferencesTab({
@@ -12,6 +17,9 @@ export function PreferencesTab({
   preferences,
   onProfileChange,
   onPreferencesChange,
+  onSave,
+  onCancel,
+  isSaving = false,
 }: PreferencesTabProps) {
   return (
     <div className="space-y-6">
@@ -168,6 +176,34 @@ export function PreferencesTab({
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-zinc-800">
+        <button
+          onClick={onCancel}
+          disabled={isSaving}
+          className="px-6 py-2.5 border border-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={onSave}
+          disabled={isSaving}
+          className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center"
+        >
+          {isSaving ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="h-4 w-4" />
+              Save Changes
+            </>
+          )}
+        </button>
       </div>
     </div>
   );

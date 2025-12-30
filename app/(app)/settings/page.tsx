@@ -1,12 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { User, Dumbbell, Wrench, Leaf, Settings as SettingsIcon, Save, X, Loader2 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ProfileTab } from "@/components/settings/profile-tab";
 import { TrainingTab } from "@/components/settings/training-tab";
 import { EquipmentTab } from "@/components/settings/equipment-tab";
 import { LifestyleTab } from "@/components/settings/lifestyle-tab";
 import { PreferencesTab } from "@/components/settings/preferences-tab";
+import { pageTransition, staggerContainer, staggerItem } from "@/lib/animations";
 
 interface SettingsData {
   profile: any;
@@ -17,8 +24,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState<SettingsData | null>(null);
-  const [activeTab, setActiveTab] = useState<"profile" | "training" | "equipment" | "lifestyle" | "preferences">("profile");
-  const [tabLoading, setTabLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("profile");
   const [error, setError] = useState<string | null>(null);
 
   // Local state for form changes (not yet saved)
@@ -60,19 +66,6 @@ export default function SettingsPage() {
 
     fetchData();
   }, []);
-
-  // Handle tab change with loading animation
-  const handleTabChange = (tabId: "profile" | "training" | "equipment" | "lifestyle" | "preferences") => {
-    if (tabId === activeTab) return;
-
-    setTabLoading(true);
-    setActiveTab(tabId);
-
-    // Show animation for 1.5 seconds (faster than initial load)
-    setTimeout(() => {
-      setTabLoading(false);
-    }, 1500);
-  };
 
   // Handle profile field changes
   const handleProfileChange = (field: string, value: any) => {
@@ -167,137 +160,186 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <div className="text-zinc-400">Loading...</div>
-      </div>
+      <motion.div
+        className="space-y-4 sm:space-y-6 pb-8"
+        variants={pageTransition}
+        initial="initial"
+        animate="animate"
+      >
+        <div>
+          <Skeleton className="h-7 sm:h-8 w-32 mb-2" />
+          <Skeleton className="h-4 sm:h-5 w-64" />
+        </div>
+
+        <Card>
+          <CardContent className="p-4 sm:p-6">
+            <Skeleton className="h-10 w-full mb-6" />
+            <div className="space-y-4">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-16 w-full" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="min-h-screen bg-zinc-950 p-4 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <p className="text-red-400">Failed to load settings</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-lg"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
+      <motion.div
+        className="space-y-4 sm:space-y-6 pb-8"
+        variants={pageTransition}
+        initial="initial"
+        animate="animate"
+      >
+        <Card>
+          <CardContent className="p-8 sm:p-12 text-center">
+            <p className="text-destructive mb-4">Failed to load settings</p>
+            <Button
+              onClick={() => window.location.reload()}
+              variant="outline"
+            >
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      </motion.div>
     );
   }
 
   const tabs = [
-    { id: "profile" as const, label: "Profile", icon: "👤" },
-    { id: "training" as const, label: "Training", icon: "💪" },
-    { id: "equipment" as const, label: "Equipment", icon: "🏋️" },
-    { id: "lifestyle" as const, label: "Lifestyle", icon: "🌱" },
-    { id: "preferences" as const, label: "Preferences", icon: "⚙️" },
+    { id: "profile", label: "Profile", icon: User },
+    { id: "training", label: "Training", icon: Dumbbell },
+    { id: "equipment", label: "Equipment", icon: Wrench },
+    { id: "lifestyle", label: "Lifestyle", icon: Leaf },
+    { id: "preferences", label: "Preferences", icon: SettingsIcon },
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-950 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-zinc-100">Settings</h1>
-          <p className="text-zinc-400">
-            Manage your profile, training preferences, and app settings
-          </p>
-        </div>
+    <motion.div
+      className="space-y-4 sm:space-y-6 pb-8"
+      variants={pageTransition}
+      initial="initial"
+      animate="animate"
+    >
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-1">Settings</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          Manage your profile, training preferences, and app settings
+        </p>
+      </div>
 
-        {/* Tab Navigation */}
-        <div className="border-b border-zinc-800">
-          <div className="flex gap-1 overflow-x-auto">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                disabled={tabLoading}
-                className={`
-                  px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors
-                  border-b-2 -mb-px
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                  ${
-                    activeTab === tab.id
-                      ? "border-green-500 text-green-500"
-                      : "border-transparent text-zinc-400 hover:text-zinc-100 hover:border-zinc-700"
-                  }
-                `}
-              >
-                <span className="mr-2">{tab.icon}</span>
-                {tab.label}
-              </button>
-            ))}
-          </div>
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        {/* Tab Navigation - Mobile optimized, sticky on scroll */}
+        <div className="sticky top-0 z-10 bg-background pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 pt-2">
+          <TabsList className="w-full h-auto grid grid-cols-5 gap-2 p-1.5 bg-muted/50 rounded-xl">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  className="flex flex-col items-center justify-center gap-1 px-1 py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg transition-all"
+                  style={{ minHeight: "60px" }}
+                >
+                  <Icon className="h-5 w-5 sm:h-5 sm:w-5 shrink-0" />
+                  <span className="text-[10px] sm:text-xs leading-tight text-center">{tab.label}</span>
+                </TabsTrigger>
+              );
+            })}
+          </TabsList>
         </div>
 
         {/* Tab Content */}
-        <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-6">
-          {tabLoading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="text-zinc-400">Loading...</div>
-            </div>
-          ) : (
-            <>
-              {activeTab === "profile" && (
-                <ProfileTab profile={profile} onChange={handleProfileChange} />
-              )}
+        <Card>
+          <CardContent className="p-4 sm:p-6">
+            <TabsContent value="profile" className="mt-0">
+              <motion.div
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+              >
+                <ProfileTab
+                  profile={profile}
+                  onChange={handleProfileChange}
+                  onSave={handleSave}
+                  onCancel={() => window.history.back()}
+                  isSaving={saving}
+                />
+              </motion.div>
+            </TabsContent>
 
-              {activeTab === "training" && (
-                <TrainingTab preferences={preferences} onChange={handlePreferencesChange} />
-              )}
+            <TabsContent value="training" className="mt-0">
+              <motion.div
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+              >
+                <TrainingTab
+                  preferences={preferences}
+                  onChange={handlePreferencesChange}
+                  onSave={handleSave}
+                  onCancel={() => window.history.back()}
+                  isSaving={saving}
+                />
+              </motion.div>
+            </TabsContent>
 
-              {activeTab === "equipment" && (
-                <EquipmentTab preferences={preferences} onChange={handlePreferencesChange} />
-              )}
+            <TabsContent value="equipment" className="mt-0">
+              <motion.div
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+              >
+                <EquipmentTab
+                  preferences={preferences}
+                  onChange={handlePreferencesChange}
+                  onSave={handleSave}
+                  onCancel={() => window.history.back()}
+                  isSaving={saving}
+                />
+              </motion.div>
+            </TabsContent>
 
-              {activeTab === "lifestyle" && (
-                <LifestyleTab preferences={preferences} onChange={handlePreferencesChange} />
-              )}
+            <TabsContent value="lifestyle" className="mt-0">
+              <motion.div
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+              >
+                <LifestyleTab
+                  preferences={preferences}
+                  onChange={handlePreferencesChange}
+                  onSave={handleSave}
+                  onCancel={() => window.history.back()}
+                  isSaving={saving}
+                />
+              </motion.div>
+            </TabsContent>
 
-              {activeTab === "preferences" && (
+            <TabsContent value="preferences" className="mt-0">
+              <motion.div
+                variants={staggerContainer}
+                initial="initial"
+                animate="animate"
+              >
                 <PreferencesTab
                   profile={profile}
                   preferences={preferences}
                   onProfileChange={handleProfileChange}
                   onPreferencesChange={handlePreferencesChange}
+                  onSave={handleSave}
+                  onCancel={() => window.history.back()}
+                  isSaving={saving}
                 />
-              )}
-            </>
-          )}
-        </div>
-
-        {/* Save Button */}
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={() => window.history.back()}
-            disabled={saving}
-            className="px-6 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-          >
-            {saving ? (
-              <>
-                <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Saving...
-              </>
-            ) : (
-              "Save Changes"
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
+              </motion.div>
+            </TabsContent>
+          </CardContent>
+        </Card>
+      </Tabs>
+    </motion.div>
   );
 }

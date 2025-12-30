@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Dumbbell,
   Play,
@@ -26,6 +27,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { WarmupFlow } from "@/components/warmup-flow";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { pageTransition, staggerContainer, staggerItem } from "@/lib/animations";
+import { celebrateWorkoutComplete, celebrateSetComplete, vibrateDevice, celebratePersonalRecord, celebrateSessionMilestone } from "@/lib/celebrations";
+import { playSetComplete, playWorkoutComplete, playPersonalRecord } from "@/lib/sounds";
 
 // Types for PPL API responses
 interface SlotExercise {
@@ -361,6 +368,11 @@ export default function WorkoutPage() {
       setShowSummary(true);
       setWorkoutStartTime(null);
       setRestTimer(null);
+
+      // Celebrate workout completion!
+      celebrateWorkoutComplete();
+      vibrateDevice([100, 50, 100, 50, 200]);
+      playWorkoutComplete();
     } catch (err) {
       toast.error("Failed to complete workout");
     }
@@ -391,6 +403,11 @@ export default function WorkoutPage() {
       if (!res.ok) throw new Error("Failed to log set");
 
       const { set } = await res.json();
+
+      // Celebrate set completion!
+      celebrateSetComplete();
+      vibrateDevice(30);
+      playSetComplete();
 
       setLoggedSets((prev) => {
         const exerciseSets = prev[sessionExerciseId] || [];
@@ -490,7 +507,12 @@ export default function WorkoutPage() {
   // For now, PPL doesn't have rest days in the 6-day rotation
 
   return (
-    <div className="space-y-4 pb-24">
+    <motion.div
+      className="space-y-4 sm:space-y-6 pb-24"
+      variants={pageTransition}
+      initial="initial"
+      animate="animate"
+    >
       {/* Warmup Flow */}
       {showWarmupFlow && sessionId && data.warmup && (
         <WarmupFlow
@@ -596,7 +618,7 @@ export default function WorkoutPage() {
           onDismiss={dismissSummary}
         />
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -628,8 +650,8 @@ function OverviewMode({
     <>
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-zinc-100">{data.templateDay.name}</h1>
-        <p className="text-zinc-300">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-1">{data.templateDay.name}</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
           Day {data.rotation.dayNumber} of {data.rotation.totalDays} • ~{data.templateDay.estimatedDuration} min
         </p>
       </div>

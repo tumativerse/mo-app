@@ -177,14 +177,14 @@ export default function DashboardPage() {
       animate="animate"
       exit="exit"
       variants={pageTransition}
-      className="space-y-6 pb-8"
+      className="space-y-4 sm:space-y-6 pb-8"
     >
       {/* Header */}
       <motion.div variants={staggerItem}>
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
           Dashboard
         </h1>
-        <p className="text-muted-foreground mt-1">Track your progress</p>
+        <p className="text-sm sm:text-base text-muted-foreground mt-1">Track your progress</p>
       </motion.div>
 
       <motion.div
@@ -208,11 +208,11 @@ export default function DashboardPage() {
                     ? "border-blue-500/30 bg-gradient-to-br from-blue-950/30 to-blue-900/5"
                     : `border-primary/30 ${getWorkoutTypeColor(data.todayWorkout?.type || null)}`
                 } transition-all duration-300`}>
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                         <motion.div
-                          className={`w-14 h-14 rounded-2xl flex items-center justify-center ${
+                          className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 ${
                             data.todayWorkout?.isRestDay
                               ? "bg-blue-500/20"
                               : "bg-primary/20"
@@ -221,23 +221,23 @@ export default function DashboardPage() {
                           transition={{ type: "spring", stiffness: 400, damping: 10 }}
                         >
                           {data.todayWorkout?.isRestDay ? (
-                            <Bed className="h-7 w-7 text-blue-400" />
+                            <Bed className="h-6 w-6 sm:h-7 sm:w-7 text-blue-400" />
                           ) : (
-                            <Dumbbell className="h-7 w-7 text-primary" />
+                            <Dumbbell className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
                           )}
                         </motion.div>
-                        <div>
-                          <p className="text-sm text-muted-foreground mb-1">Today's Workout</p>
-                          <p className="font-bold text-xl mb-1">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs sm:text-sm text-muted-foreground mb-1">Today's Workout</p>
+                          <p className="font-bold text-lg sm:text-xl mb-1 truncate">
                             {data.todayWorkout?.isRestDay
                               ? "Rest Day"
                               : data.todayWorkout?.name || "Workout"}
                           </p>
-                          <div className="flex items-center gap-2">
-                            <p className="text-sm text-muted-foreground">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <p className="text-xs sm:text-sm text-muted-foreground truncate">
                               {data.program?.name}
                             </p>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="outline" className="text-xs shrink-0">
                               Week {data.program?.week}
                             </Badge>
                           </div>
@@ -245,12 +245,13 @@ export default function DashboardPage() {
                       </div>
                       {!data.todayWorkout?.isRestDay && (
                         <motion.div
-                          className="flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground rounded-xl font-medium shadow-lg"
+                          className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2.5 sm:py-3 bg-primary text-primary-foreground rounded-xl font-medium shadow-lg shrink-0"
                           whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1)" }}
                           whileTap={{ scale: 0.95 }}
+                          style={{ minHeight: '44px' }}
                         >
-                          <Play className="h-5 w-5" fill="currentColor" />
-                          <span>Start</span>
+                          <Play className="h-4 w-4 sm:h-5 sm:w-5" fill="currentColor" />
+                          <span className="text-sm sm:text-base">Start</span>
                         </motion.div>
                       )}
                     </div>
@@ -262,14 +263,14 @@ export default function DashboardPage() {
         ) : (
           <motion.div variants={staggerItem}>
             <Card className="border-yellow-500/50 bg-gradient-to-br from-yellow-950/30 to-yellow-900/5">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-yellow-500/20 flex items-center justify-center">
-                    <Sparkles className="h-6 w-6 text-yellow-400" />
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-yellow-500/20 flex items-center justify-center shrink-0">
+                    <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-400" />
                   </div>
-                  <div>
-                    <p className="font-semibold text-lg mb-1">Setup Required</p>
-                    <p className="text-sm text-muted-foreground">
+                  <div className="min-w-0">
+                    <p className="font-semibold text-base sm:text-lg mb-1">Setup Required</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       Run database seed to create the PPL program template
                     </p>
                   </div>
@@ -291,11 +292,11 @@ export default function DashboardPage() {
                 ? "border-orange-500/30 bg-gradient-to-br from-orange-950/20 to-orange-900/5"
                 : "border-red-500/30 bg-gradient-to-br from-red-950/20 to-red-900/5"
             }`}>
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+              <CardContent className="p-4 sm:p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
                     <motion.div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 ${
                         trainingStatus.fatigue.color === "green"
                           ? "bg-green-500/20"
                           : trainingStatus.fatigue.color === "yellow"
@@ -308,26 +309,26 @@ export default function DashboardPage() {
                     >
                       {trainingStatus.fatigue.score <= 4 ? (
                         <Zap
-                          className={`h-6 w-6 ${
+                          className={`h-5 w-5 sm:h-6 sm:w-6 ${
                             trainingStatus.fatigue.color === "green"
                               ? "text-green-400"
                               : "text-yellow-400"
                           }`}
                         />
                       ) : trainingStatus.fatigue.score <= 6 ? (
-                        <Battery className="h-6 w-6 text-orange-400" />
+                        <Battery className="h-5 w-5 sm:h-6 sm:w-6 text-orange-400" />
                       ) : (
-                        <AlertTriangle className="h-6 w-6 text-red-400" />
+                        <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 text-red-400" />
                       )}
                     </motion.div>
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <span className="font-semibold text-sm sm:text-base">
                           Fatigue: {trainingStatus.fatigue.score}/10
                         </span>
                         <Badge
                           variant="outline"
-                          className={
+                          className={`text-xs ${
                             trainingStatus.fatigue.color === "green"
                               ? "bg-green-600/20 text-green-400 border-green-500/50"
                               : trainingStatus.fatigue.color === "yellow"
@@ -335,19 +336,19 @@ export default function DashboardPage() {
                               : trainingStatus.fatigue.color === "orange"
                               ? "bg-orange-600/20 text-orange-400 border-orange-500/50"
                               : "bg-red-600/20 text-red-400 border-red-500/50"
-                          }
+                          }`}
                         >
                           {trainingStatus.fatigue.level}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs sm:text-sm text-muted-foreground">
                         {trainingStatus.fatigue.message}
                       </p>
                     </div>
                   </div>
                   <Link
                     href="/progress"
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0"
                   >
                     Details →
                   </Link>
@@ -355,15 +356,15 @@ export default function DashboardPage() {
 
                 {/* Deload banner */}
                 {trainingStatus.deload.status === "active" && (
-                  <div className="mt-4 pt-4 border-t border-border">
-                    <p className="text-sm text-orange-400">
+                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border">
+                    <p className="text-xs sm:text-sm text-orange-400">
                       🏋️ Deload active: {trainingStatus.deload.daysRemaining} days remaining
                     </p>
                   </div>
                 )}
                 {trainingStatus.deload.status === "recommended" && (
-                  <div className="mt-4 pt-4 border-t border-border">
-                    <p className="text-sm text-yellow-400">
+                  <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border">
+                    <p className="text-xs sm:text-sm text-yellow-400">
                       ⚠️ Deload recommended: {trainingStatus.deload.reason}
                     </p>
                   </div>
@@ -390,53 +391,56 @@ export default function DashboardPage() {
               whileTap="tap"
             >
               <Card className="border-2 border-purple-500/30 bg-gradient-to-br from-purple-950/30 to-purple-900/5 hover:border-purple-500/50 transition-all">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
-                        <Moon className="h-6 w-6 text-purple-400" />
+                <CardContent className="p-4 sm:p-5">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-500/20 flex items-center justify-center shrink-0">
+                        <Moon className="h-5 w-5 sm:h-6 sm:w-6 text-purple-400" />
                       </div>
-                      <div className="text-left">
-                        <p className="font-semibold">Log Recovery</p>
-                        <p className="text-sm text-muted-foreground">How are you feeling today?</p>
+                      <div className="text-left min-w-0">
+                        <p className="font-semibold text-sm sm:text-base">Log Recovery</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">How are you feeling today?</p>
                       </div>
                     </div>
-                    <ChevronRight className="h-5 w-5 text-purple-400" />
+                    <ChevronRight className="h-5 w-5 text-purple-400 shrink-0" />
                   </div>
                 </CardContent>
               </Card>
             </motion.button>
           ) : (
             <Card>
-              <CardContent className="p-5">
-                <div className="flex items-center gap-3 mb-4">
-                  <Moon className="h-5 w-5 text-purple-400" />
-                  <span className="font-semibold">Today's Recovery</span>
+              <CardContent className="p-4 sm:p-5">
+                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                  <Moon className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
+                  <span className="font-semibold text-sm sm:text-base">Today's Recovery</span>
                 </div>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
                   <motion.div
-                    className="bg-secondary rounded-xl p-3 text-center"
+                    className="bg-secondary rounded-xl p-2 sm:p-3 text-center"
                     whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <p className="text-xl font-bold">
+                    <p className="text-lg sm:text-xl font-bold">
                       {recovery?.log?.sleepHours || "--"}
                     </p>
                     <p className="text-xs text-muted-foreground">hrs sleep</p>
                   </motion.div>
                   <motion.div
-                    className="bg-secondary rounded-xl p-3 text-center"
+                    className="bg-secondary rounded-xl p-2 sm:p-3 text-center"
                     whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <p className="text-xl font-bold">
+                    <p className="text-lg sm:text-xl font-bold">
                       {recovery?.log?.energyLevel || "--"}/5
                     </p>
                     <p className="text-xs text-muted-foreground">energy</p>
                   </motion.div>
                   <motion.div
-                    className="bg-secondary rounded-xl p-3 text-center"
+                    className="bg-secondary rounded-xl p-2 sm:p-3 text-center"
                     whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <p className="text-xl font-bold">
+                    <p className="text-lg sm:text-xl font-bold">
                       {recovery?.log?.overallSoreness || "--"}/5
                     </p>
                     <p className="text-xs text-muted-foreground">soreness</p>
@@ -448,7 +452,7 @@ export default function DashboardPage() {
         </motion.div>
 
         {/* Quick Actions */}
-        <motion.div variants={staggerItem} className="grid grid-cols-2 gap-4">
+        <motion.div variants={staggerItem} className="grid grid-cols-2 gap-3 sm:gap-4">
           <Link href="/weight">
             <motion.div
               variants={cardHover}
@@ -456,17 +460,17 @@ export default function DashboardPage() {
               whileTap="tap"
             >
               <Card className="h-full hover:border-blue-500/50 transition-all">
-                <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
+                <CardContent className="flex flex-col items-center gap-2 sm:gap-3 p-4 sm:p-6 text-center">
                   <motion.div
-                    className="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center"
+                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center"
                     whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Scale className="h-8 w-8 text-blue-400" />
+                    <Scale className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
                   </motion.div>
                   <div>
-                    <p className="font-semibold mb-1">Log Weight</p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="font-semibold text-sm sm:text-base mb-1">Log Weight</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       {data?.currentWeight ? `${data.currentWeight} lbs` : "Track daily"}
                     </p>
                   </div>
@@ -482,17 +486,17 @@ export default function DashboardPage() {
               whileTap="tap"
             >
               <Card className="h-full hover:border-orange-500/50 transition-all">
-                <CardContent className="flex flex-col items-center gap-3 p-6 text-center">
+                <CardContent className="flex flex-col items-center gap-2 sm:gap-3 p-4 sm:p-6 text-center">
                   <motion.div
-                    className="w-16 h-16 rounded-2xl bg-orange-500/20 flex items-center justify-center"
+                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-orange-500/20 flex items-center justify-center"
                     whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Activity className="h-8 w-8 text-orange-400" />
+                    <Activity className="h-6 w-6 sm:h-8 sm:w-8 text-orange-400" />
                   </motion.div>
                   <div>
-                    <p className="font-semibold mb-1">Progress</p>
-                    <p className="text-sm text-muted-foreground">View trends</p>
+                    <p className="font-semibold text-sm sm:text-base mb-1">Progress</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">View trends</p>
                   </div>
                 </CardContent>
               </Card>
@@ -503,39 +507,42 @@ export default function DashboardPage() {
         {/* Progress Overview */}
         <motion.div variants={staggerItem}>
           <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-2 mb-5">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                <h2 className="font-semibold text-lg">This Week</h2>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center gap-2 mb-4 sm:mb-5">
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                <h2 className="font-semibold text-base sm:text-lg">This Week</h2>
               </div>
-              <div className="grid grid-cols-3 gap-6">
+              <div className="grid grid-cols-3 gap-3 sm:gap-6">
                 <motion.div
                   className="text-center"
                   whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <p className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                  <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
                     {data?.workoutsThisWeek || 0}
                   </p>
-                  <p className="text-sm text-muted-foreground mt-1">Workouts</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">Workouts</p>
                 </motion.div>
                 <motion.div
                   className="text-center"
                   whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <p className="text-3xl font-bold">
+                  <p className="text-2xl sm:text-3xl font-bold">
                     {data?.weekAvgWeight || "--"}
                   </p>
-                  <p className="text-sm text-muted-foreground mt-1">Avg Weight</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">Avg Weight</p>
                 </motion.div>
                 <motion.div
                   className="text-center"
                   whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <div className="flex items-center justify-center gap-2">
-                    <Flame className="h-6 w-6 text-orange-500" />
-                    <p className="text-3xl font-bold">{data?.streak || 0}</p>
+                  <div className="flex items-center justify-center gap-1 sm:gap-2">
+                    <Flame className="h-5 w-5 sm:h-6 sm:w-6 text-orange-500" />
+                    <p className="text-2xl sm:text-3xl font-bold">{data?.streak || 0}</p>
                   </div>
-                  <p className="text-sm text-muted-foreground mt-1">Day Streak</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">Day Streak</p>
                 </motion.div>
               </div>
             </CardContent>
@@ -546,24 +553,24 @@ export default function DashboardPage() {
         {!data?.hasProgram && (
           <motion.div variants={staggerItem}>
             <Card className="border-yellow-500/50 bg-gradient-to-br from-yellow-950/30 to-yellow-900/5">
-              <CardContent className="p-6">
-                <h3 className="font-semibold text-yellow-400 mb-3 flex items-center gap-2">
-                  <Sparkles className="h-5 w-5" />
+              <CardContent className="p-4 sm:p-6">
+                <h3 className="font-semibold text-yellow-400 mb-3 flex items-center gap-2 text-sm sm:text-base">
+                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
                   Setup Instructions
                 </h3>
-                <ul className="text-sm text-muted-foreground space-y-2">
+                <ul className="text-xs sm:text-sm text-muted-foreground space-y-2">
                   <li className="flex items-start gap-2">
-                    <span className="text-yellow-400 font-bold">1.</span>
+                    <span className="text-yellow-400 font-bold shrink-0">1.</span>
                     <span>
                       Run <code className="bg-secondary px-2 py-0.5 rounded text-xs">npm run db:seed</code> to create the PPL template
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-yellow-400 font-bold">2.</span>
+                    <span className="text-yellow-400 font-bold shrink-0">2.</span>
                     <span>Refresh this page</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-yellow-400 font-bold">3.</span>
+                    <span className="text-yellow-400 font-bold shrink-0">3.</span>
                     <span>Start your first workout!</span>
                   </li>
                 </ul>
