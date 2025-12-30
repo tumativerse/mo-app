@@ -1,6 +1,8 @@
 "use client";
 
-import { Save, Loader2 } from "lucide-react";
+import { Save, Loader2, Dumbbell, Target, Activity, Zap, Sprout, Flame, Award, Sunrise, Sun, Sunset, Moon, MoonStar } from "lucide-react";
+import { SingleSelectDropdown } from "@/components/ui/single-select-dropdown";
+import { MultiSelectDropdown } from "@/components/ui/multi-select-dropdown";
 
 interface TrainingTabProps {
   preferences: any;
@@ -11,29 +13,44 @@ interface TrainingTabProps {
 }
 
 export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving = false }: TrainingTabProps) {
-  const toggleTrainingTime = (time: string) => {
-    const current = preferences?.preferredTrainingTimes || [];
-    const updated = current.includes(time)
-      ? current.filter((t: string) => t !== time)
-      : [...current, time];
-    onChange("preferredTrainingTimes", updated);
-  };
+  const fitnessGoalOptions = [
+    { value: "strength", label: "Strength", icon: Dumbbell, description: "Max strength" },
+    { value: "hypertrophy", label: "Muscle Building", icon: Target, description: "Size & definition" },
+    { value: "endurance", label: "Endurance", icon: Activity, description: "Stamina & conditioning" },
+    { value: "general", label: "General Fitness", icon: Zap, description: "Overall health" },
+  ];
 
-  const toggleRestDay = (day: string) => {
-    const current = preferences?.restDaysPreference || [];
-    const updated = current.includes(day)
-      ? current.filter((d: string) => d !== day)
-      : [...current, day];
-    onChange("restDaysPreference", updated);
-  };
+  const experienceLevelOptions = [
+    { value: "beginner", label: "Beginner", icon: Sprout, description: "< 1 year consistent training" },
+    { value: "intermediate", label: "Intermediate", icon: Flame, description: "1-3 years" },
+    { value: "advanced", label: "Advanced", icon: Award, description: "3+ years" },
+  ];
+
+  const trainingTimeOptions = [
+    { value: "morning", label: "Morning", description: "5am-10am" },
+    { value: "midday", label: "Midday", description: "10am-2pm" },
+    { value: "afternoon", label: "Afternoon", description: "2pm-6pm" },
+    { value: "evening", label: "Evening", description: "6pm-10pm" },
+    { value: "late_night", label: "Late Night", description: "10pm+" },
+  ];
+
+  const restDayOptions = [
+    { value: "sunday", label: "Sunday" },
+    { value: "monday", label: "Monday" },
+    { value: "tuesday", label: "Tuesday" },
+    { value: "wednesday", label: "Wednesday" },
+    { value: "thursday", label: "Thursday" },
+    { value: "friday", label: "Friday" },
+    { value: "saturday", label: "Saturday" },
+  ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-4">
       <div>
-        <h2 className="text-xl font-semibold text-zinc-100 mb-2">
+        <h2 className="text-lg sm:text-xl font-semibold text-zinc-100 mb-2">
           Training Profile
         </h2>
-        <p className="text-sm text-zinc-400 mb-6">
+        <p className="text-sm text-zinc-400 mb-4 sm:mb-6">
           Configure your training goals, experience, and schedule
         </p>
       </div>
@@ -46,70 +63,30 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
 
         {/* Fitness Goal */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-3">
+          <label className="block text-sm font-medium text-zinc-300 mb-2">
             Fitness Goal <span className="text-red-400">*</span>
           </label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { value: "strength", label: "Strength", icon: "💪", desc: "Max strength" },
-              { value: "hypertrophy", label: "Muscle Building", icon: "🦾", desc: "Size & definition" },
-              { value: "endurance", label: "Endurance", icon: "🏃", desc: "Stamina & conditioning" },
-              { value: "general", label: "General Fitness", icon: "⚡", desc: "Overall health" },
-            ].map((goal) => (
-              <button
-                key={goal.value}
-                type="button"
-                onClick={() => onChange("fitnessGoal", goal.value)}
-                className={`
-                  p-4 rounded-lg border-2 transition-all
-                  ${
-                    preferences?.fitnessGoal === goal.value
-                      ? "border-green-500 bg-green-500/10"
-                      : "border-zinc-700 bg-zinc-800 hover:border-zinc-600"
-                  }
-                `}
-              >
-                <div className="text-3xl mb-2">{goal.icon}</div>
-                <div className={`text-sm font-medium ${preferences?.fitnessGoal === goal.value ? "text-green-400" : "text-zinc-300"}`}>
-                  {goal.label}
-                </div>
-                <div className="text-xs text-zinc-500 mt-1">{goal.desc}</div>
-              </button>
-            ))}
-          </div>
+          <SingleSelectDropdown
+            value={preferences?.fitnessGoal || ""}
+            options={fitnessGoalOptions}
+            onChange={(value) => onChange("fitnessGoal", value)}
+            placeholder="Select your primary fitness goal"
+            width="100%"
+          />
         </div>
 
         {/* Experience Level */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-3">
+          <label className="block text-sm font-medium text-zinc-300 mb-2">
             Experience Level <span className="text-red-400">*</span>
           </label>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {[
-              { value: "beginner", label: "Beginner", desc: "< 1 year consistent training" },
-              { value: "intermediate", label: "Intermediate", desc: "1-3 years" },
-              { value: "advanced", label: "Advanced", desc: "3+ years" },
-            ].map((level) => (
-              <button
-                key={level.value}
-                type="button"
-                onClick={() => onChange("experienceLevel", level.value)}
-                className={`
-                  p-4 rounded-lg border-2 transition-all text-left
-                  ${
-                    preferences?.experienceLevel === level.value
-                      ? "border-green-500 bg-green-500/10"
-                      : "border-zinc-700 bg-zinc-800 hover:border-zinc-600"
-                  }
-                `}
-              >
-                <div className={`text-sm font-medium mb-1 ${preferences?.experienceLevel === level.value ? "text-green-400" : "text-zinc-300"}`}>
-                  {level.label}
-                </div>
-                <div className="text-xs text-zinc-500">{level.desc}</div>
-              </button>
-            ))}
-          </div>
+          <SingleSelectDropdown
+            value={preferences?.experienceLevel || ""}
+            options={experienceLevelOptions}
+            onChange={(value) => onChange("experienceLevel", value)}
+            placeholder="Select your experience level"
+            width="100%"
+          />
         </div>
       </div>
 
@@ -130,7 +107,7 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
             onChange={(e) => onChange("trainingFrequency", parseInt(e.target.value))}
             min={1}
             max={7}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
           <p className="text-xs text-zinc-500 mt-1">
@@ -150,7 +127,7 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
             min={15}
             max={180}
             step={5}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
           <p className="text-xs text-zinc-500 mt-1">
@@ -160,69 +137,28 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
 
         {/* Preferred Training Times */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-3">
+          <label className="block text-sm font-medium text-zinc-300 mb-2">
             Preferred Training Times <span className="text-zinc-500">(Optional)</span>
           </label>
-          <div className="flex flex-wrap gap-2">
-            {[
-              { value: "morning", label: "Morning", time: "5am-10am" },
-              { value: "midday", label: "Midday", time: "10am-2pm" },
-              { value: "afternoon", label: "Afternoon", time: "2pm-6pm" },
-              { value: "evening", label: "Evening", time: "6pm-10pm" },
-              { value: "late_night", label: "Late Night", time: "10pm+" },
-            ].map((time) => (
-              <button
-                key={time.value}
-                type="button"
-                onClick={() => toggleTrainingTime(time.value)}
-                className={`
-                  px-4 py-2 rounded-lg border transition-all
-                  ${
-                    preferences?.preferredTrainingTimes?.includes(time.value)
-                      ? "border-green-500 bg-green-500/10 text-green-400"
-                      : "border-zinc-700 bg-zinc-800 text-zinc-300 hover:border-zinc-600"
-                  }
-                `}
-              >
-                <div className="text-sm font-medium">{time.label}</div>
-                <div className="text-xs opacity-75">{time.time}</div>
-              </button>
-            ))}
-          </div>
+          <MultiSelectDropdown
+            value={preferences?.preferredTrainingTimes || []}
+            options={trainingTimeOptions}
+            onChange={(value) => onChange("preferredTrainingTimes", value)}
+            placeholder="Select your preferred training times"
+          />
         </div>
 
         {/* Rest Days Preference */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-3">
+          <label className="block text-sm font-medium text-zinc-300 mb-2">
             Rest Days Preference <span className="text-zinc-500">(Optional)</span>
           </label>
-          <div className="flex flex-wrap gap-2">
-            {[
-              { value: "sunday", label: "Sun" },
-              { value: "monday", label: "Mon" },
-              { value: "tuesday", label: "Tue" },
-              { value: "wednesday", label: "Wed" },
-              { value: "thursday", label: "Thu" },
-              { value: "friday", label: "Fri" },
-              { value: "saturday", label: "Sat" },
-            ].map((day) => (
-              <button
-                key={day.value}
-                type="button"
-                onClick={() => toggleRestDay(day.value)}
-                className={`
-                  px-4 py-2 rounded-lg border transition-all min-w-[60px]
-                  ${
-                    preferences?.restDaysPreference?.includes(day.value)
-                      ? "border-green-500 bg-green-500/10 text-green-400"
-                      : "border-zinc-700 bg-zinc-800 text-zinc-300 hover:border-zinc-600"
-                  }
-                `}
-              >
-                {day.label}
-              </button>
-            ))}
-          </div>
+          <MultiSelectDropdown
+            value={preferences?.restDaysPreference || []}
+            options={restDayOptions}
+            onChange={(value) => onChange("restDaysPreference", value)}
+            placeholder="Select your preferred rest days"
+          />
         </div>
       </div>
 
@@ -239,7 +175,7 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
           <select
             value={preferences?.preferredCardio || ""}
             onChange={(e) => onChange("preferredCardio", e.target.value || null)}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             <option value="">None / No preference</option>
             <option value="running">Running</option>
@@ -258,14 +194,14 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
         <button
           onClick={onCancel}
           disabled={isSaving}
-          className="px-6 py-2.5 border border-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto px-6 py-3 text-base border border-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
         >
           Cancel
         </button>
         <button
           onClick={onSave}
           disabled={isSaving}
-          className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center"
+          className="w-full sm:w-auto px-6 py-3 text-base bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
         >
           {isSaving ? (
             <>

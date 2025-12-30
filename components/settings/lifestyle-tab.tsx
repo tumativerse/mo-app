@@ -1,6 +1,7 @@
 "use client";
 
-import { Save, Loader2 } from "lucide-react";
+import { Save, Loader2, Armchair, PersonStanding, Footprints, Flame, Moon } from "lucide-react";
+import { SingleSelectDropdown } from "@/components/ui/single-select-dropdown";
 
 interface LifestyleTabProps {
   preferences: any;
@@ -11,54 +12,36 @@ interface LifestyleTabProps {
 }
 
 export function LifestyleTab({ preferences, onChange, onSave, onCancel, isSaving = false }: LifestyleTabProps) {
+  const activityLevelOptions = [
+    { value: "sedentary", label: "Sedentary", icon: Armchair, description: "Desk job, minimal daily movement" },
+    { value: "lightly_active", label: "Lightly Active", icon: PersonStanding, description: "Light walking, some standing" },
+    { value: "moderately_active", label: "Moderately Active", icon: Footprints, description: "On feet frequently, regular movement" },
+    { value: "very_active", label: "Very Active", icon: Flame, description: "Physical labor or high daily activity" },
+  ];
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-4">
       <div>
-        <h2 className="text-xl font-semibold text-zinc-100 mb-2">
+        <h2 className="text-lg sm:text-xl font-semibold text-zinc-100 mb-2">
           Lifestyle Information
         </h2>
-        <p className="text-sm text-zinc-400 mb-6">
+        <p className="text-sm text-zinc-400 mb-4 sm:mb-6">
           Your daily activity and schedule help us optimize recovery
         </p>
       </div>
 
       {/* Activity Level */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-3">
+        <label className="block text-sm font-medium text-zinc-300 mb-2">
           Activity Level <span className="text-zinc-500">(Optional)</span>
         </label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {[
-            { value: "sedentary", label: "Sedentary", icon: "🪑", desc: "Desk job, minimal daily movement" },
-            { value: "lightly_active", label: "Lightly Active", icon: "🚶", desc: "Light walking, some standing" },
-            { value: "moderately_active", label: "Moderately Active", icon: "🏃", desc: "On feet frequently, regular movement" },
-            { value: "very_active", label: "Very Active", icon: "🏋️", desc: "Physical labor or high daily activity" },
-          ].map((level) => (
-            <button
-              key={level.value}
-              type="button"
-              onClick={() => onChange("activityLevel", level.value)}
-              className={`
-                p-4 rounded-lg border-2 transition-all text-left
-                ${
-                  preferences?.activityLevel === level.value
-                    ? "border-green-500 bg-green-500/10"
-                    : "border-zinc-700 bg-zinc-800 hover:border-zinc-600"
-                }
-              `}
-            >
-              <div className="flex items-start gap-3">
-                <div className="text-3xl">{level.icon}</div>
-                <div className="flex-1">
-                  <div className={`text-sm font-medium mb-1 ${preferences?.activityLevel === level.value ? "text-green-400" : "text-zinc-300"}`}>
-                    {level.label}
-                  </div>
-                  <div className="text-xs text-zinc-500">{level.desc}</div>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
+        <SingleSelectDropdown
+          value={preferences?.activityLevel || ""}
+          options={activityLevelOptions}
+          onChange={(value) => onChange("activityLevel", value)}
+          placeholder="Select your activity level"
+          width="100%"
+        />
       </div>
 
       {/* Occupation Type */}
@@ -69,7 +52,7 @@ export function LifestyleTab({ preferences, onChange, onSave, onCancel, isSaving
         <select
           value={preferences?.occupationType || ""}
           onChange={(e) => onChange("occupationType", e.target.value || null)}
-          className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
         >
           <option value="">Select occupation type</option>
           <option value="desk_job">Desk Job / Office Work</option>
@@ -100,7 +83,7 @@ export function LifestyleTab({ preferences, onChange, onSave, onCancel, isSaving
             type="time"
             value={preferences?.typicalBedtime || ""}
             onChange={(e) => onChange("typicalBedtime", e.target.value || null)}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
 
@@ -113,14 +96,15 @@ export function LifestyleTab({ preferences, onChange, onSave, onCancel, isSaving
             type="time"
             value={preferences?.typicalWakeTime || ""}
             onChange={(e) => onChange("typicalWakeTime", e.target.value || null)}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
 
         {preferences?.typicalBedtime && preferences?.typicalWakeTime && (
-          <div className="p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg">
+          <div className="p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg flex items-start gap-3">
+            <Moon className="h-5 w-5 text-zinc-400 flex-shrink-0 mt-0.5" />
             <p className="text-sm text-zinc-400">
-              💤 Sleep window: {preferences.typicalBedtime} - {preferences.typicalWakeTime}
+              Sleep window: {preferences.typicalBedtime} - {preferences.typicalWakeTime}
             </p>
           </div>
         )}
@@ -131,14 +115,14 @@ export function LifestyleTab({ preferences, onChange, onSave, onCancel, isSaving
         <button
           onClick={onCancel}
           disabled={isSaving}
-          className="px-6 py-2.5 border border-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto px-6 py-3 text-base border border-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
         >
           Cancel
         </button>
         <button
           onClick={onSave}
           disabled={isSaving}
-          className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center"
+          className="w-full sm:w-auto px-6 py-3 text-base bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
         >
           {isSaving ? (
             <>

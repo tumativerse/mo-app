@@ -1,6 +1,7 @@
 "use client";
 
-import { Save, Loader2 } from "lucide-react";
+import { Save, Loader2, Ruler, Scale } from "lucide-react";
+import { SingleSelectDropdown } from "@/components/ui/single-select-dropdown";
 
 interface PreferencesTabProps {
   profile: any;
@@ -21,62 +22,44 @@ export function PreferencesTab({
   onCancel,
   isSaving = false,
 }: PreferencesTabProps) {
+  const unitOptions = [
+    {
+      value: "metric",
+      label: "Metric",
+      icon: Ruler,
+      description: "Kilograms (kg) & Centimeters (cm)"
+    },
+    {
+      value: "imperial",
+      label: "Imperial",
+      icon: Scale,
+      description: "Pounds (lbs) & Inches (in)"
+    },
+  ];
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-4">
       <div>
-        <h2 className="text-xl font-semibold text-zinc-100 mb-2">
+        <h2 className="text-lg sm:text-xl font-semibold text-zinc-100 mb-2">
           App Preferences
         </h2>
-        <p className="text-sm text-zinc-400 mb-6">
+        <p className="text-sm text-zinc-400 mb-4 sm:mb-6">
           Customize your app experience and workout settings
         </p>
       </div>
 
       {/* Units */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-3">
+        <label className="block text-sm font-medium text-zinc-300 mb-2">
           Measurement Units
         </label>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {[
-            {
-              value: "metric",
-              label: "Metric",
-              icon: "📏",
-              desc: "Kilograms (kg) & Centimeters (cm)"
-            },
-            {
-              value: "imperial",
-              label: "Imperial",
-              icon: "📐",
-              desc: "Pounds (lbs) & Inches (in)"
-            },
-          ].map((unit) => (
-            <button
-              key={unit.value}
-              type="button"
-              onClick={() => onProfileChange("units", unit.value)}
-              className={`
-                p-4 rounded-lg border-2 transition-all text-left
-                ${
-                  profile?.units === unit.value
-                    ? "border-green-500 bg-green-500/10"
-                    : "border-zinc-700 bg-zinc-800 hover:border-zinc-600"
-                }
-              `}
-            >
-              <div className="flex items-start gap-3">
-                <div className="text-3xl">{unit.icon}</div>
-                <div className="flex-1">
-                  <div className={`text-sm font-medium mb-1 ${profile?.units === unit.value ? "text-green-400" : "text-zinc-300"}`}>
-                    {unit.label}
-                  </div>
-                  <div className="text-xs text-zinc-500">{unit.desc}</div>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
+        <SingleSelectDropdown
+          value={profile?.units || "imperial"}
+          options={unitOptions}
+          onChange={(value) => onProfileChange("units", value)}
+          placeholder="Select measurement units"
+          width="100%"
+        />
         <p className="text-xs text-zinc-500 mt-2">
           This affects weight displays, body measurements, and exercise weights throughout the app
         </p>
@@ -96,7 +79,7 @@ export function PreferencesTab({
           <select
             value={preferences?.warmupDuration || "10"}
             onChange={(e) => onPreferencesChange("warmupDuration", e.target.value)}
-            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             <option value="5">5 minutes</option>
             <option value="10">10 minutes</option>
@@ -183,14 +166,14 @@ export function PreferencesTab({
         <button
           onClick={onCancel}
           disabled={isSaving}
-          className="px-6 py-2.5 border border-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto px-6 py-3 text-base border border-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
         >
           Cancel
         </button>
         <button
           onClick={onSave}
           disabled={isSaving}
-          className="px-6 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center"
+          className="w-full sm:w-auto px-6 py-3 text-base bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
         >
           {isSaving ? (
             <>
