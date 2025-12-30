@@ -10,7 +10,7 @@ export default function AppLayout({
   return (
     <div className="min-h-screen bg-zinc-950">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/95">
+      <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950" style={{ contain: 'layout style paint' }}>
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-lg">
             <Dumbbell className="h-5 w-5 text-blue-500" />
@@ -19,7 +19,7 @@ export default function AppLayout({
           <div className="flex items-center gap-3">
             <Link
               href="/settings"
-              className="p-2 text-zinc-400 hover:text-zinc-100 transition-colors rounded-lg hover:bg-zinc-800"
+              className="p-2 text-zinc-400 hover:text-zinc-100 rounded-lg hover:bg-zinc-800"
               aria-label="Settings"
             >
               <Settings className="h-5 w-5" />
@@ -35,7 +35,7 @@ export default function AppLayout({
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-zinc-950/98">
+      <nav className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-zinc-950" style={{ contain: 'layout style paint' }}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-around h-16">
             <NavLink href="/dashboard" icon={Home} label="Home" />
@@ -62,7 +62,7 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="flex flex-col items-center gap-1 text-zinc-300 hover:text-zinc-100 transition-colors"
+      className="flex flex-col items-center gap-1 text-zinc-300 hover:text-zinc-100"
     >
       <Icon className="h-5 w-5" />
       <span className="text-xs">{label}</span>
