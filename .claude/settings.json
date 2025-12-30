@@ -1,0 +1,65 @@
+{
+  "model": "sonnet",
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(npm test:*)",
+      "Bash(npx:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(ls:*)",
+      "Bash(mkdir:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Read",
+      "Edit",
+      "Write",
+      "Task",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.local)",
+      "Read(.env.production)",
+      "Read(.env*.local)",
+      "Read(./secrets/**)",
+      "Read(.git/config)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(rm -rf:*)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'FILE=$(echo \"$CLAUDE_FILE_PATH\" | tr -d \"\"); if [[ \"$FILE\" =~ \\.(ts|tsx|js|jsx)$ ]]; then npx eslint --fix \"$FILE\" 2>/dev/null || true; fi'",
+            "timeout": 10000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'FILE=$(echo \"$CLAUDE_FILE_PATH\" | tr -d \"\"); if [[ \"$FILE\" =~ \\.(ts|tsx|js|jsx|json|md)$ ]]; then npx prettier --write \"$FILE\" 2>/dev/null || true; fi'",
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -32,6 +32,30 @@ export const fitnessGoalEnum = pgEnum('fitness_goal', [
 
 export const unitsEnum = pgEnum('units', ['imperial', 'metric']);
 
+export const genderEnum = pgEnum('gender', [
+  'male',
+  'female',
+  'non_binary',
+  'prefer_not_to_say',
+]);
+
+export const activityLevelEnum = pgEnum('activity_level', [
+  'sedentary',
+  'lightly_active',
+  'moderately_active',
+  'very_active',
+]);
+
+export const occupationTypeEnum = pgEnum('occupation_type', [
+  'desk_job',
+  'standing_job',
+  'physical_labor',
+  'mixed',
+  'student',
+  'retired',
+  'other',
+]);
+
 export const workoutStatusEnum = pgEnum('workout_status', [
   'planned',
   'in_progress',
@@ -242,22 +266,34 @@ export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
   clerkId: varchar('clerk_id', { length: 255 }).notNull().unique(),
   email: varchar('email', { length: 255 }).notNull().unique(),
-  fullName: varchar('full_name', { length: 255 }),
 
-  // Body metrics
-  heightCm: integer('height_cm'),
-  currentWeight: decimal('current_weight', { precision: 5, scale: 2 }),
-  goalWeight: decimal('goal_weight', { precision: 5, scale: 2 }),
+  // ===== ENCRYPTED PERSONAL DATA =====
+  // All fields below are AES-256-GCM encrypted at application level
 
-  // Fitness profile
+  // Personal Info (encrypted)
+  fullName: text('full_name'), // encrypted
+  dateOfBirth: text('date_of_birth'), // encrypted - ISO date string
+  gender: text('gender'), // encrypted - enum value as string
+
+  // Body Metrics (encrypted)
+  heightCm: text('height_cm'), // encrypted - number as string
+  currentWeight: text('current_weight'), // encrypted - number as string
+  goalWeight: text('goal_weight'), // encrypted - number as string
+
+  // Health & Safety (encrypted)
+  injuryHistory: text('injury_history'), // encrypted - JSON array as string
+  chronicConditions: text('chronic_conditions'), // encrypted - text
+  medications: text('medications'), // encrypted - text
+
+  // ===== NON-ENCRYPTED DATA =====
+  // These are app preferences, not personally identifiable
+
+  // Fitness Profile
   experience: experienceEnum('experience'),
   fitnessGoal: fitnessGoalEnum('fitness_goal'),
 
-  // Equipment access
+  // Equipment Access
   availableEquipment: text('available_equipment').array(),
-
-  // Health & Safety
-  injuryHistory: text('injury_history').array(),
 
   // Preferences
   units: unitsEnum('units').default('imperial'),
@@ -569,22 +605,38 @@ export const userPreferences = pgTable('user_preferences', {
     .references(() => users.id, { onDelete: 'cascade' })
     .unique(),
 
-  // Training preferences
-  fitnessGoal: varchar('fitness_goal', { length: 50 }),
-  experienceLevel: varchar('experience_level', { length: 50 }),
-  trainingFrequency: integer('training_frequency').default(6),
-  sessionDuration: integer('session_duration').default(75),
-  focusAreas: text('focus_areas').array(),
+  // ===== ENCRYPTED TRAINING PREFERENCES =====
+  // All personal training data encrypted at application level
 
-  // Equipment
-  defaultEquipmentLevel: equipmentLevelEnum('default_equipment_level').default('full_gym'),
-  availableEquipment: text('available_equipment').array(),
+  // Training Profile (encrypted)
+  fitnessGoal: text('fitness_goal'), // encrypted - enum value as string
+  experienceLevel: text('experience_level'), // encrypted - enum value as string
+  trainingFrequency: text('training_frequency'), // encrypted - number as string
+  sessionDuration: text('session_duration'), // encrypted - number as string
+  focusAreas: text('focus_areas'), // encrypted - JSON array as string
+  preferredTrainingTimes: text('preferred_training_times'), // encrypted - JSON array of time strings
+  restDaysPreference: text('rest_days_preference'), // encrypted - JSON array of day strings
 
-  // Workout preferences
+  // Equipment (encrypted)
+  defaultEquipmentLevel: text('default_equipment_level'), // encrypted - enum value as string
+  availableEquipment: text('available_equipment'), // encrypted - JSON array as string
+
+  // Lifestyle Context (encrypted)
+  activityLevel: text('activity_level'), // encrypted - enum value as string
+  occupationType: text('occupation_type'), // encrypted - enum value as string
+  typicalBedtime: text('typical_bedtime'), // encrypted - time string (HH:mm)
+  typicalWakeTime: text('typical_wake_time'), // encrypted - time string (HH:mm)
+
+  // Cardio Preference (encrypted)
+  preferredCardio: text('preferred_cardio'), // encrypted - string
+
+  // ===== NON-ENCRYPTED APP SETTINGS =====
+  // These are app display preferences, not personal data
+
+  // Warmup Settings
   warmupDuration: varchar('warmup_duration', { length: 20 }).default('normal'),
   skipGeneralWarmup: boolean('skip_general_warmup').default(false),
   includeMobilityWork: boolean('include_mobility_work').default(true),
-  preferredCardio: varchar('preferred_cardio', { length: 50 }),
 
   // Units
   weightUnit: varchar('weight_unit', { length: 10 }).default('lbs'),

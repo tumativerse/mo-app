@@ -25,6 +25,7 @@ import {
   Zap,
 } from "lucide-react";
 import { toast } from "sonner";
+import { WarmupFlow } from "@/components/warmup-flow";
 
 // Types for PPL API responses
 interface SlotExercise {
@@ -191,6 +192,7 @@ export default function WorkoutPage() {
   const [slotSelections, setSlotSelections] = useState<SlotSelection>({});
   const [showSwapModal, setShowSwapModal] = useState<string | null>(null);
   const [showWarmup, setShowWarmup] = useState(false);
+  const [showWarmupFlow, setShowWarmupFlow] = useState(false);
 
   // Timer state
   const [workoutStartTime, setWorkoutStartTime] = useState<Date | null>(null);
@@ -311,8 +313,15 @@ export default function WorkoutPage() {
       setSessionId(session.id);
       setSessionExercises(session.exercises || []);
       setWorkoutStartTime(new Date());
-      setViewMode("focused");
-      setCurrentExerciseIndex(0);
+
+      // Show warmup flow if warmup exists
+      if (data.warmup) {
+        setShowWarmupFlow(true);
+      } else {
+        setViewMode("focused");
+        setCurrentExerciseIndex(0);
+      }
+
       toast.success("Workout started!");
     } catch (err) {
       toast.error("Failed to start workout");
@@ -477,6 +486,24 @@ export default function WorkoutPage() {
 
   return (
     <div className="space-y-4 pb-24">
+      {/* Warmup Flow */}
+      {showWarmupFlow && sessionId && data.warmup && (
+        <WarmupFlow
+          sessionId={sessionId}
+          warmup={data.warmup}
+          onComplete={() => {
+            setShowWarmupFlow(false);
+            setViewMode("focused");
+            setCurrentExerciseIndex(0);
+          }}
+          onSkip={() => {
+            setShowWarmupFlow(false);
+            setViewMode("focused");
+            setCurrentExerciseIndex(0);
+          }}
+        />
+      )}
+
       {/* Rest Timer Overlay */}
       {restTimer !== null && (
         <div className="fixed inset-x-0 top-16 z-40 mx-4">

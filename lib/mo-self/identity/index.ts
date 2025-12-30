@@ -4,7 +4,7 @@
  *
  * The identity vertical handles user authentication and profile:
  * - MoAuth: Authentication and user management
- * - MoProfile: User profile data (future)
+ * - MoProfile: User profile data
  * - MoGoals: User training goals (future)
  */
 
@@ -17,3 +17,13 @@ export {
   requireAuth,
   getCurrentUser,
 } from './auth';
+
+// MoProfile - "Your Foundation"
+export {
+  getProfile,
+  getProfileByClerkId,
+  updateProfile,
+  calculateAge,
+  type UserProfile,
+  type UpdateProfileInput,
+} from './profile';

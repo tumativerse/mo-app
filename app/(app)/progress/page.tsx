@@ -14,6 +14,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
+import { FatigueChart } from "@/components/fatigue-chart";
+import { VolumeChart } from "@/components/volume-chart";
 
 interface ProgressionData {
   fatigueScore: number;
@@ -29,6 +31,16 @@ interface ProgressionData {
     avgEnergy: number;
     avgSoreness: number;
   };
+  fatigueHistory?: Array<{
+    date: string;
+    score: number;
+    level: 'fresh' | 'manageable' | 'accumulating' | 'high';
+  }>;
+  volumeByWeek?: Array<{
+    week: string;
+    volume: number;
+    baseline: number;
+  }>;
   readyToProgress: Array<{
     exerciseId: string;
     exerciseName: string;
@@ -234,6 +246,22 @@ export default function ProgressPage() {
           </div>
         </div>
       </div>
+
+      {/* Fatigue Trend */}
+      {data.fatigueHistory && data.fatigueHistory.length > 0 && (
+        <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-4">
+          <h3 className="font-semibold text-zinc-100 mb-3">Fatigue Trend</h3>
+          <FatigueChart data={data.fatigueHistory} />
+        </div>
+      )}
+
+      {/* Weekly Volume */}
+      {data.volumeByWeek && data.volumeByWeek.length > 0 && (
+        <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-4">
+          <h3 className="font-semibold text-zinc-100 mb-3">Weekly Volume</h3>
+          <VolumeChart data={data.volumeByWeek} />
+        </div>
+      )}
 
       {/* Ready to Progress */}
       {data.readyToProgress.length > 0 && (

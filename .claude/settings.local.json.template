@@ -1,0 +1,10 @@
+{
+  "model": "sonnet",
+  "permissions": {
+    "allow": [],
+    "deny": []
+  },
+  "env": {
+    "MO_DOCS_PATH": "/path/to/mo-docs"
+  }
+}

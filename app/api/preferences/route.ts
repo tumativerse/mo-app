@@ -23,17 +23,32 @@ export async function GET() {
 }
 
 const updatePreferencesSchema = z.object({
+  // Training
   fitnessGoal: z.string().optional(),
   experienceLevel: z.string().optional(),
   trainingFrequency: z.number().min(1).max(7).optional(),
   sessionDuration: z.number().min(15).max(180).optional(),
   focusAreas: z.array(z.string()).optional(),
+  preferredTrainingTimes: z.array(z.string()).optional(),
+  restDaysPreference: z.array(z.string()).optional(),
+
+  // Equipment
   defaultEquipmentLevel: z.enum(["full_gym", "home_gym", "bodyweight"]).optional(),
   availableEquipment: z.array(z.string()).optional(),
+
+  // Lifestyle
+  activityLevel: z.enum(["sedentary", "lightly_active", "moderately_active", "very_active"]).optional(),
+  occupationType: z.enum(["desk_job", "standing_job", "physical_labor", "mixed", "student", "retired", "other"]).optional(),
+  typicalBedtime: z.string().optional(), // "HH:mm" format
+  typicalWakeTime: z.string().optional(), // "HH:mm" format
+
+  // Cardio
+  preferredCardio: z.string().optional(),
+
+  // App settings
   warmupDuration: z.string().optional(),
   skipGeneralWarmup: z.boolean().optional(),
   includeMobilityWork: z.boolean().optional(),
-  preferredCardio: z.string().optional(),
   weightUnit: z.enum(["lbs", "kg"]).optional(),
 });
 

@@ -1,6 +1,6 @@
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { Dumbbell, Scale, Home, History } from "lucide-react";
+import { Dumbbell, Scale, Home, History, Activity, Settings } from "lucide-react";
 
 export default function AppLayout({
   children,
@@ -16,7 +16,16 @@ export default function AppLayout({
             <Dumbbell className="h-5 w-5 text-blue-500" />
             <span className="text-zinc-100">Mo</span>
           </Link>
-          <UserButton afterSignOutUrl="/" />
+          <div className="flex items-center gap-3">
+            <Link
+              href="/settings"
+              className="p-2 text-zinc-400 hover:text-zinc-100 transition-colors rounded-lg hover:bg-zinc-800"
+              aria-label="Settings"
+            >
+              <Settings className="h-5 w-5" />
+            </Link>
+            <UserButton afterSignOutUrl="/" />
+          </div>
         </div>
       </header>
 
@@ -32,6 +41,7 @@ export default function AppLayout({
             <NavLink href="/dashboard" icon={Home} label="Home" />
             <NavLink href="/workout" icon={Dumbbell} label="Workout" />
             <NavLink href="/weight" icon={Scale} label="Weight" />
+            <NavLink href="/progress" icon={Activity} label="Progress" />
             <NavLink href="/history" icon={History} label="History" />
           </div>
         </div>
