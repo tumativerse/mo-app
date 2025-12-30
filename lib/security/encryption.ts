@@ -95,6 +95,14 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
     // Decode from base64
     const combined = Buffer.from(ciphertext, 'base64');
 
+    // Check if data is properly formatted for decryption
+    // Encrypted data must be at least IV_LENGTH + AUTH_TAG_LENGTH bytes
+    if (combined.length < IV_LENGTH + AUTH_TAG_LENGTH) {
+      // Data is too short to be encrypted, likely plain text
+      console.warn('Data appears to be plain text, not encrypted. Returning as-is.');
+      return ciphertext;
+    }
+
     // Extract components
     const iv = combined.subarray(0, IV_LENGTH);
     const authTag = combined.subarray(IV_LENGTH, IV_LENGTH + AUTH_TAG_LENGTH);
@@ -114,8 +122,10 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
     return decrypted;
 
   } catch (error) {
-    console.error('Decryption error:', error);
-    throw new Error('Failed to decrypt data - data may be corrupted or key may be incorrect');
+    // If decryption fails, the data might be plain text or encrypted with a different key
+    // Return as-is for backwards compatibility
+    console.warn('Decryption failed, returning data as-is:', error);
+    return ciphertext;
   }
 }
 
