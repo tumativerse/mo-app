@@ -10,6 +10,7 @@ import {
   Flame,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
 
 interface ExerciseSummary {
   name: string;
@@ -64,8 +65,8 @@ export default function HistoryPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-zinc-300">Loading...</div>
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center -mt-6">
+        <ProfileLoadingAnimation loadingContext="history" />
       </div>
     );
   }

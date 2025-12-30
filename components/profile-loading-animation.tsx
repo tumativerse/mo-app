@@ -27,6 +27,7 @@ export function ProfileLoadingAnimation({
   // Context-specific loading messages
   const getLoadingMessage = () => {
     const messages: Record<string, { title: string; subtitle: string }> = {
+      // Settings tabs
       profile: {
         title: "Loading your profile...",
         subtitle: "Retrieving personal information",
@@ -46,6 +47,27 @@ export function ProfileLoadingAnimation({
       preferences: {
         title: "Loading app preferences...",
         subtitle: "Customizing your experience",
+      },
+      // Main navigation pages
+      dashboard: {
+        title: "Loading dashboard...",
+        subtitle: "Gathering your stats and progress",
+      },
+      workout: {
+        title: "Loading workout...",
+        subtitle: "Preparing today's training session",
+      },
+      weight: {
+        title: "Loading weight data...",
+        subtitle: "Fetching your progress tracking",
+      },
+      progress: {
+        title: "Loading progress...",
+        subtitle: "Analyzing your fitness journey",
+      },
+      history: {
+        title: "Loading history...",
+        subtitle: "Reviewing past workout sessions",
       },
     };
 

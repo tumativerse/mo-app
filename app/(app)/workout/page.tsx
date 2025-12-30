@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { WarmupFlow } from "@/components/warmup-flow";
+import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
 
 // Types for PPL API responses
 interface SlotExercise {
@@ -453,8 +454,8 @@ export default function WorkoutPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-zinc-300">Loading...</div>
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center -mt-6">
+        <ProfileLoadingAnimation loadingContext="workout" />
       </div>
     );
   }

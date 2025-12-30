@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { RecoveryCheckin } from "@/components/recovery-checkin";
+import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
 
 interface DashboardData {
   workoutsThisWeek: number;
@@ -122,8 +123,8 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-zinc-300">Loading...</div>
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <ProfileLoadingAnimation loadingContext="dashboard" />
       </div>
     );
   }

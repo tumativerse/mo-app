@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
+import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
 
 interface WeightEntry {
   id: string;
@@ -94,6 +95,14 @@ export default function WeightPage() {
     stats?.current && stats?.weekAgo
       ? Math.round((stats.current - stats.weekAgo) * 10) / 10
       : null;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center -mt-6">
+        <ProfileLoadingAnimation loadingContext="weight" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

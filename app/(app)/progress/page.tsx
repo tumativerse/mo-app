@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner";
 import { FatigueChart } from "@/components/fatigue-chart";
 import { VolumeChart } from "@/components/volume-chart";
+import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
 
 interface ProgressionData {
   fatigueScore: number;
@@ -84,8 +85,8 @@ export default function ProgressPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-zinc-300">Loading...</div>
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center -mt-6">
+        <ProfileLoadingAnimation loadingContext="progress" />
       </div>
     );
   }
