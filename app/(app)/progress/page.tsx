@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { FatigueChart } from "@/components/fatigue-chart";
 import { VolumeChart } from "@/components/volume-chart";
 import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
+import { useMinimumLoadingTime } from "@/hooks/use-minimum-loading-time";
 
 interface ProgressionData {
   fatigueScore: number;
@@ -64,6 +65,7 @@ export default function ProgressPage() {
   const [data, setData] = useState<ProgressionData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [days, setDays] = useState(14);
+  const isMinTimeElapsed = useMinimumLoadingTime(3000);
 
   useEffect(() => {
     fetchProgression();
@@ -83,7 +85,7 @@ export default function ProgressPage() {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || !isMinTimeElapsed) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center -mt-6">
         <ProfileLoadingAnimation loadingContext="progress" />

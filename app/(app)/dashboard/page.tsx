@@ -20,6 +20,7 @@ import {
 import { toast } from "sonner";
 import { RecoveryCheckin } from "@/components/recovery-checkin";
 import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
+import { useMinimumLoadingTime } from "@/hooks/use-minimum-loading-time";
 
 interface DashboardData {
   workoutsThisWeek: number;
@@ -71,6 +72,7 @@ export default function DashboardPage() {
   const [trainingStatus, setTrainingStatus] = useState<TrainingStatus | null>(null);
   const [showRecoveryForm, setShowRecoveryForm] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const isMinTimeElapsed = useMinimumLoadingTime(3000); // 3 second minimum
 
   useEffect(() => {
     fetchDashboard();
@@ -121,7 +123,8 @@ export default function DashboardPage() {
     fetchTodayRecovery();
   }
 
-  if (isLoading) {
+  // Show loading animation until BOTH data is loaded AND minimum time has elapsed
+  if (isLoading || !isMinTimeElapsed) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
         <ProfileLoadingAnimation loadingContext="dashboard" />

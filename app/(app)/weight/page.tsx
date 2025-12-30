@@ -14,6 +14,7 @@ import {
   ReferenceLine,
 } from "recharts";
 import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
+import { useMinimumLoadingTime } from "@/hooks/use-minimum-loading-time";
 
 interface WeightEntry {
   id: string;
@@ -36,6 +37,7 @@ export default function WeightPage() {
   const [stats, setStats] = useState<WeightStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isMinTimeElapsed = useMinimumLoadingTime(3000);
 
   useEffect(() => {
     fetchEntries();
@@ -96,7 +98,7 @@ export default function WeightPage() {
       ? Math.round((stats.current - stats.weekAgo) * 10) / 10
       : null;
 
-  if (isLoading) {
+  if (isLoading || !isMinTimeElapsed) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center -mt-6">
         <ProfileLoadingAnimation loadingContext="weight" />
