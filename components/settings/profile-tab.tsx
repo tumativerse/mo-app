@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { NumberPicker } from "@/components/ui/number-picker";
 
 interface ProfileTabProps {
   profile: any;
@@ -191,29 +192,29 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             type="date"
             value={profile?.dateOfBirth || ""}
             onChange={(e) => onChange("dateOfBirth", e.target.value)}
-            className="w-full max-w-xs px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
         </div>
 
         {/* Gender */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-3">
+          <label className="block text-sm font-medium text-zinc-300 mb-2">
             Gender <span className="text-red-400">*</span>
           </label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="flex flex-wrap gap-2">
             {[
-              { value: "male", label: "Male", icon: "♂️" },
-              { value: "female", label: "Female", icon: "♀️" },
-              { value: "non_binary", label: "Non-binary", icon: "⚧️" },
-              { value: "prefer_not_to_say", label: "Prefer not to say", icon: "—" },
+              { value: "male", label: "Male" },
+              { value: "female", label: "Female" },
+              { value: "non_binary", label: "Non-binary" },
+              { value: "prefer_not_to_say", label: "Prefer not to say" },
             ].map((option) => (
               <button
                 key={option.value}
                 type="button"
                 onClick={() => onChange("gender", option.value)}
                 className={`
-                  p-3 rounded-lg border-2 transition-all text-center
+                  px-4 py-2 rounded-lg border transition-all text-sm font-medium
                   ${
                     profile?.gender === option.value
                       ? "border-green-500 bg-green-500/10 text-green-400"
@@ -221,8 +222,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
                   }
                 `}
               >
-                <div className="text-2xl mb-1">{option.icon}</div>
-                <div className="text-xs font-medium">{option.label}</div>
+                {option.label}
               </button>
             ))}
           </div>
@@ -240,54 +240,48 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Height <span className="text-red-400">*</span>
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             {heightUnit === "ft_in" ? (
-              <>
-                <div className="flex-1 flex gap-2">
-                  <div className="flex-1">
-                    <input
-                      type="number"
-                      value={displayHeightFeet}
-                      onChange={(e) => handleFeetChange(e.target.value)}
-                      placeholder="5"
-                      min="3"
-                      max="8"
-                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      required
-                    />
-                    <p className="text-xs text-zinc-500 mt-1 text-center">ft</p>
-                  </div>
-                  <div className="flex-1">
-                    <input
-                      type="number"
-                      value={displayHeightInches}
-                      onChange={(e) => handleInchesChange(e.target.value)}
-                      placeholder="8"
-                      min="0"
-                      max="11"
-                      className="w-full px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                      required
-                    />
-                    <p className="text-xs text-zinc-500 mt-1 text-center">in</p>
-                  </div>
+              <div className="flex-1 flex gap-3">
+                <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+                  <p className="text-xs text-zinc-500 text-center mb-1">Feet</p>
+                  <NumberPicker
+                    value={parseInt(displayHeightFeet) || 5}
+                    onChange={(val) => handleFeetChange(String(val))}
+                    min={3}
+                    max={8}
+                    step={1}
+                  />
                 </div>
-              </>
+                <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+                  <p className="text-xs text-zinc-500 text-center mb-1">Inches</p>
+                  <NumberPicker
+                    value={parseInt(displayHeightInches) || 0}
+                    onChange={(val) => handleInchesChange(String(val))}
+                    min={0}
+                    max={11}
+                    step={1}
+                  />
+                </div>
+              </div>
             ) : (
-              <input
-                type="number"
-                value={displayHeight}
-                onChange={(e) => handleHeightChange(e.target.value, heightUnit === "cm" ? "cm" : "inches")}
-                placeholder={heightUnit === "cm" ? "170" : "67"}
-                min={heightUnit === "cm" ? "50" : "20"}
-                max={heightUnit === "cm" ? "300" : "118"}
-                className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-                required
-              />
+              <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+                <p className="text-xs text-zinc-500 text-center mb-1">
+                  {heightUnit === "cm" ? "Centimeters" : "Inches"}
+                </p>
+                <NumberPicker
+                  value={parseInt(displayHeight) || (heightUnit === "cm" ? 170 : 67)}
+                  onChange={(val) => handleHeightChange(String(val), heightUnit === "cm" ? "cm" : "inches")}
+                  min={heightUnit === "cm" ? 100 : 40}
+                  max={heightUnit === "cm" ? 250 : 98}
+                  step={1}
+                />
+              </div>
             )}
             <button
               type="button"
               onClick={toggleHeightUnit}
-              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[90px] shrink-0"
+              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[90px] shrink-0 self-start"
             >
               {heightUnit === "ft_in" ? "ft/in" : heightUnit}
             </button>
@@ -299,20 +293,26 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Current Weight
           </label>
-          <div className="flex gap-2">
-            <input
-              type="number"
-              value={displayCurrentWeight}
-              onChange={(e) => handleWeightChange(e.target.value, "currentWeight")}
-              placeholder={profile?.units === "imperial" ? "150" : "70"}
-              min="20"
-              max="500"
-              step="0.1"
-              className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-            <div className="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-400 min-w-[80px] flex items-center justify-center">
-              {profile?.units === "imperial" ? "lbs" : "kg"}
+          <div className="flex gap-3">
+            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+              <p className="text-xs text-zinc-500 text-center mb-1">
+                {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
+              </p>
+              <NumberPicker
+                value={parseFloat(displayCurrentWeight) || (profile?.units === "imperial" ? 150 : 70)}
+                onChange={(val) => handleWeightChange(String(val), "currentWeight")}
+                min={profile?.units === "imperial" ? 50 : 20}
+                max={profile?.units === "imperial" ? 500 : 230}
+                step={0.1}
+              />
             </div>
+            <button
+              type="button"
+              onClick={() => onChange("units", profile?.units === "imperial" ? "metric" : "imperial")}
+              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px] shrink-0 self-start"
+            >
+              {profile?.units === "imperial" ? "lbs" : "kg"}
+            </button>
           </div>
         </div>
 
@@ -321,20 +321,26 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           <label className="block text-sm font-medium text-zinc-300 mb-2">
             Goal Weight <span className="text-zinc-500">(Optional)</span>
           </label>
-          <div className="flex gap-2">
-            <input
-              type="number"
-              value={displayGoalWeight}
-              onChange={(e) => handleWeightChange(e.target.value, "goalWeight")}
-              placeholder={profile?.units === "imperial" ? "165" : "75"}
-              min="20"
-              max="500"
-              step="0.1"
-              className="flex-1 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-            <div className="px-4 py-2 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-400 min-w-[80px] flex items-center justify-center">
-              {profile?.units === "imperial" ? "lbs" : "kg"}
+          <div className="flex gap-3">
+            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg p-2">
+              <p className="text-xs text-zinc-500 text-center mb-1">
+                {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
+              </p>
+              <NumberPicker
+                value={parseFloat(displayGoalWeight) || (profile?.units === "imperial" ? 165 : 75)}
+                onChange={(val) => handleWeightChange(String(val), "goalWeight")}
+                min={profile?.units === "imperial" ? 50 : 20}
+                max={profile?.units === "imperial" ? 500 : 230}
+                step={0.1}
+              />
             </div>
+            <button
+              type="button"
+              onClick={() => onChange("units", profile?.units === "imperial" ? "metric" : "imperial")}
+              className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 transition-colors min-w-[80px] shrink-0 self-start"
+            >
+              {profile?.units === "imperial" ? "lbs" : "kg"}
+            </button>
           </div>
         </div>
       </div>
