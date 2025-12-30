@@ -14,6 +14,29 @@ export async function GET() {
     const preferences = await getPreferences(user.id);
     return NextResponse.json({ preferences });
   } catch (error) {
+    // Check if this is a decryption error
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const isDecryptionError = errorMessage.includes("Failed to decrypt data");
+
+    if (isDecryptionError) {
+      // Log critical security error for monitoring
+      console.error("CRITICAL: Preferences decryption failed", {
+        userId: (await getCurrentUser())?.id,
+        error: errorMessage,
+        timestamp: new Date().toISOString(),
+      });
+
+      return NextResponse.json(
+        {
+          error: "Data integrity error",
+          message: "Unable to read your preferences data. Please contact support.",
+          code: "DECRYPTION_FAILED",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Generic error handling
     console.error("Error fetching preferences:", error);
     return NextResponse.json(
       { error: "Failed to fetch preferences" },
@@ -74,6 +97,29 @@ export async function PATCH(request: NextRequest) {
     const preferences = await updatePreferences(user.id, parsed.data);
     return NextResponse.json({ preferences });
   } catch (error) {
+    // Check if this is a decryption error
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const isDecryptionError = errorMessage.includes("Failed to decrypt data");
+
+    if (isDecryptionError) {
+      // Log critical security error for monitoring
+      console.error("CRITICAL: Preferences decryption failed during update", {
+        userId: (await getCurrentUser())?.id,
+        error: errorMessage,
+        timestamp: new Date().toISOString(),
+      });
+
+      return NextResponse.json(
+        {
+          error: "Data integrity error",
+          message: "Unable to read your existing preferences data. Please contact support.",
+          code: "DECRYPTION_FAILED",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Generic error handling
     console.error("Error updating preferences:", error);
     return NextResponse.json(
       { error: "Failed to update preferences" },

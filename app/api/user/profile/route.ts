@@ -19,6 +19,29 @@ export async function GET() {
 
     return NextResponse.json({ profile });
   } catch (error) {
+    // Check if this is a decryption error
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const isDecryptionError = errorMessage.includes("Failed to decrypt data");
+
+    if (isDecryptionError) {
+      // Log critical security error for monitoring
+      console.error("CRITICAL: Profile decryption failed", {
+        userId: (await getCurrentUser())?.id,
+        error: errorMessage,
+        timestamp: new Date().toISOString(),
+      });
+
+      return NextResponse.json(
+        {
+          error: "Data integrity error",
+          message: "Unable to read your profile data. Please contact support.",
+          code: "DECRYPTION_FAILED",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Generic error handling
     console.error("Error fetching profile:", error);
     return NextResponse.json(
       { error: "Failed to fetch profile" },
@@ -69,6 +92,29 @@ export async function PATCH(request: NextRequest) {
     const profile = await updateProfile(user.id, parsed.data);
     return NextResponse.json({ profile });
   } catch (error) {
+    // Check if this is a decryption error
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    const isDecryptionError = errorMessage.includes("Failed to decrypt data");
+
+    if (isDecryptionError) {
+      // Log critical security error for monitoring
+      console.error("CRITICAL: Profile decryption failed during update", {
+        userId: (await getCurrentUser())?.id,
+        error: errorMessage,
+        timestamp: new Date().toISOString(),
+      });
+
+      return NextResponse.json(
+        {
+          error: "Data integrity error",
+          message: "Unable to read your existing profile data. Please contact support.",
+          code: "DECRYPTION_FAILED",
+        },
+        { status: 500 }
+      );
+    }
+
+    // Generic error handling
     console.error("Error updating profile:", error);
     return NextResponse.json(
       { error: "Failed to update profile" },

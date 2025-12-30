@@ -98,9 +98,11 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
     // Check if data is properly formatted for decryption
     // Encrypted data must be at least IV_LENGTH + AUTH_TAG_LENGTH bytes
     if (combined.length < IV_LENGTH + AUTH_TAG_LENGTH) {
-      // Data is too short to be encrypted, likely plain text
-      console.warn('Data appears to be plain text, not encrypted. Returning as-is.');
-      return ciphertext;
+      throw new Error(
+        `Data too short to be encrypted (${combined.length} bytes). ` +
+        'Expected at least 32 bytes for AES-256-GCM. ' +
+        'Data may be corrupted or not encrypted.'
+      );
     }
 
     // Extract components
@@ -122,10 +124,21 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
     return decrypted;
 
   } catch (error) {
-    // If decryption fails, the data might be plain text or encrypted with a different key
-    // Return as-is for backwards compatibility
-    console.warn('Decryption failed, returning data as-is:', error);
-    return ciphertext;
+    // Log error for monitoring
+    console.error('CRITICAL: Decryption failed:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      dataLength: ciphertext.length,
+      dataPreview: ciphertext.substring(0, 50) + '...',
+    });
+
+    // Throw error with helpful message
+    throw new Error(
+      'Failed to decrypt data. This could indicate: ' +
+      '(1) Data corruption in database, ' +
+      '(2) Incorrect ENCRYPTION_KEY, or ' +
+      '(3) Data encrypted with different key. ' +
+      `Original error: ${error instanceof Error ? error.message : 'Unknown'}`
+    );
   }
 }
 
