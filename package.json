@@ -7,13 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "type-check": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx lib/db/seed.ts",
     "db:migrate:encrypt": "tsx scripts/migrate-encrypt-data.ts",
     "security:generate-key": "tsx scripts/generate-encryption-key.ts",
-    "security:test": "tsx scripts/test-encryption.ts"
+    "security:test": "tsx scripts/test-encryption.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.5",
@@ -44,6 +46,7 @@
     "drizzle-kit": "^0.31.8",
     "eslint": "^9",
     "eslint-config-next": "16.1.0",
+    "husky": "^9.1.7",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
