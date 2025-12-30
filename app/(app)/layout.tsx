@@ -10,7 +10,7 @@ export default function AppLayout({
   return (
     <div className="min-h-screen bg-zinc-950">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-sm">
+      <header className="sticky top-0 z-50 border-b border-zinc-800 bg-zinc-950/95">
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-lg">
             <Dumbbell className="h-5 w-5 text-blue-500" />
@@ -35,7 +35,7 @@ export default function AppLayout({
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur-sm">
+      <nav className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-zinc-950/98">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-around h-16">
             <NavLink href="/dashboard" icon={Home} label="Home" />
