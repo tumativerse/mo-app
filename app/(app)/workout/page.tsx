@@ -26,8 +26,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { WarmupFlow } from "@/components/warmup-flow";
-import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
-import { useMinimumLoadingTime } from "@/hooks/use-minimum-loading-time";
 
 // Types for PPL API responses
 interface SlotExercise {
@@ -187,7 +185,6 @@ export default function WorkoutPage() {
   const [data, setData] = useState<PPLTodayData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const isMinTimeElapsed = useMinimumLoadingTime(3500);
 
   // Session state
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -454,10 +451,10 @@ export default function WorkoutPage() {
   const allComplete = sessionExercises.length > 0 && completedCount === sessionExercises.length;
 
   // Loading state
-  if (isLoading || !isMinTimeElapsed) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center -mt-6">
-        <ProfileLoadingAnimation loadingContext="workout" />
+        <div className="text-zinc-400">Loading...</div>
       </div>
     );
   }

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
 import { ProfileTab } from "@/components/settings/profile-tab";
 import { TrainingTab } from "@/components/settings/training-tab";
 import { EquipmentTab } from "@/components/settings/equipment-tab";
@@ -169,10 +168,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <ProfileLoadingAnimation
-          gender={data?.profile?.gender}
-          loadingContext="profile"
-        />
+        <div className="text-zinc-400">Loading...</div>
       </div>
     );
   }
@@ -242,11 +238,7 @@ export default function SettingsPage() {
         <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-6">
           {tabLoading ? (
             <div className="flex items-center justify-center py-20">
-              <ProfileLoadingAnimation
-                gender={data?.profile?.gender}
-                loadingContext={activeTab}
-                minDisplayTime={1500}
-              />
+              <div className="text-zinc-400">Loading...</div>
             </div>
           ) : (
             <>

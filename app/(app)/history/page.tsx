@@ -10,8 +10,6 @@ import {
   Flame,
 } from "lucide-react";
 import { toast } from "sonner";
-import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
-import { useMinimumLoadingTime } from "@/hooks/use-minimum-loading-time";
 
 interface ExerciseSummary {
   name: string;
@@ -45,7 +43,6 @@ export default function HistoryPage() {
   const [stats, setStats] = useState<HistoryStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [expandedWorkout, setExpandedWorkout] = useState<string | null>(null);
-  const isMinTimeElapsed = useMinimumLoadingTime(3500);
 
   useEffect(() => {
     fetchHistory();
@@ -65,10 +62,10 @@ export default function HistoryPage() {
     }
   }
 
-  if (isLoading || !isMinTimeElapsed) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center -mt-6">
-        <ProfileLoadingAnimation loadingContext="history" />
+        <div className="text-zinc-400">Loading...</div>
       </div>
     );
   }

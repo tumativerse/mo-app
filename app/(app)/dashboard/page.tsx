@@ -19,8 +19,6 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { RecoveryCheckin } from "@/components/recovery-checkin";
-import { ProfileLoadingAnimation } from "@/components/profile-loading-animation";
-import { useMinimumLoadingTime } from "@/hooks/use-minimum-loading-time";
 
 interface DashboardData {
   workoutsThisWeek: number;
@@ -72,7 +70,6 @@ export default function DashboardPage() {
   const [trainingStatus, setTrainingStatus] = useState<TrainingStatus | null>(null);
   const [showRecoveryForm, setShowRecoveryForm] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const isMinTimeElapsed = useMinimumLoadingTime(3500); // Match animation duration
 
   useEffect(() => {
     fetchDashboard();
@@ -123,11 +120,10 @@ export default function DashboardPage() {
     fetchTodayRecovery();
   }
 
-  // Show loading animation until BOTH data is loaded AND minimum time has elapsed
-  if (isLoading || !isMinTimeElapsed) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-        <ProfileLoadingAnimation loadingContext="dashboard" />
+        <div className="text-zinc-400">Loading...</div>
       </div>
     );
   }
