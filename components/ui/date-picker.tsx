@@ -1,6 +1,6 @@
 "use client";
 
-import { NumberPicker } from "./number-picker";
+import { InlineScrollPicker } from "./inline-scroll-picker";
 
 interface DatePickerProps {
   value: string; // YYYY-MM-DD format
@@ -25,18 +25,21 @@ export function DatePicker({ value, onChange, className = "" }: DatePickerProps)
 
   const { year, month, day } = parseDate(value);
 
-  const handleYearChange = (newYear: number) => {
-    const newDate = `${newYear}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  const handleYearChange = (newYear: number | string) => {
+    const yearNum = typeof newYear === 'string' ? parseInt(newYear) : newYear;
+    const newDate = `${yearNum}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     onChange(newDate);
   };
 
-  const handleMonthChange = (newMonth: number) => {
-    const newDate = `${year}-${String(newMonth).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  const handleMonthChange = (newMonth: number | string) => {
+    const monthNum = typeof newMonth === 'string' ? parseInt(newMonth) : newMonth;
+    const newDate = `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     onChange(newDate);
   };
 
-  const handleDayChange = (newDay: number) => {
-    const newDate = `${year}-${String(month).padStart(2, "0")}-${String(newDay).padStart(2, "0")}`;
+  const handleDayChange = (newDay: number | string) => {
+    const dayNum = typeof newDay === 'string' ? parseInt(newDay) : newDay;
+    const newDate = `${year}-${String(month).padStart(2, "0")}-${String(dayNum).padStart(2, "0")}`;
     onChange(newDate);
   };
 
@@ -46,47 +49,52 @@ export function DatePicker({ value, onChange, className = "" }: DatePickerProps)
   };
 
   const monthNames = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
   ];
 
   const currentYear = new Date().getFullYear();
 
-  return (
-    <div className={`flex gap-2 ${className}`}>
-      <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-2 sm:px-3 py-2">
-        <p className="text-xs text-zinc-500 text-center mb-1">Month</p>
-        <div className="flex items-center gap-1 justify-center">
-          <NumberPicker
-            value={month}
-            onChange={handleMonthChange}
-            min={1}
-            max={12}
-            step={1}
-          />
-          <span className="text-xs text-zinc-500 min-w-[28px]">{monthNames[month - 1]}</span>
-        </div>
-      </div>
+  // Generate options
+  const monthOptions = monthNames.map((name, index) => ({
+    value: index + 1,
+    label: name,
+  }));
 
-      <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-2 sm:px-3 py-2">
-        <p className="text-xs text-zinc-500 text-center mb-1">Day</p>
-        <NumberPicker
-          value={day}
-          onChange={handleDayChange}
-          min={1}
-          max={getDaysInMonth(year, month)}
-          step={1}
+  const dayOptions = Array.from({ length: getDaysInMonth(year, month) }, (_, i) => ({
+    value: i + 1,
+    label: String(i + 1),
+  }));
+
+  const yearOptions = Array.from({ length: 100 }, (_, i) => ({
+    value: currentYear - 13 - i,
+    label: String(currentYear - 13 - i),
+  }));
+
+  return (
+    <div className={`flex gap-2 items-center ${className}`}>
+      <div className="flex-[2] min-w-0">
+        <InlineScrollPicker
+          value={month}
+          options={monthOptions}
+          onChange={handleMonthChange}
+          width="100%"
         />
       </div>
-
-      <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-2 sm:px-3 py-2">
-        <p className="text-xs text-zinc-500 text-center mb-1">Year</p>
-        <NumberPicker
+      <div className="flex-1 min-w-0">
+        <InlineScrollPicker
+          value={day}
+          options={dayOptions}
+          onChange={handleDayChange}
+          width="100%"
+        />
+      </div>
+      <div className="flex-1 min-w-0">
+        <InlineScrollPicker
           value={year}
+          options={yearOptions}
           onChange={handleYearChange}
-          min={currentYear - 100}
-          max={currentYear - 13}
-          step={1}
+          width="100%"
         />
       </div>
     </div>
