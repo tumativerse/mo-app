@@ -278,7 +278,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
               <NumberPicker
-                value={Math.round(parseFloat(displayCurrentWeight)) || (profile?.units === "imperial" ? 160 : 73)}
+                value={Math.round(parseFloat(displayCurrentWeight)) || (profile?.units === "imperial" ? 210 : 95)}
                 onChange={(val) => handleWeightChange(String(val), "currentWeight")}
                 min={profile?.units === "imperial" ? 50 : 20}
                 max={profile?.units === "imperial" ? 500 : 230}
@@ -306,7 +306,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
               <NumberPicker
-                value={Math.round(parseFloat(displayGoalWeight)) || (profile?.units === "imperial" ? 160 : 73)}
+                value={Math.round(parseFloat(displayGoalWeight)) || (profile?.units === "imperial" ? 185 : 84)}
                 onChange={(val) => handleWeightChange(String(val), "goalWeight")}
                 min={profile?.units === "imperial" ? 50 : 20}
                 max={profile?.units === "imperial" ? 500 : 230}
