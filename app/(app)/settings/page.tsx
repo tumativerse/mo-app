@@ -66,6 +66,10 @@ export default function SettingsPage() {
 
         const preferencesWithDefaults = {
           ...preferencesData.preferences,
+          // Training tab defaults
+          trainingFrequency: preferencesData.preferences?.trainingFrequency || 6,
+          sessionDuration: preferencesData.preferences?.sessionDuration || 75,
+          // Preferences tab defaults
           warmupDuration: preferencesData.preferences?.warmupDuration || 10,
           theme: preferencesData.preferences?.theme || "dark",
           accentColor: preferencesData.preferences?.accentColor || "#10b981",
