@@ -63,9 +63,8 @@ export async function getOrCreateUser() {
     .values({
       clerkId: userId,
       email: clerkUser.emailAddresses[0]?.emailAddress ?? '',
-      fullName: clerkUser.firstName
-        ? `${clerkUser.firstName} ${clerkUser.lastName ?? ''}`.trim()
-        : null,
+      // Note: fullName and other encrypted fields are set later via profile completion
+      // where they'll be properly encrypted
     })
     .returning();
 
