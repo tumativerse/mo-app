@@ -14,7 +14,10 @@ interface ProfileTabProps {
 }
 
 export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = false }: ProfileTabProps) {
-  const [heightUnit, setHeightUnit] = useState<"cm" | "ft_in">("cm");
+  // Default to imperial (ft_in) to match app default, will sync with profile.units in useEffect
+  const [heightUnit, setHeightUnit] = useState<"cm" | "ft_in">(
+    profile?.units === "metric" ? "cm" : "ft_in"
+  );
   const [displayHeight, setDisplayHeight] = useState<string>("");
   const [displayHeightFeet, setDisplayHeightFeet] = useState<string>("");
   const [displayHeightInches, setDisplayHeightInches] = useState<string>("");
@@ -23,9 +26,14 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
 
   // Initialize height and weight displays based on profile units
   useEffect(() => {
+    // Always sync heightUnit with profile.units (even if no height value yet)
+    // Default to imperial if units not set
+    const units = profile?.units || "imperial";
+    setHeightUnit(units === "imperial" ? "ft_in" : "cm");
+
+    // Initialize height displays if height value exists
     if (profile?.heightCm) {
-      if (profile.units === "imperial") {
-        setHeightUnit("ft_in");
+      if (units === "imperial") {
         const totalInches = Math.round(profile.heightCm / 2.54);
         const feet = Math.floor(totalInches / 12);
         const inches = totalInches % 12;
@@ -33,14 +41,13 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
         setDisplayHeightInches(String(inches));
         setDisplayHeight(String(totalInches));
       } else {
-        setHeightUnit("cm");
         setDisplayHeight(String(profile.heightCm));
       }
     }
 
     // Initialize weight displays (weights are stored in kg, convert to lbs if imperial)
     if (profile?.currentWeight !== null && profile?.currentWeight !== undefined) {
-      if (profile.units === "imperial") {
+      if (units === "imperial") {
         const lbs = Math.round(profile.currentWeight * 2.20462);
         setDisplayCurrentWeight(String(lbs));
       } else {
@@ -51,7 +58,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
     }
 
     if (profile?.goalWeight !== null && profile?.goalWeight !== undefined) {
-      if (profile.units === "imperial") {
+      if (units === "imperial") {
         const lbs = Math.round(profile.goalWeight * 2.20462);
         setDisplayGoalWeight(String(lbs));
       } else {
