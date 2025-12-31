@@ -244,32 +244,42 @@ export default function SettingsPage() {
   const handleProfileAndPreferencesSave = async () => {
     setSaving(true);
     try {
-      console.log("Saving profile:", profile);
-      console.log("Saving preferences:", preferences);
+      // Only send the fields that Preferences tab actually uses
+      const profilePayload = {
+        units: profile?.units,
+      };
+
+      const preferencesPayload = {
+        warmupDuration: preferences?.warmupDuration,
+        skipGeneralWarmup: preferences?.skipGeneralWarmup,
+        includeMobilityWork: preferences?.includeMobilityWork,
+        theme: preferences?.theme,
+        accentColor: preferences?.accentColor,
+      };
 
       const [profileRes, preferencesRes] = await Promise.all([
         fetch("/api/user/profile", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(profile),
+          body: JSON.stringify(profilePayload),
         }),
         fetch("/api/preferences", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(preferences),
+          body: JSON.stringify(preferencesPayload),
         }),
       ]);
 
       if (!profileRes.ok) {
         const profileError = await profileRes.json();
         console.error("Profile API error:", profileError);
-        throw new Error("Failed to save profile: " + JSON.stringify(profileError.details || profileError.error));
+        throw new Error("Failed to save profile");
       }
 
       if (!preferencesRes.ok) {
         const preferencesError = await preferencesRes.json();
         console.error("Preferences API error:", preferencesError);
-        throw new Error("Failed to save preferences: " + JSON.stringify(preferencesError.details || preferencesError.error));
+        throw new Error("Failed to save preferences");
       }
 
       toast.success("Settings saved successfully!");
