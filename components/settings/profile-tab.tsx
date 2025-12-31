@@ -41,10 +41,10 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
     // Initialize weight displays (weights are stored in kg, convert to lbs if imperial)
     if (profile?.currentWeight !== null && profile?.currentWeight !== undefined) {
       if (profile.units === "imperial") {
-        const lbs = (profile.currentWeight * 2.20462).toFixed(1);
-        setDisplayCurrentWeight(lbs);
+        const lbs = Math.round(profile.currentWeight * 2.20462);
+        setDisplayCurrentWeight(String(lbs));
       } else {
-        setDisplayCurrentWeight(profile.currentWeight.toFixed(1));
+        setDisplayCurrentWeight(String(Math.round(profile.currentWeight)));
       }
     } else {
       setDisplayCurrentWeight("");
@@ -52,10 +52,10 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
 
     if (profile?.goalWeight !== null && profile?.goalWeight !== undefined) {
       if (profile.units === "imperial") {
-        const lbs = (profile.goalWeight * 2.20462).toFixed(1);
-        setDisplayGoalWeight(lbs);
+        const lbs = Math.round(profile.goalWeight * 2.20462);
+        setDisplayGoalWeight(String(lbs));
       } else {
-        setDisplayGoalWeight(profile.goalWeight.toFixed(1));
+        setDisplayGoalWeight(String(Math.round(profile.goalWeight)));
       }
     } else {
       setDisplayGoalWeight("");
@@ -112,7 +112,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
 
   // Handle weight changes (always store in kg)
   const handleWeightChange = (value: string, field: "currentWeight" | "goalWeight") => {
-    const numValue = parseFloat(value);
+    const numValue = parseInt(value);
 
     if (field === "currentWeight") {
       setDisplayCurrentWeight(value);
@@ -121,9 +121,9 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
     }
 
     if (!isNaN(numValue) && numValue > 0) {
-      // Convert to kg if imperial, otherwise use as-is
+      // Convert to kg if imperial, otherwise use as-is (rounded to whole numbers)
       const weightInKg = profile?.units === "imperial"
-        ? parseFloat((numValue / 2.20462).toFixed(1))
+        ? Math.round(numValue / 2.20462)
         : numValue;
       onChange(field, weightInKg);
     } else if (value === "") {
@@ -278,11 +278,11 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
               <NumberPicker
-                value={parseFloat(displayCurrentWeight) || (profile?.units === "imperial" ? 160 : 72.5)}
+                value={Math.round(parseFloat(displayCurrentWeight)) || (profile?.units === "imperial" ? 160 : 73)}
                 onChange={(val) => handleWeightChange(String(val), "currentWeight")}
                 min={profile?.units === "imperial" ? 50 : 20}
                 max={profile?.units === "imperial" ? 500 : 230}
-                step={0.1}
+                step={1}
               />
             </div>
             <button
@@ -306,11 +306,11 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
               <NumberPicker
-                value={parseFloat(displayGoalWeight) || (profile?.units === "imperial" ? 165 : 75)}
+                value={Math.round(parseFloat(displayGoalWeight)) || (profile?.units === "imperial" ? 160 : 73)}
                 onChange={(val) => handleWeightChange(String(val), "goalWeight")}
                 min={profile?.units === "imperial" ? 50 : 20}
                 max={profile?.units === "imperial" ? 500 : 230}
-                step={0.1}
+                step={1}
               />
             </div>
             <button
