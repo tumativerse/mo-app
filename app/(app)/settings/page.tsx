@@ -271,6 +271,13 @@ export default function SettingsPage() {
     }
   };
 
+  // Calculate profile completion status (updates in real-time)
+  // MUST be before early returns to comply with Rules of Hooks
+  const completionStatus = useMemo(() => {
+    if (!profile || !preferences) return null;
+    return checkProfileCompletion(profile, preferences);
+  }, [profile, preferences]);
+
   if (loading) {
     return (
       <motion.div
@@ -328,12 +335,6 @@ export default function SettingsPage() {
     { id: "lifestyle", label: "Lifestyle", icon: Leaf },
     { id: "preferences", label: "Preferences", icon: SettingsIcon },
   ];
-
-  // Calculate profile completion status (updates in real-time)
-  const completionStatus = useMemo(() => {
-    if (!profile || !preferences) return null;
-    return checkProfileCompletion(profile, preferences);
-  }, [profile, preferences]);
 
   return (
     <motion.div
