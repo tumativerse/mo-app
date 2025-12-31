@@ -58,17 +58,35 @@ export async function getOrCreateUser() {
   }
 
   // Create user in our database
-  const [newUser] = await db
-    .insert(users)
-    .values({
-      clerkId: userId,
-      email: clerkUser.emailAddresses[0]?.emailAddress ?? '',
-      // Note: fullName and other encrypted fields are set later via profile completion
-      // where they'll be properly encrypted
-    })
-    .returning();
+  // Handle race condition: webhook might create user while we're checking
+  try {
+    const [newUser] = await db
+      .insert(users)
+      .values({
+        clerkId: userId,
+        email: clerkUser.emailAddresses[0]?.emailAddress ?? '',
+        // Note: fullName and other encrypted fields are set later via profile completion
+        // where they'll be properly encrypted
+      })
+      .returning();
 
-  return newUser;
+    return newUser;
+  } catch (error: any) {
+    // If duplicate key error (webhook created user while we were checking)
+    if (error?.code === '23505' && error?.constraint === 'users_clerk_id_unique') {
+      // Query again to get the user created by webhook
+      const user = await db.query.users.findFirst({
+        where: eq(users.clerkId, userId),
+      });
+
+      if (user) {
+        return user;
+      }
+    }
+
+    // Re-throw any other error
+    throw error;
+  }
 }
 
 /**
