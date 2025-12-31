@@ -24,7 +24,7 @@ export default function AppLayout({
             >
               <Settings className="h-5 w-5" />
             </Link>
-            <UserButton afterSignOutUrl="/" />
+            <UserButton />
           </div>
         </div>
       </header>

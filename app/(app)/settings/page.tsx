@@ -60,12 +60,12 @@ export default function SettingsPage() {
 
         // Apply UI-only defaults (not saved to DB until user explicitly saves)
         const profileWithDefaults = {
-          ...profileData.profile,
+          ...(profileData.profile || {}),
           units: profileData.profile?.units || "imperial",
         };
 
         const preferencesWithDefaults = {
-          ...preferencesData.preferences,
+          ...(preferencesData.preferences || {}),
           // Training tab defaults
           trainingFrequency: preferencesData.preferences?.trainingFrequency || 6,
           sessionDuration: preferencesData.preferences?.sessionDuration || 75,
