@@ -70,7 +70,7 @@ export default function SettingsPage() {
           trainingFrequency: preferencesData.preferences?.trainingFrequency || 6,
           sessionDuration: preferencesData.preferences?.sessionDuration || 75,
           // Preferences tab defaults
-          warmupDuration: preferencesData.preferences?.warmupDuration || 10,
+          warmupDuration: preferencesData.preferences?.warmupDuration || "10", // String to match schema
           theme: preferencesData.preferences?.theme || "dark",
           accentColor: preferencesData.preferences?.accentColor || "#10b981",
         };
