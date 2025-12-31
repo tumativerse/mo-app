@@ -331,6 +331,7 @@ export default function SettingsPage() {
 
   // Calculate profile completion status (updates in real-time)
   const completionStatus = useMemo(() => {
+    if (!profile || !preferences) return null;
     return checkProfileCompletion(profile, preferences);
   }, [profile, preferences]);
 
@@ -350,7 +351,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Profile Completion Banner */}
-      <ProfileCompletionBanner status={completionStatus} />
+      {completionStatus && <ProfileCompletionBanner status={completionStatus} />}
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
