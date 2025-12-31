@@ -5,12 +5,17 @@ import { Lock, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface AppLockScreenProps {
-  progress: number;
-  missingFields: string[];
+  progress: number; // Overall completion percentage
+  missingFields: string[]; // Missing mandatory fields
+  mandatoryCount: number; // Number of mandatory fields
+  totalFields: number; // Total number of fields
 }
 
-export function AppLockScreen({ progress, missingFields }: AppLockScreenProps) {
+export function AppLockScreen({ progress, missingFields, mandatoryCount, totalFields }: AppLockScreenProps) {
   const router = useRouter();
+
+  // Calculate what % completion unlocking will give
+  const unlockProgress = Math.round((mandatoryCount / totalFields) * 100);
 
   return (
     <motion.div
@@ -39,14 +44,17 @@ export function AppLockScreen({ progress, missingFields }: AppLockScreenProps) {
           <h1 className="text-xl sm:text-2xl font-bold text-zinc-100 mb-2">
             Complete Setup to Unlock Mo
           </h1>
-          <p className="text-sm sm:text-base text-zinc-400 mb-4 sm:mb-6">
-            Finish your profile to start your fitness journey
+          <p className="text-sm sm:text-base text-zinc-400 mb-1">
+            Complete {missingFields.length} mandatory {missingFields.length === 1 ? 'field' : 'fields'} to unlock
+          </p>
+          <p className="text-xs sm:text-sm text-zinc-500 mb-4 sm:mb-6">
+            (Unlocking gets you to {unlockProgress}% completion)
           </p>
 
           {/* Progress Bar */}
           <div className="mb-4 sm:mb-6">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-xs sm:text-sm text-zinc-500">Setup Progress</span>
+              <span className="text-xs sm:text-sm text-zinc-500">Overall Progress</span>
               <span className="text-xs sm:text-sm font-medium text-zinc-100">{progress}%</span>
             </div>
             <div className="h-2 sm:h-3 bg-zinc-800 rounded-full overflow-hidden">

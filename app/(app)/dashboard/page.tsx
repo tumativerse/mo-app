@@ -207,8 +207,10 @@ export default function DashboardPage() {
   if (!completionStatus.isMandatoryComplete) {
     return (
       <AppLockScreen
-        progress={completionStatus.mandatoryProgress}
+        progress={completionStatus.overallProgress}
         missingFields={completionStatus.missingMandatoryFields}
+        mandatoryCount={completionStatus.mandatoryFieldsTotal}
+        totalFields={completionStatus.overallFieldsTotal}
       />
     );
   }
