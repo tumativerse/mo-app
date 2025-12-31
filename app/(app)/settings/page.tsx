@@ -94,11 +94,10 @@ export default function SettingsPage() {
     }
   };
 
-  // Validate required fields
-  const validateForm = (): { valid: boolean; errors: string[] } => {
+  // Validate profile fields
+  const validateProfile = (): { valid: boolean; errors: string[] } => {
     const errors: string[] = [];
 
-    // Profile required fields
     if (!profile?.fullName?.trim()) {
       errors.push("Full name is required");
     }
@@ -111,6 +110,13 @@ export default function SettingsPage() {
     if (!profile?.heightCm) {
       errors.push("Height is required");
     }
+
+    return { valid: errors.length === 0, errors };
+  };
+
+  // Validate preferences fields (training + equipment)
+  const validatePreferences = (): { valid: boolean; errors: string[] } => {
+    const errors: string[] = [];
 
     // Training required fields
     if (!preferences?.fitnessGoal) {
@@ -134,18 +140,94 @@ export default function SettingsPage() {
     return { valid: errors.length === 0, errors };
   };
 
-  // Save changes
-  const handleSave = async () => {
-    const validation = validateForm();
+  // Save profile only
+  const handleProfileSave = async () => {
+    const validation = validateProfile();
     if (!validation.valid) {
-      toast.error("Please fill in all required fields");
       validation.errors.forEach((error) => toast.error(error));
       return;
     }
 
     setSaving(true);
     try {
-      // Save profile and preferences in parallel
+      const res = await fetch("/api/user/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profile),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save profile");
+      }
+
+      toast.success("Profile saved successfully!");
+      setData((prev) => prev ? { ...prev, profile } : null);
+    } catch (err) {
+      console.error("Save error:", err);
+      toast.error("Failed to save profile");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Save preferences with validation (for Training & Equipment tabs)
+  const handlePreferencesSave = async () => {
+    const validation = validatePreferences();
+    if (!validation.valid) {
+      validation.errors.forEach((error) => toast.error(error));
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const res = await fetch("/api/preferences", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(preferences),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save preferences");
+      }
+
+      toast.success("Preferences saved successfully!");
+      setData((prev) => prev ? { ...prev, preferences } : null);
+    } catch (err) {
+      console.error("Save error:", err);
+      toast.error("Failed to save preferences");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Save preferences without validation (for Lifestyle & Preferences tabs - no required fields)
+  const handleOptionalPreferencesSave = async () => {
+    setSaving(true);
+    try {
+      const res = await fetch("/api/preferences", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(preferences),
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save preferences");
+      }
+
+      toast.success("Preferences saved successfully!");
+      setData((prev) => prev ? { ...prev, preferences } : null);
+    } catch (err) {
+      console.error("Save error:", err);
+      toast.error("Failed to save preferences");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Save both profile and preferences (for Preferences tab which has units in profile)
+  const handleProfileAndPreferencesSave = async () => {
+    setSaving(true);
+    try {
       const [profileRes, preferencesRes] = await Promise.all([
         fetch("/api/user/profile", {
           method: "PATCH",
@@ -164,8 +246,6 @@ export default function SettingsPage() {
       }
 
       toast.success("Settings saved successfully!");
-
-      // Update the original data state to reflect saved changes
       setData({ profile, preferences });
     } catch (err) {
       console.error("Save error:", err);
@@ -282,7 +362,7 @@ export default function SettingsPage() {
                 <ProfileTab
                   profile={profile}
                   onChange={handleProfileChange}
-                  onSave={handleSave}
+                  onSave={handleProfileSave}
                   onCancel={() => window.history.back()}
                   isSaving={saving}
                 />
@@ -298,7 +378,7 @@ export default function SettingsPage() {
                 <TrainingTab
                   preferences={preferences}
                   onChange={handlePreferencesChange}
-                  onSave={handleSave}
+                  onSave={handlePreferencesSave}
                   onCancel={() => window.history.back()}
                   isSaving={saving}
                 />
@@ -314,7 +394,7 @@ export default function SettingsPage() {
                 <EquipmentTab
                   preferences={preferences}
                   onChange={handlePreferencesChange}
-                  onSave={handleSave}
+                  onSave={handlePreferencesSave}
                   onCancel={() => window.history.back()}
                   isSaving={saving}
                 />
@@ -330,7 +410,7 @@ export default function SettingsPage() {
                 <LifestyleTab
                   preferences={preferences}
                   onChange={handlePreferencesChange}
-                  onSave={handleSave}
+                  onSave={handleOptionalPreferencesSave}
                   onCancel={() => window.history.back()}
                   isSaving={saving}
                 />
@@ -348,7 +428,7 @@ export default function SettingsPage() {
                   preferences={preferences}
                   onProfileChange={handleProfileChange}
                   onPreferencesChange={handlePreferencesChange}
-                  onSave={handleSave}
+                  onSave={handleProfileAndPreferencesSave}
                   onCancel={() => window.history.back()}
                   isSaving={saving}
                 />
