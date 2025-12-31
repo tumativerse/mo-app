@@ -96,6 +96,9 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
     const newUnit = heightUnit === "cm" ? "ft_in" : "cm";
     setHeightUnit(newUnit);
 
+    // Update global units preference
+    onChange("units", newUnit === "ft_in" ? "imperial" : "metric");
+
     if (displayHeight || profile?.heightCm) {
       const currentCm = profile?.heightCm || 0;
       if (newUnit === "ft_in") {
@@ -265,6 +268,9 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
               {heightUnit === "ft_in" ? "ft/in" : "cm"}
             </button>
           </div>
+          <p className="text-xs text-zinc-500 mt-2">
+            💡 Unit preference applies throughout the app (workouts, weight tracking, etc.)
+          </p>
         </div>
 
         {/* Current Weight */}
@@ -293,6 +299,9 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
               {profile?.units === "imperial" ? "lbs" : "kg"}
             </button>
           </div>
+          <p className="text-xs text-zinc-500 mt-2">
+            💡 Unit preference applies throughout the app (workouts, weight tracking, etc.)
+          </p>
         </div>
 
         {/* Goal Weight */}
