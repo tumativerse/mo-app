@@ -77,17 +77,20 @@ export function PreferencesTab({
           <label className="block text-sm font-medium text-foreground mb-2">
             Warmup Duration
           </label>
-          <select
+          <SingleSelectDropdown
             value={preferences?.warmupDuration || "10"}
-            onChange={(e) => onPreferencesChange("warmupDuration", e.target.value)}
-            className="w-full px-4 py-3 text-base bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-          >
-            <option value="5">5 minutes</option>
-            <option value="10">10 minutes</option>
-            <option value="15">15 minutes</option>
-            <option value="20">20 minutes</option>
-          </select>
-          <p className="text-xs text-muted-foreground mt-1">
+            options={[
+              { value: "5", label: "5 minutes", description: "Quick warmup" },
+              { value: "10", label: "10 minutes", description: "Recommended" },
+              { value: "15", label: "15 minutes", description: "Extended warmup" },
+              { value: "20", label: "20 minutes", description: "Full mobility session" },
+            ]}
+            onChange={(value) => onPreferencesChange("warmupDuration", value)}
+            placeholder="Select duration"
+            width="100%"
+            showIcons={false}
+          />
+          <p className="text-xs text-muted-foreground mt-2">
             Default duration for pre-workout warmup routines
           </p>
         </div>

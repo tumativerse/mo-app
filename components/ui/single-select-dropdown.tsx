@@ -79,22 +79,22 @@ export function SingleSelectDropdown({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-3 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 font-medium text-center cursor-pointer hover:border-zinc-600 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 transition-colors flex items-center justify-between gap-2 touch-manipulation"
+        className="w-full px-3 py-3 text-base bg-secondary border border-border rounded-lg text-foreground font-medium text-center cursor-pointer hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors flex items-center justify-between gap-2 touch-manipulation"
       >
         <span className="flex-1 text-left flex items-center gap-2">
           {selectedOption?.icon && showIcons && (
-            <selectedOption.icon className="h-4 w-4 text-zinc-400 flex-shrink-0" />
+            <selectedOption.icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
           )}
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <ChevronDown className={`h-4 w-4 text-zinc-500 transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
         <div
           ref={menuRef}
-          className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-dropdown-menu"
+          className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-xl max-h-60 overflow-y-auto custom-dropdown-menu"
         >
           {options.map((option) => {
             const Icon = option.icon;
@@ -108,13 +108,13 @@ export function SingleSelectDropdown({
                 onClick={() => handleSelect(option.value)}
                 className={`w-full px-3 py-3 text-base text-left transition-colors flex items-start gap-3 touch-manipulation ${
                   isSelected
-                    ? "bg-green-600 text-white font-medium"
-                    : "text-zinc-100 hover:bg-zinc-800"
+                    ? "bg-primary text-primary-foreground font-medium"
+                    : "text-foreground hover:bg-secondary"
                 }`}
               >
                 {/* Icon */}
                 {Icon && showIcons && (
-                  <Icon className={`h-5 w-5 flex-shrink-0 mt-0.5 ${isSelected ? "text-white" : "text-zinc-400"}`} />
+                  <Icon className={`h-5 w-5 flex-shrink-0 mt-0.5 ${isSelected ? "text-primary-foreground" : "text-muted-foreground"}`} />
                 )}
 
                 {/* Label and Description */}
@@ -123,7 +123,7 @@ export function SingleSelectDropdown({
                     {option.label}
                   </div>
                   {option.description && (
-                    <div className={`text-xs mt-0.5 ${isSelected ? "text-white/75" : "text-zinc-500"}`}>
+                    <div className={`text-xs mt-0.5 ${isSelected ? "text-primary-foreground/75" : "text-muted-foreground"}`}>
                       {option.description}
                     </div>
                   )}
