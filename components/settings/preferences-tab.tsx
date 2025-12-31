@@ -41,17 +41,17 @@ export function PreferencesTab({
   return (
     <div className="space-y-6 pb-4">
       <div>
-        <h2 className="text-lg sm:text-xl font-semibold text-zinc-100 mb-2">
+        <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-2">
           App Preferences
         </h2>
-        <p className="text-sm text-zinc-400 mb-4 sm:mb-6">
+        <p className="text-sm text-muted-foreground mb-4 sm:mb-6">
           Customize your app experience and workout settings
         </p>
       </div>
 
       {/* Units */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-2">
+        <label className="block text-sm font-medium text-foreground mb-2">
           Measurement Units
         </label>
         <SingleSelectDropdown
@@ -61,70 +61,70 @@ export function PreferencesTab({
           placeholder="Select measurement units"
           width="100%"
         />
-        <p className="text-xs text-zinc-500 mt-2">
+        <p className="text-xs text-muted-foreground mt-2">
           This affects weight displays, body measurements, and exercise weights throughout the app
         </p>
       </div>
 
       {/* Warmup Settings */}
-      <div className="space-y-4 pt-6 border-t border-zinc-800">
-        <h3 className="text-sm font-medium text-zinc-300 uppercase tracking-wide">
+      <div className="space-y-4 pt-6 border-t border-border">
+        <h3 className="text-sm font-medium text-foreground uppercase tracking-wide">
           Warmup Settings
         </h3>
 
         {/* Warmup Duration */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             Warmup Duration
           </label>
           <select
             value={preferences?.warmupDuration || "10"}
             onChange={(e) => onPreferencesChange("warmupDuration", e.target.value)}
-            className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 text-base bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
           >
             <option value="5">5 minutes</option>
             <option value="10">10 minutes</option>
             <option value="15">15 minutes</option>
             <option value="20">20 minutes</option>
           </select>
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Default duration for pre-workout warmup routines
           </p>
         </div>
 
         {/* Skip General Warmup */}
-        <div className="flex items-start gap-3 p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg">
+        <div className="flex items-start gap-3 p-4 bg-muted/50 border border-border rounded-lg transition-colors">
           <input
             type="checkbox"
             id="skipGeneralWarmup"
             checked={preferences?.skipGeneralWarmup || false}
             onChange={(e) => onPreferencesChange("skipGeneralWarmup", e.target.checked)}
-            className="mt-1 w-4 h-4 bg-zinc-800 border-zinc-600 rounded text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 focus:ring-offset-zinc-900"
+            className="mt-1 w-4 h-4 bg-secondary border-border rounded text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 focus:ring-offset-background transition-colors"
           />
           <div className="flex-1">
-            <label htmlFor="skipGeneralWarmup" className="text-sm font-medium text-zinc-300 cursor-pointer">
+            <label htmlFor="skipGeneralWarmup" className="text-sm font-medium text-foreground cursor-pointer">
               Skip general warmup
             </label>
-            <p className="text-xs text-zinc-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Only show movement-specific warmup sets (no cardio/dynamic stretching)
             </p>
           </div>
         </div>
 
         {/* Include Mobility Work */}
-        <div className="flex items-start gap-3 p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg">
+        <div className="flex items-start gap-3 p-4 bg-muted/50 border border-border rounded-lg transition-colors">
           <input
             type="checkbox"
             id="includeMobilityWork"
             checked={preferences?.includeMobilityWork || false}
             onChange={(e) => onPreferencesChange("includeMobilityWork", e.target.checked)}
-            className="mt-1 w-4 h-4 bg-zinc-800 border-zinc-600 rounded text-green-600 focus:ring-2 focus:ring-green-500 focus:ring-offset-0 focus:ring-offset-zinc-900"
+            className="mt-1 w-4 h-4 bg-secondary border-border rounded text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 focus:ring-offset-background transition-colors"
           />
           <div className="flex-1">
-            <label htmlFor="includeMobilityWork" className="text-sm font-medium text-zinc-300 cursor-pointer">
+            <label htmlFor="includeMobilityWork" className="text-sm font-medium text-foreground cursor-pointer">
               Include mobility work
             </label>
-            <p className="text-xs text-zinc-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Add mobility exercises to warmup routines (recommended for injury prevention)
             </p>
           </div>
@@ -132,14 +132,14 @@ export function PreferencesTab({
       </div>
 
       {/* Display Preferences */}
-      <div className="space-y-4 pt-6 border-t border-zinc-800">
-        <h3 className="text-sm font-medium text-zinc-300 uppercase tracking-wide">
+      <div className="space-y-4 pt-6 border-t border-border">
+        <h3 className="text-sm font-medium text-foreground uppercase tracking-wide">
           Display
         </h3>
 
         {/* Theme Selection */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             App Theme
           </label>
           <div className="grid grid-cols-2 gap-3">
@@ -148,14 +148,14 @@ export function PreferencesTab({
               onClick={() => onPreferencesChange("theme", "light")}
               className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all ${
                 preferences?.theme === "light"
-                  ? "border-green-500 bg-zinc-800"
-                  : "border-zinc-700 bg-zinc-800/50 hover:bg-zinc-800"
+                  ? "border-primary bg-secondary"
+                  : "border-border bg-muted/50 hover:bg-secondary"
               }`}
             >
-              <Sun className="h-5 w-5 text-zinc-300" />
+              <Sun className="h-5 w-5 text-foreground" />
               <div className="text-left">
-                <p className="text-sm font-medium text-zinc-300">Light</p>
-                <p className="text-xs text-zinc-500">Bright theme</p>
+                <p className="text-sm font-medium text-foreground">Light</p>
+                <p className="text-xs text-muted-foreground">Bright theme</p>
               </div>
             </button>
             <button
@@ -163,14 +163,14 @@ export function PreferencesTab({
               onClick={() => onPreferencesChange("theme", "dark")}
               className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all ${
                 preferences?.theme === "dark"
-                  ? "border-green-500 bg-zinc-800"
-                  : "border-zinc-700 bg-zinc-800/50 hover:bg-zinc-800"
+                  ? "border-primary bg-secondary"
+                  : "border-border bg-muted/50 hover:bg-secondary"
               }`}
             >
-              <Moon className="h-5 w-5 text-zinc-300" />
+              <Moon className="h-5 w-5 text-foreground" />
               <div className="text-left">
-                <p className="text-sm font-medium text-zinc-300">Dark</p>
-                <p className="text-xs text-zinc-500">Default theme</p>
+                <p className="text-sm font-medium text-foreground">Dark</p>
+                <p className="text-xs text-muted-foreground">Default theme</p>
               </div>
             </button>
           </div>
@@ -185,13 +185,13 @@ export function PreferencesTab({
         </div>
 
         {/* Notifications - Coming Soon */}
-        <div className="p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg">
+        <div className="p-4 bg-muted/50 border border-border rounded-lg transition-colors">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-zinc-300">Notifications</p>
-              <p className="text-xs text-zinc-500 mt-1">Rest timer alerts, PR celebrations, streak reminders</p>
+              <p className="text-sm font-medium text-foreground">Notifications</p>
+              <p className="text-xs text-muted-foreground mt-1">Rest timer alerts, PR celebrations, streak reminders</p>
             </div>
-            <div className="px-3 py-1 bg-zinc-900 border border-zinc-800 rounded text-xs text-zinc-400">
+            <div className="px-3 py-1 bg-background border border-border rounded text-xs text-muted-foreground">
               Coming soon
             </div>
           </div>
@@ -199,18 +199,18 @@ export function PreferencesTab({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-zinc-800">
+      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-border">
         <button
           onClick={onCancel}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-3 text-base border border-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+          className="w-full sm:w-auto px-6 py-3 text-base border border-border text-foreground rounded-lg hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
         >
           Cancel
         </button>
         <button
           onClick={onSave}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-3 text-base bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
+          className="w-full sm:w-auto px-6 py-3 text-base bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
         >
           {isSaving ? (
             <>
