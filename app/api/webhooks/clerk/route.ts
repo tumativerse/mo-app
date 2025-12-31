@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { db } from "@/lib/db";
-import { users, userPreferences } from "@/lib/db/schema";
+import { users } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 // Clerk webhook event types
@@ -153,14 +153,8 @@ async function handleUserCreated(
 
   console.log(`Created user in DB: ${newUser.id}`);
 
-  // Create default preferences
-  await db.insert(userPreferences).values({
-    userId: newUser.id,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  });
-
-  console.log(`Created default preferences for user: ${newUser.id}`);
+  // Note: Preferences are auto-created on first access by getPreferences()
+  // with proper encrypted defaults. No need to create them here.
 }
 
 /**
