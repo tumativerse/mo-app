@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useProfileGuard } from "@/lib/hooks/use-profile-guard";
 import {
   Dumbbell,
   Calendar,
@@ -46,6 +47,9 @@ interface HistoryStats {
 }
 
 export default function HistoryPage() {
+  // Route guard - redirect to dashboard if mandatory profile fields incomplete
+  const { isChecking: profileChecking, isUnlocked } = useProfileGuard();
+
   const [workouts, setWorkouts] = useState<WorkoutHistory[]>([]);
   const [stats, setStats] = useState<HistoryStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -82,7 +86,7 @@ export default function HistoryPage() {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || profileChecking) {
     return (
       <motion.div
         className="space-y-4 sm:space-y-6 pb-8"

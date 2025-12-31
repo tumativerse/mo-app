@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { User, Dumbbell, Wrench, Leaf, Settings as SettingsIcon, Save, X, Loader2 } from "lucide-react";
@@ -13,8 +13,10 @@ import { TrainingTab } from "@/components/settings/training-tab";
 import { EquipmentTab } from "@/components/settings/equipment-tab";
 import { LifestyleTab } from "@/components/settings/lifestyle-tab";
 import { PreferencesTab } from "@/components/settings/preferences-tab";
+import { ProfileCompletionBanner } from "@/components/settings/profile-completion-banner";
 import { pageTransition, staggerContainer, staggerItem } from "@/lib/animations";
 import { useTheme } from "@/lib/contexts/theme-context";
+import { checkProfileCompletion } from "@/lib/utils/profile-completion";
 
 interface SettingsData {
   profile: any;
@@ -313,6 +315,11 @@ export default function SettingsPage() {
     { id: "preferences", label: "Preferences", icon: SettingsIcon },
   ];
 
+  // Calculate profile completion status (updates in real-time)
+  const completionStatus = useMemo(() => {
+    return checkProfileCompletion(profile, preferences);
+  }, [profile, preferences]);
+
   return (
     <motion.div
       className="space-y-4 sm:space-y-6 pb-8"
@@ -327,6 +334,9 @@ export default function SettingsPage() {
           Manage your profile, training preferences, and app settings
         </p>
       </div>
+
+      {/* Profile Completion Banner */}
+      <ProfileCompletionBanner status={completionStatus} />
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

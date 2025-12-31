@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useProfileGuard } from "@/lib/hooks/use-profile-guard";
 import {
   Activity,
   TrendingUp,
@@ -66,6 +67,9 @@ interface ProgressionData {
 }
 
 export default function ProgressPage() {
+  // Route guard - redirect to dashboard if mandatory profile fields incomplete
+  const { isChecking: profileChecking, isUnlocked } = useProfileGuard();
+
   const [data, setData] = useState<ProgressionData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [days, setDays] = useState(14);
@@ -107,7 +111,7 @@ export default function ProgressPage() {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || profileChecking) {
     return (
       <motion.div
         className="space-y-4 sm:space-y-6 pb-8"

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useProfileGuard } from "@/lib/hooks/use-profile-guard";
 import {
   Dumbbell,
   Play,
@@ -187,6 +188,9 @@ interface SlotSelection {
 
 export default function WorkoutPage() {
   const router = useRouter();
+
+  // Route guard - redirect to dashboard if mandatory profile fields incomplete
+  const { isChecking: profileChecking, isUnlocked } = useProfileGuard();
 
   // Data state
   const [data, setData] = useState<PPLTodayData | null>(null);
@@ -467,8 +471,8 @@ export default function WorkoutPage() {
 
   const allComplete = sessionExercises.length > 0 && completedCount === sessionExercises.length;
 
-  // Loading state
-  if (isLoading) {
+  // Loading state (including profile guard check)
+  if (isLoading || profileChecking) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center -mt-6">
         <div className="text-zinc-400">Loading...</div>

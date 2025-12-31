@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -23,7 +23,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RecoveryCheckin } from "@/components/recovery-checkin";
+import { ProfileSetupToast } from "@/components/profile-setup-toast";
+import { AppLockScreen } from "@/components/app-lock-screen";
 import { pageTransition, staggerContainer, staggerItem, cardHover } from "@/lib/animations";
+import { checkProfileCompletion } from "@/lib/utils/profile-completion";
 
 interface DashboardData {
   workoutsThisWeek: number;
@@ -107,10 +110,15 @@ export default function DashboardPage() {
   const [showRecoveryForm, setShowRecoveryForm] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Profile completion state
+  const [profile, setProfile] = useState<any>(null);
+  const [preferences, setPreferences] = useState<any>(null);
+
   useEffect(() => {
     fetchDashboard();
     fetchTodayRecovery();
     fetchTrainingStatus();
+    fetchProfileData();
   }, []);
 
   async function fetchDashboard() {
@@ -151,12 +159,38 @@ export default function DashboardPage() {
     }
   }
 
+  async function fetchProfileData() {
+    try {
+      const [profileRes, preferencesRes] = await Promise.all([
+        fetch("/api/user/profile"),
+        fetch("/api/preferences"),
+      ]);
+
+      if (profileRes.ok && preferencesRes.ok) {
+        const [profileData, preferencesData] = await Promise.all([
+          profileRes.json(),
+          preferencesRes.json(),
+        ]);
+        setProfile(profileData.profile);
+        setPreferences(preferencesData.preferences);
+      }
+    } catch {
+      // Silently fail - will show lock screen if data is missing
+    }
+  }
+
   function handleRecoveryComplete() {
     setShowRecoveryForm(false);
     fetchTodayRecovery();
   }
 
-  if (isLoading) {
+  // Calculate profile completion status
+  const completionStatus = useMemo(() => {
+    if (!profile || !preferences) return null;
+    return checkProfileCompletion(profile, preferences);
+  }, [profile, preferences]);
+
+  if (isLoading || !completionStatus) {
     return (
       <motion.div
         initial="initial"
@@ -166,6 +200,16 @@ export default function DashboardPage() {
       >
         <DashboardSkeleton />
       </motion.div>
+    );
+  }
+
+  // Show lock screen if mandatory fields are not complete
+  if (!completionStatus.isMandatoryComplete) {
+    return (
+      <AppLockScreen
+        progress={completionStatus.mandatoryProgress}
+        missingFields={completionStatus.missingMandatoryFields}
+      />
     );
   }
 
@@ -186,6 +230,15 @@ export default function DashboardPage() {
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground mt-1">Track your progress</p>
       </motion.div>
+
+      {/* Profile Setup Toast - Show when unlocked but optional fields incomplete */}
+      {completionStatus.overallProgress < 100 && (
+        <ProfileSetupToast
+          progress={completionStatus.overallProgress}
+          missingCount={completionStatus.missingOptionalFields.length}
+          isDismissible={true}
+        />
+      )}
 
       <motion.div
         variants={staggerContainer}

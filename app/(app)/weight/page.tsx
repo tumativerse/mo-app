@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useProfileGuard } from "@/lib/hooks/use-profile-guard";
 import { Scale, TrendingDown, TrendingUp, Minus, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -57,6 +58,9 @@ function WeightSkeleton() {
 }
 
 export default function WeightPage() {
+  // Route guard - redirect to dashboard if mandatory profile fields incomplete
+  const { isChecking: profileChecking, isUnlocked } = useProfileGuard();
+
   const [weight, setWeight] = useState("");
   const [entries, setEntries] = useState<WeightEntry[]>([]);
   const [stats, setStats] = useState<WeightStats | null>(null);
@@ -169,7 +173,7 @@ export default function WeightPage() {
     return "text-muted-foreground";
   };
 
-  if (isLoading) {
+  if (isLoading || profileChecking) {
     return (
       <motion.div
         initial="initial"
