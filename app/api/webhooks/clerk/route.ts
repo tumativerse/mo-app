@@ -119,6 +119,11 @@ async function handleUserCreated(
   const primaryEmail = emailAddresses[0]?.email_address;
 
   if (!primaryEmail) {
+    // Handle test events from Clerk Dashboard (they have empty email arrays)
+    if (emailAddresses.length === 0) {
+      console.log(`Test event received for user ${clerkId} - skipping (no email)`);
+      return;
+    }
     throw new Error("No email address found for user");
   }
 
@@ -171,6 +176,11 @@ async function handleUserUpdated(
   const primaryEmail = emailAddresses[0]?.email_address;
 
   if (!primaryEmail) {
+    // Handle test events from Clerk Dashboard (they have empty email arrays)
+    if (emailAddresses.length === 0) {
+      console.log(`Test event received for user ${clerkId} - skipping (no email)`);
+      return;
+    }
     throw new Error("No email address found for user");
   }
 
