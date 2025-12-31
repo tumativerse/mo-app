@@ -57,17 +57,27 @@ export default function SettingsPage() {
           profile: profileData.profile,
           preferences: preferencesData.preferences,
         });
-        // Initialize local state for editing
-        setProfile(profileData.profile);
-        setPreferences(preferencesData.preferences);
 
-        // Sync theme context with user preferences
-        if (preferencesData.preferences?.theme) {
-          setTheme(preferencesData.preferences.theme);
-        }
-        if (preferencesData.preferences?.accentColor) {
-          setAccentColor(preferencesData.preferences.accentColor);
-        }
+        // Apply UI-only defaults (not saved to DB until user explicitly saves)
+        const profileWithDefaults = {
+          ...profileData.profile,
+          units: profileData.profile?.units || "imperial",
+        };
+
+        const preferencesWithDefaults = {
+          ...preferencesData.preferences,
+          warmupDuration: preferencesData.preferences?.warmupDuration || 10,
+          theme: preferencesData.preferences?.theme || "dark",
+          accentColor: preferencesData.preferences?.accentColor || "#10b981",
+        };
+
+        // Initialize local state for editing with defaults
+        setProfile(profileWithDefaults);
+        setPreferences(preferencesWithDefaults);
+
+        // Sync theme context with defaults
+        setTheme(preferencesWithDefaults.theme);
+        setAccentColor(preferencesWithDefaults.accentColor);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
         toast.error("Failed to load settings");
