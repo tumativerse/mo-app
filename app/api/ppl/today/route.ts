@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
     });
 
     const equipmentLevel = prefs?.defaultEquipmentLevel || 'full_gym';
+    const units = user.units || 'imperial'; // Get user's unit preference
 
     // Get the PPL template
     const template = await db.query.programTemplates.findFirst({
@@ -271,6 +272,8 @@ export async function GET(request: NextRequest) {
         estimatedDuration: todayDay.estimatedDuration || 60,
         notes: null,
       },
+      // User preferences
+      units,
       // Slots at root level (moved from today.slots)
       slots: slotsWithSuggestions.map((slot) => ({
         id: slot.id,

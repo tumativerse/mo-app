@@ -54,7 +54,11 @@ export async function GET(request: NextRequest) {
         : null,
     };
 
-    return NextResponse.json({ entries, stats });
+    return NextResponse.json({
+      entries,
+      stats,
+      units: user.units || 'imperial'
+    });
   } catch (error) {
     console.error("Error fetching weight entries:", error);
     return NextResponse.json(

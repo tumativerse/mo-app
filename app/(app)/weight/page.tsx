@@ -64,6 +64,7 @@ export default function WeightPage() {
   const [weight, setWeight] = useState("");
   const [entries, setEntries] = useState<WeightEntry[]>([]);
   const [stats, setStats] = useState<WeightStats | null>(null);
+  const [units, setUnits] = useState<"imperial" | "metric">("imperial");
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -71,6 +72,9 @@ export default function WeightPage() {
   // Animated stat values
   const [animatedCurrent, setAnimatedCurrent] = useState(0);
   const [animatedAverage, setAnimatedAverage] = useState(0);
+
+  // Unit label for display
+  const unitLabel = units === "imperial" ? "lbs" : "kg";
 
   useEffect(() => {
     fetchEntries();
@@ -93,6 +97,7 @@ export default function WeightPage() {
       const data = await res.json();
       setEntries(data.entries);
       setStats(data.stats);
+      setUnits(data.units || "imperial");
     } catch (error) {
       toast.error("Failed to load weight data");
     } finally {
@@ -228,7 +233,7 @@ export default function WeightPage() {
                     style={{ minHeight: '56px' }} // Touch-friendly
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
-                    lbs
+                    {unitLabel}
                   </span>
                 </div>
 
@@ -297,7 +302,7 @@ export default function WeightPage() {
                   <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
                     {stats.current ? `${animatedCurrent.toFixed(1)}` : "--"}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">lbs</p>
+                  <p className="text-xs text-muted-foreground mt-1">{unitLabel}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -320,7 +325,7 @@ export default function WeightPage() {
                     </p>
                     {getTrendIcon()}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">lbs</p>
+                  <p className="text-xs text-muted-foreground mt-1">{unitLabel}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -333,7 +338,7 @@ export default function WeightPage() {
                   <p className="text-2xl sm:text-3xl font-bold">
                     {stats.average ? `${animatedAverage.toFixed(1)}` : "--"}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">lbs</p>
+                  <p className="text-xs text-muted-foreground mt-1">{unitLabel}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -348,7 +353,7 @@ export default function WeightPage() {
                       ? `${stats.lowest} - ${stats.highest}`
                       : "--"}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">lbs</p>
+                  <p className="text-xs text-muted-foreground mt-1">{unitLabel}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -395,7 +400,7 @@ export default function WeightPage() {
                           borderRadius: "8px",
                         }}
                         labelStyle={{ color: "hsl(var(--muted-foreground))" }}
-                        formatter={(value: any) => [`${value} lbs`, "Weight"]}
+                        formatter={(value: any) => [`${value} ${unitLabel}`, "Weight"]}
                       />
                       {stats?.average && (
                         <ReferenceLine
@@ -468,7 +473,7 @@ export default function WeightPage() {
                         })}
                       </span>
                       <Badge variant="outline" className="text-sm sm:text-base font-semibold">
-                        {entry.weight} lbs
+                        {entry.weight} {unitLabel}
                       </Badge>
                     </motion.div>
                   ))}

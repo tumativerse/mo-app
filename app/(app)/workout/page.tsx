@@ -125,6 +125,7 @@ interface PPLTodayData {
   templateDay: TemplateDay;
   slots: TemplateSlot[];
   equipmentLevel: "full_gym" | "home_gym" | "bodyweight";
+  units: "imperial" | "metric";
   warmup: {
     id: string;
     name: string;
@@ -398,7 +399,7 @@ export default function WorkoutPage() {
           sessionExerciseId,
           setNumber,
           weight,
-          weightUnit: "lbs",
+          weightUnit: data?.units === "imperial" ? "lbs" : "kg",
           reps,
           rpe,
         }),
@@ -830,7 +831,7 @@ function OverviewMode({
                       </p>
                       {exercise.previous && (
                         <p className="text-xs text-zinc-500 mt-1">
-                          Last: {exercise.previous.weight} lbs × {exercise.previous.reps}
+                          Last: {exercise.previous.weight} {data?.units === "imperial" ? "lbs" : "kg"} × {exercise.previous.reps}
                           {exercise.previous.rpe && ` @ ${exercise.previous.rpe}`}
                         </p>
                       )}
@@ -993,7 +994,7 @@ function FocusedMode({
           <div className="px-4 py-3 bg-zinc-800/50 flex items-center gap-2">
             <span className="text-sm text-zinc-400">Last time:</span>
             <span className="font-medium text-zinc-200">
-              {currentExercise.previous.weight} lbs × {currentExercise.previous.reps}
+              {currentExercise.previous.weight} {data?.units === "imperial" ? "lbs" : "kg"} × {currentExercise.previous.reps}
               {currentExercise.previous.rpe && ` @ RPE ${currentExercise.previous.rpe}`}
             </span>
           </div>
