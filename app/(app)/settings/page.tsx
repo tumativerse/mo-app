@@ -244,6 +244,9 @@ export default function SettingsPage() {
   const handleProfileAndPreferencesSave = async () => {
     setSaving(true);
     try {
+      console.log("Saving profile:", profile);
+      console.log("Saving preferences:", preferences);
+
       const [profileRes, preferencesRes] = await Promise.all([
         fetch("/api/user/profile", {
           method: "PATCH",
@@ -257,15 +260,23 @@ export default function SettingsPage() {
         }),
       ]);
 
-      if (!profileRes.ok || !preferencesRes.ok) {
-        throw new Error("Failed to save settings");
+      if (!profileRes.ok) {
+        const profileError = await profileRes.json();
+        console.error("Profile API error:", profileError);
+        throw new Error("Failed to save profile: " + JSON.stringify(profileError.details || profileError.error));
+      }
+
+      if (!preferencesRes.ok) {
+        const preferencesError = await preferencesRes.json();
+        console.error("Preferences API error:", preferencesError);
+        throw new Error("Failed to save preferences: " + JSON.stringify(preferencesError.details || preferencesError.error));
       }
 
       toast.success("Settings saved successfully!");
       setData({ profile, preferences });
     } catch (err) {
       console.error("Save error:", err);
-      toast.error("Failed to save settings");
+      toast.error(err instanceof Error ? err.message : "Failed to save settings");
     } finally {
       setSaving(false);
     }
