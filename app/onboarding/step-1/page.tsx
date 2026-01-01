@@ -117,31 +117,6 @@ export default function OnboardingStep1Page() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Units Toggle */}
-          <div className="space-y-2">
-            <Label>Measurement Units</Label>
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                variant={units === 'metric' ? 'primary' : 'outline'}
-                size="md"
-                onClick={() => setUnits('metric')}
-                className="flex-1"
-              >
-                Metric (kg, cm)
-              </Button>
-              <Button
-                type="button"
-                variant={units === 'imperial' ? 'primary' : 'outline'}
-                size="md"
-                onClick={() => setUnits('imperial')}
-                className="flex-1"
-              >
-                Imperial (lbs, ft/in)
-              </Button>
-            </div>
-          </div>
-
           {/* Full Name */}
           <div className="space-y-2">
             <Label htmlFor="fullName">Full Name</Label>
@@ -186,6 +161,35 @@ export default function OnboardingStep1Page() {
             <p className="text-xs text-muted-foreground">
               Helps us provide more accurate calorie and nutrition recommendations
             </p>
+          </div>
+
+          {/* Units Toggle - Compact */}
+          <div className="flex items-center justify-between py-2 px-3 bg-secondary/50 rounded-lg border border-border">
+            <span className="text-sm text-muted-foreground">Units:</span>
+            <div className="flex gap-1">
+              <button
+                type="button"
+                onClick={() => setUnits('metric')}
+                className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
+                  units === 'metric'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Metric
+              </button>
+              <button
+                type="button"
+                onClick={() => setUnits('imperial')}
+                className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
+                  units === 'imperial'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-transparent text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                Imperial
+              </button>
+            </div>
           </div>
 
           {/* Height - Conditional based on units */}
