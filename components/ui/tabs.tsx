@@ -38,46 +38,13 @@ function TabsTrigger({
   className,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
-  const [isActive, setIsActive] = React.useState(false);
-  const ref = React.useRef<HTMLButtonElement>(null);
-
-  React.useEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    // Check initial state immediately
-    const checkState = () => {
-      setIsActive(element.getAttribute('data-state') === 'active');
-    };
-
-    // Check on mount
-    checkState();
-
-    // Also use a small timeout to check after Radix initialization
-    const timeout = setTimeout(checkState, 50);
-
-    // Watch for state changes
-    const observer = new MutationObserver(checkState);
-    observer.observe(element, { attributes: true, attributeFilter: ['data-state'] });
-
-    return () => {
-      clearTimeout(timeout);
-      observer.disconnect();
-    };
-  }, []);
-
   return (
     <TabsPrimitive.Trigger
-      ref={ref}
       data-slot="tabs-trigger"
       className={cn(
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,background-color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,background-color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 tabs-trigger-custom",
         className
       )}
-      style={isActive ? {
-        backgroundColor: 'var(--user-accent-color, #0BA08B)',
-        color: 'white'
-      } : {}}
       {...props}
     />
   )

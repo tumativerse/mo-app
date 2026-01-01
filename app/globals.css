@@ -146,4 +146,10 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Tab trigger active state with accent color */
+  .tabs-trigger-custom[data-state="active"] {
+    background-color: var(--user-accent-color, #0BA08B) !important;
+    color: white !important;
+  }
 }
