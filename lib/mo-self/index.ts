@@ -25,6 +25,7 @@ export {
   getUserByClerkId,
   requireAuth,
   getCurrentUser,
+  hasCompletedOnboarding,
   getProfile,
   updateProfile,
 } from './identity';

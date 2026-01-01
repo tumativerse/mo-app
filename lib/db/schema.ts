@@ -298,6 +298,9 @@ export const users = pgTable('users', {
   // Preferences
   units: unitsEnum('units').default('imperial'),
 
+  // Onboarding Status
+  onboardingCompleted: boolean('onboarding_completed').default(false),
+
   // Timestamps
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

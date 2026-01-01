@@ -71,9 +71,10 @@ export async function getOrCreateUser() {
       .returning();
 
     return newUser;
-  } catch (error: any) {
+  } catch (error: unknown) {
     // If duplicate key error (webhook created user while we were checking)
-    if (error?.code === '23505' && error?.constraint === 'users_clerk_id_unique') {
+    const dbError = error as { code?: string; constraint?: string };
+    if (dbError?.code === '23505' && dbError?.constraint === 'users_clerk_id_unique') {
       // Query again to get the user created by webhook
       const user = await db.query.users.findFirst({
         where: eq(users.clerkId, userId),
@@ -122,4 +123,19 @@ export async function getCurrentUser() {
   }
 
   return user;
+}
+
+/**
+ * Check if current user has completed onboarding
+ * Returns true if onboarding is completed, false if not
+ * Returns null if user is not authenticated
+ */
+export async function hasCompletedOnboarding(): Promise<boolean | null> {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return null;
+  }
+
+  return user.onboardingCompleted ?? false;
 }

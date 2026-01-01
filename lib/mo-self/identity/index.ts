@@ -16,6 +16,7 @@ export {
   getUserByClerkId,
   requireAuth,
   getCurrentUser,
+  hasCompletedOnboarding,
 } from './auth';
 
 // MoProfile - "Your Foundation"
