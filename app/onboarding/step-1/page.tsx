@@ -29,6 +29,7 @@ export default function OnboardingStep1Page() {
   const [units, setUnits] = useState<'metric' | 'imperial'>('imperial');
   const [formData, setFormData] = useState({
     fullName: '',
+    preferredName: '',
     dateOfBirth: '',
     gender: '',
     heightCm: '',
@@ -87,6 +88,7 @@ export default function OnboardingStep1Page() {
 
       const dataToSave = {
         fullName: formData.fullName,
+        preferredName: formData.preferredName,
         dateOfBirth: formData.dateOfBirth,
         gender: formData.gender,
         heightCm,
@@ -129,6 +131,22 @@ export default function OnboardingStep1Page() {
               required
               size="md"
             />
+          </div>
+
+          {/* Preferred Name - Optional */}
+          <div className="space-y-2">
+            <Label htmlFor="preferredName">What should Mo call you?</Label>
+            <Input
+              id="preferredName"
+              type="text"
+              placeholder="e.g., Johnny"
+              value={formData.preferredName}
+              onChange={(e) => setFormData({ ...formData, preferredName: e.target.value })}
+              size="md"
+            />
+            <p className="text-xs text-muted-foreground">
+              We'll use this throughout the app (optional)
+            </p>
           </div>
 
           {/* Date of Birth */}
