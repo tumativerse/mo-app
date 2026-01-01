@@ -47,6 +47,31 @@ import { cn } from '@/lib/utils';
 - [ ] Works on 375px width (iPhone SE)
 - [ ] No horizontal scroll
 
+### Browser & Device Compatibility Checklist:
+- [ ] **Cross-Browser Testing**: Works on Chrome, Safari, Firefox, Edge
+- [ ] **Responsive Design**: Mobile (375px), Tablet (768px), Desktop (1024px+)
+- [ ] **Touch & Mouse**: Hover states have active/focus alternatives for touch devices
+- [ ] **Images**: All `<img>` tags have alt text for accessibility and SEO
+- [ ] **Fixed Widths**: Use responsive breakpoints (sm:, md:, lg:) or relative units
+- [ ] **Input Zoom Prevention**: All inputs use text-base (16px) or larger to prevent iOS zoom
+- [ ] **Browser Prefixes**: CSS autoprefixer handles vendor prefixes automatically
+- [ ] **Performance**: Images use Next.js Image component with lazy loading
+- [ ] **Viewport**: Meta viewport tag present in layout: `width=device-width, initial-scale=1`
+- [ ] **Orientation**: Works in both portrait and landscape on mobile/tablet
+
+### Device-Specific Optimizations:
+- **iOS**:
+  - [ ] No text-sm or smaller on inputs (prevents zoom)
+  - [ ] Touch targets minimum 44px height
+  - [ ] Safe area insets for notched devices
+- **Android**:
+  - [ ] Works on Chrome Mobile and Samsung Internet
+  - [ ] Handles different screen densities (1x, 2x, 3x)
+- **Desktop**:
+  - [ ] Keyboard navigation works (Tab, Enter, Space, Arrows)
+  - [ ] Hover states visible but not required for interaction
+  - [ ] Focus indicators always visible
+
 ### Theme Checklist:
 - [ ] Uses CSS variables (hsl(var(--primary)))
 - [ ] Works in both light AND dark mode

@@ -99,11 +99,64 @@ if [ -n "$SMALL_TOUCH" ]; then
   # Don't increment ERRORS - this is a warning
 fi
 
+# Check for browser compatibility issues
+echo "Checking for browser compatibility..."
+
+# Check for webkit-specific styles without fallbacks
+WEBKIT_ONLY=$(echo "$STAGED_FILES" | xargs grep -n '\-webkit-' | grep -v 'appearance' || true)
+if [ -n "$WEBKIT_ONLY" ]; then
+  echo "⚠️  Found webkit-specific CSS (may need cross-browser fallbacks):"
+  echo "$WEBKIT_ONLY"
+  echo ""
+  echo "Reminder: Consider adding fallbacks for Firefox, Safari, Chrome, Edge"
+  # Don't increment ERRORS - this is a warning
+fi
+
+# Check for img tags without alt (accessibility + SEO)
+IMG_NO_ALT=$(echo "$STAGED_FILES" | xargs grep -n '<img' | grep -v 'alt=' || true)
+if [ -n "$IMG_NO_ALT" ]; then
+  echo "⚠️  Found img tags without alt attribute:"
+  echo "$IMG_NO_ALT"
+  echo ""
+  echo "Fix: Add alt text for accessibility and SEO"
+  # Don't increment ERRORS - this is a warning
+fi
+
+# Check for fixed widths without responsive breakpoints
+FIXED_WIDTH=$(echo "$STAGED_FILES" | xargs grep -n "w-\[.*px\]" | grep -v "sm:\|md:\|lg:" || true)
+if [ -n "$FIXED_WIDTH" ]; then
+  echo "⚠️  Found fixed pixel widths without responsive breakpoints:"
+  echo "$FIXED_WIDTH"
+  echo ""
+  echo "Reminder: Use responsive breakpoints (sm:, md:, lg:) or relative units"
+  # Don't increment ERRORS - this is a warning
+fi
+
+# Check for text size below 16px on inputs (causes iOS zoom)
+SMALL_INPUT_TEXT=$(echo "$STAGED_FILES" | xargs grep -n '<Input' | grep -E 'text-(xs|sm)' || true)
+if [ -n "$SMALL_INPUT_TEXT" ]; then
+  echo "❌ Found input fields with text smaller than 16px:"
+  echo "$SMALL_INPUT_TEXT"
+  echo ""
+  echo "Fix: Use text-base (16px) or larger on inputs to prevent iOS zoom"
+  ERRORS=$((ERRORS + 1))
+fi
+
+# Check for hover-only interactions (mobile accessibility)
+HOVER_ONLY=$(echo "$STAGED_FILES" | xargs grep -n 'hover:' | grep -v 'active:\|focus:' || true)
+if [ -n "$HOVER_ONLY" ]; then
+  echo "⚠️  Found hover-only styles (may not work on touch devices):"
+  echo "$HOVER_ONLY"
+  echo ""
+  echo "Reminder: Add active: and focus: states for mobile/keyboard users"
+  # Don't increment ERRORS - this is a warning
+fi
+
 echo ""
 if [ $ERRORS -gt 0 ]; then
   echo "❌ Design system violations found. Please fix before committing."
   echo ""
-  echo "📖 See .claude/PRE_BUILD_CHECKLIST.md for guidelines"
+  echo "📖 See .claude/rules/design-system.md for guidelines"
   exit 1
 else
   echo "✅ Design system checks passed!"
