@@ -95,25 +95,93 @@ import { cn } from '@/lib/utils';
 
 ### Responsive Standardization Pattern:
 
-**ALWAYS prefer consistent alignment with responsive sizing:**
+**CORE PRINCIPLE: Same Strategy + Responsive Sizing = Consistent UX**
 
+ALWAYS use the same strategy across all breakpoints. Only change:
+- ✅ Sizes (h-6 sm:h-10, w-6 sm:w-10)
+- ✅ Spacing (gap-2 sm:gap-4, p-2 sm:p-4)
+- ✅ Margins/Padding values (mx-2 sm:mx-4)
+
+NEVER change:
+- ❌ Alignment strategy (justify-between sm:justify-center)
+- ❌ Display type (block sm:flex, grid sm:flex)
+- ❌ Positioning type (relative sm:absolute)
+- ❌ Text alignment (text-left sm:text-center)
+- ❌ Flex direction behavior (different approaches per breakpoint)
+
+### Examples by Category:
+
+**Flexbox Alignment:**
 ```tsx
-// ✅ CORRECT: Same alignment strategy, different sizes
+// ✅ CORRECT: Same justify, different spacing
 <div className="flex justify-center gap-2 sm:gap-4">
-  <Circle className="h-6 w-6 sm:h-10 sm:w-10" />
+  <Item />
 </div>
 
-// ❌ WRONG: Different alignment strategies per breakpoint
+// ❌ WRONG: Different justify per breakpoint
 <div className="flex justify-between sm:justify-center">
-  {/* Mobile spreads, desktop centers - inconsistent UX */}
+  <Item />
 </div>
 ```
 
-**Why?**
+**Items Alignment:**
+```tsx
+// ✅ CORRECT: Same alignment, different sizes
+<div className="flex items-center gap-2 sm:gap-4">
+  <Icon className="h-4 sm:h-6" />
+</div>
+
+// ❌ WRONG: Different items alignment
+<div className="flex items-start sm:items-center">
+  <Icon />
+</div>
+```
+
+**Display Type:**
+```tsx
+// ✅ CORRECT: Always flex, change direction
+<div className="flex flex-col sm:flex-row gap-4">
+  <Item />
+</div>
+
+// ❌ WRONG: Different display types
+<div className="block sm:flex">
+  <Item />
+</div>
+```
+
+**Text Alignment:**
+```tsx
+// ✅ CORRECT: Same alignment always
+<p className="text-center text-sm sm:text-base">
+  Text
+</p>
+
+// ❌ WRONG: Different text alignment
+<p className="text-left sm:text-center">
+  Text
+</p>
+```
+
+**Positioning:**
+```tsx
+// ✅ CORRECT: Same position type, different offsets
+<div className="absolute top-2 sm:top-4 right-2 sm:right-4">
+  <Badge />
+</div>
+
+// ❌ WRONG: Different positioning types
+<div className="relative sm:absolute">
+  <Badge />
+</div>
+```
+
+**Why This Matters:**
 - Consistent visual center point across all devices
-- Predictable user experience
-- Easier to maintain (one alignment rule)
-- Only size/spacing changes, not positioning logic
+- Predictable user experience - no surprises
+- Easier to maintain (one strategy rule, not multiple)
+- Prevents layout bugs from breakpoint transitions
+- Simpler mental model for the team
 
 ### Component Positioning Patterns:
 ```tsx

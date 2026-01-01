@@ -255,18 +255,68 @@ for file in $STAGED_FILES; do
   fi
 done
 
-# Check for inconsistent alignment strategies across breakpoints
-ALIGNMENT_INCONSISTENCY=$(echo "$STAGED_FILES" | xargs grep -n "justify-between.*sm:justify-\|justify-start.*sm:justify-\|justify-end.*sm:justify-" || true)
-if [ -n "$ALIGNMENT_INCONSISTENCY" ]; then
-  echo "⚠️  Found different alignment strategies per breakpoint:"
-  echo "$ALIGNMENT_INCONSISTENCY"
+# Check for inconsistent strategies across breakpoints (comprehensive)
+echo "Checking for responsive strategy consistency..."
+
+# Check justify alignment changes
+JUSTIFY_CHANGES=$(echo "$STAGED_FILES" | xargs grep -n "justify-\(between\|start\|end\|around\|evenly\).*sm:justify-\|justify-\(between\|start\|end\|around\|evenly\).*md:justify-\|justify-\(between\|start\|end\|around\|evenly\).*lg:justify-" || true)
+if [ -n "$JUSTIFY_CHANGES" ]; then
+  echo "⚠️  Found different justify strategies per breakpoint:"
+  echo "$JUSTIFY_CHANGES"
   echo ""
-  echo "Reminder: Use consistent alignment (e.g., always justify-center)"
-  echo "          Only change size/spacing with responsive classes, not alignment"
-  echo "          Example: justify-center gap-2 sm:gap-4 (consistent alignment, different spacing)"
-  # Don't increment ERRORS - this is a warning
+  echo "Fix: Use consistent justify (e.g., always justify-center)"
+  echo "     Only change gap/spacing: justify-center gap-2 sm:gap-4"
 fi
 
+# Check items alignment changes
+ITEMS_CHANGES=$(echo "$STAGED_FILES" | xargs grep -n "items-start.*sm:items-\|items-end.*sm:items-\|items-start.*md:items-\|items-end.*md:items-" || true)
+if [ -n "$ITEMS_CHANGES" ]; then
+  echo "⚠️  Found different items alignment per breakpoint:"
+  echo "$ITEMS_CHANGES"
+  echo ""
+  echo "Fix: Use consistent items alignment (e.g., always items-center)"
+fi
+
+# Check display strategy changes
+DISPLAY_CHANGES=$(echo "$STAGED_FILES" | xargs grep -n "block.*sm:flex\|flex.*sm:block\|grid.*sm:flex\|flex.*sm:grid\|block.*sm:grid\|grid.*sm:block" || true)
+if [ -n "$DISPLAY_CHANGES" ]; then
+  echo "⚠️  Found different display strategies per breakpoint:"
+  echo "$DISPLAY_CHANGES"
+  echo ""
+  echo "Consider: Use consistent display type (e.g., always flex)"
+  echo "          Change layout with flex-col sm:flex-row if needed"
+fi
+
+# Check text alignment changes
+TEXT_ALIGN_CHANGES=$(echo "$STAGED_FILES" | xargs grep -n "text-left.*sm:text-\|text-right.*sm:text-\|text-left.*md:text-\|text-right.*md:text-" || true)
+if [ -n "$TEXT_ALIGN_CHANGES" ]; then
+  echo "⚠️  Found different text alignment per breakpoint:"
+  echo "$TEXT_ALIGN_CHANGES"
+  echo ""
+  echo "Consider: Use consistent text alignment (e.g., always text-center)"
+fi
+
+# Check positioning strategy changes
+POSITION_CHANGES=$(echo "$STAGED_FILES" | xargs grep -n "static.*sm:absolute\|relative.*sm:absolute\|absolute.*sm:relative\|static.*sm:fixed\|relative.*sm:fixed" || true)
+if [ -n "$POSITION_CHANGES" ]; then
+  echo "⚠️  Found different positioning strategies per breakpoint:"
+  echo "$POSITION_CHANGES"
+  echo ""
+  echo "Warning: Changing position type across breakpoints can cause layout issues"
+  echo "         Consider: Keep same position type, adjust top/left/right/bottom values"
+fi
+
+# Check flex wrap changes (often intentional, so just info)
+WRAP_CHANGES=$(echo "$STAGED_FILES" | xargs grep -n "flex-wrap.*sm:flex-nowrap\|flex-nowrap.*sm:flex-wrap" || true)
+if [ -n "$WRAP_CHANGES" ]; then
+  echo "ℹ️  Found flex wrap strategy changes (may be intentional):"
+  echo "$WRAP_CHANGES"
+fi
+
+echo ""
+echo "💡 Standardization Principle:"
+echo "   Same strategy + Responsive sizing = Consistent UX"
+echo "   Example: justify-center gap-2 sm:gap-4 h-6 sm:h-10"
 echo ""
 if [ $ERRORS -gt 0 ]; then
   echo "❌ Design system violations found. Please fix before committing."
