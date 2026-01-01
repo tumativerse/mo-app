@@ -4,6 +4,7 @@ import { getCurrentUser, updateProfile, updatePreferences } from '@/lib/mo-self'
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { clerkClient } from '@clerk/nextjs/server';
 
 /**
  * Onboarding Data Schema
@@ -132,7 +133,7 @@ export async function POST(request: NextRequest) {
       weightUnit: data.unitSystem === 'metric' ? 'kg' : 'lbs',
     });
 
-    // Mark onboarding as completed
+    // Mark onboarding as completed in database
     await db
       .update(users)
       .set({
@@ -140,6 +141,14 @@ export async function POST(request: NextRequest) {
         updatedAt: new Date(),
       })
       .where(eq(users.id, user.id));
+
+    // Mark onboarding as completed in Clerk metadata (for middleware access)
+    const clerk = await clerkClient();
+    await clerk.users.updateUserMetadata(user.clerkId, {
+      publicMetadata: {
+        onboardingCompleted: true,
+      },
+    });
 
     return NextResponse.json(
       {
