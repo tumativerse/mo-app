@@ -79,3 +79,15 @@ body {
 button, input, select, textarea {
   transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
 }
+
+/* Hide number input spinners/incrementers */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
