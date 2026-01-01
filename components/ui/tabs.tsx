@@ -45,14 +45,25 @@ function TabsTrigger({
     const element = ref.current;
     if (!element) return;
 
-    const observer = new MutationObserver(() => {
+    // Check initial state immediately
+    const checkState = () => {
       setIsActive(element.getAttribute('data-state') === 'active');
-    });
+    };
 
+    // Check on mount
+    checkState();
+
+    // Also use a small timeout to check after Radix initialization
+    const timeout = setTimeout(checkState, 50);
+
+    // Watch for state changes
+    const observer = new MutationObserver(checkState);
     observer.observe(element, { attributes: true, attributeFilter: ['data-state'] });
-    setIsActive(element.getAttribute('data-state') === 'active');
 
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(timeout);
+      observer.disconnect();
+    };
   }, []);
 
   return (

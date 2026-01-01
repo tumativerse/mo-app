@@ -70,33 +70,36 @@ export function CustomDropdown({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-sm font-medium text-center cursor-pointer hover:border-zinc-600 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 transition-colors flex items-center justify-between gap-2"
+        className="w-full px-3 py-2 bg-secondary border border-border rounded-lg text-foreground text-sm font-medium text-center cursor-pointer hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors flex items-center justify-between gap-2"
       >
         <span className="flex-1">{selectedOption ? selectedOption.label : placeholder}</span>
-        <ChevronDown className={`h-4 w-4 text-zinc-500 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
         <div
           ref={menuRef}
-          className="absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl max-h-60 overflow-y-auto custom-dropdown-menu"
+          className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-xl max-h-60 overflow-y-auto custom-dropdown-menu"
         >
-          {options.map((option) => (
-            <button
-              key={String(option.value)}
-              ref={option.value === value ? selectedButtonRef : null}
-              type="button"
-              onClick={() => handleSelect(option.value)}
-              className={`w-full px-3 py-2 text-sm text-left transition-colors ${
-                option.value === value
-                  ? "bg-green-600 text-white font-medium"
-                  : "text-zinc-100 hover:bg-zinc-800"
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
+          {options.map((option) => {
+            const isSelected = option.value === value;
+            return (
+              <button
+                key={String(option.value)}
+                ref={isSelected ? selectedButtonRef : null}
+                type="button"
+                onClick={() => handleSelect(option.value)}
+                className={`w-full px-3 py-2 text-sm text-left transition-colors ${
+                  isSelected
+                    ? "bg-primary/10 text-foreground font-medium"
+                    : "text-foreground hover:bg-secondary"
+                }`}
+              >
+                {option.label}
+              </button>
+            );
+          })}
         </div>
       )}
 

@@ -101,14 +101,21 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
           <label className="block text-sm font-medium text-foreground mb-2">
             Training Frequency (days/week) <span className="text-destructive">*</span>
           </label>
-          <input
-            type="number"
-            value={preferences?.trainingFrequency || 6}
-            onChange={(e) => onChange("trainingFrequency", parseInt(e.target.value))}
-            min={1}
-            max={7}
-            className="w-full px-4 py-3 text-base bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-            required
+          <SingleSelectDropdown
+            value={preferences?.trainingFrequency?.toString() || "6"}
+            options={[
+              { value: "1", label: "1 day/week", description: "Minimal commitment" },
+              { value: "2", label: "2 days/week", description: "Light schedule" },
+              { value: "3", label: "3 days/week", description: "Moderate schedule" },
+              { value: "4", label: "4 days/week", description: "Regular training" },
+              { value: "5", label: "5 days/week", description: "Frequent training" },
+              { value: "6", label: "6 days/week", description: "Dedicated schedule" },
+              { value: "7", label: "7 days/week", description: "Daily training" },
+            ]}
+            onChange={(value) => onChange("trainingFrequency", parseInt(value))}
+            placeholder="Select training frequency"
+            width="100%"
+            showIcons={false}
           />
           <p className="text-xs text-muted-foreground mt-1">
             How many days per week do you plan to train?
@@ -120,15 +127,21 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
           <label className="block text-sm font-medium text-foreground mb-2">
             Session Duration (minutes) <span className="text-destructive">*</span>
           </label>
-          <input
-            type="number"
-            value={preferences?.sessionDuration || 75}
-            onChange={(e) => onChange("sessionDuration", parseInt(e.target.value))}
-            min={15}
-            max={180}
-            step={5}
-            className="w-full px-4 py-3 text-base bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-            required
+          <SingleSelectDropdown
+            value={preferences?.sessionDuration?.toString() || "75"}
+            options={[
+              { value: "30", label: "30 minutes", description: "Quick workout" },
+              { value: "45", label: "45 minutes", description: "Short session" },
+              { value: "60", label: "60 minutes", description: "Standard session" },
+              { value: "75", label: "75 minutes", description: "Extended session" },
+              { value: "90", label: "90 minutes", description: "Long session" },
+              { value: "105", label: "105 minutes", description: "Very long session" },
+              { value: "120", label: "120 minutes", description: "Maximum session" },
+            ]}
+            onChange={(value) => onChange("sessionDuration", parseInt(value))}
+            placeholder="Select session duration"
+            width="100%"
+            showIcons={false}
           />
           <p className="text-xs text-muted-foreground mt-1">
             Average length of your training sessions
