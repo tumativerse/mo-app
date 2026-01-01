@@ -49,7 +49,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
 
       {/* Step Progress Indicator */}
       <div className="border-b border-border bg-card">
-        <div className="mx-auto max-w-2xl px-4 py-6">
+        <div className="mx-auto max-w-2xl px-4 py-4">
           <div className="flex items-center justify-center gap-2 sm:gap-4">
             {STEPS.map((step, index) => {
               const isCompleted = currentStep > step.number;
