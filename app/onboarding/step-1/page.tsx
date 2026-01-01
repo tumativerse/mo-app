@@ -121,7 +121,7 @@ export default function OnboardingStep1Page() {
         <CardContent className="space-y-6">
           {/* Full Name */}
           <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
+            <Label htmlFor="fullName">Full Name *</Label>
             <Input
               id="fullName"
               type="text"
@@ -151,7 +151,7 @@ export default function OnboardingStep1Page() {
 
           {/* Date of Birth */}
           <div className="space-y-2">
-            <Label htmlFor="dateOfBirth">Date of Birth</Label>
+            <Label htmlFor="dateOfBirth">Date of Birth *</Label>
             <DatePicker
               value={formData.dateOfBirth}
               onChange={(value) => setFormData({ ...formData, dateOfBirth: value })}
@@ -163,7 +163,7 @@ export default function OnboardingStep1Page() {
 
           {/* Gender */}
           <div className="space-y-2">
-            <Label htmlFor="gender">Gender</Label>
+            <Label htmlFor="gender">Gender *</Label>
             <CustomDropdown
               value={formData.gender}
               options={[
@@ -212,12 +212,12 @@ export default function OnboardingStep1Page() {
 
           {/* Height - Conditional based on units */}
           <div className="space-y-2">
-            <Label htmlFor="height">Height</Label>
+            <Label htmlFor="height">Height *</Label>
             {units === 'metric' ? (
               <Input
                 id="height"
                 type="number"
-                placeholder="175"
+                placeholder="175 cm"
                 value={formData.heightCm}
                 onChange={(e) => setFormData({ ...formData, heightCm: e.target.value })}
                 required
@@ -232,7 +232,7 @@ export default function OnboardingStep1Page() {
                   <Input
                     id="heightFt"
                     type="number"
-                    placeholder="5"
+                    placeholder="5 ft"
                     value={formData.heightFt}
                     onChange={(e) => setFormData({ ...formData, heightFt: e.target.value })}
                     required
@@ -240,13 +240,12 @@ export default function OnboardingStep1Page() {
                     min="3"
                     max="8"
                   />
-                  <p className="text-xs text-muted-foreground mt-1">Feet</p>
                 </div>
                 <div className="flex-1">
                   <Input
                     id="heightIn"
                     type="number"
-                    placeholder="10"
+                    placeholder="10 in"
                     value={formData.heightIn}
                     onChange={(e) => setFormData({ ...formData, heightIn: e.target.value })}
                     required
@@ -254,7 +253,6 @@ export default function OnboardingStep1Page() {
                     min="0"
                     max="11"
                   />
-                  <p className="text-xs text-muted-foreground mt-1">Inches</p>
                 </div>
               </div>
             )}
@@ -265,12 +263,12 @@ export default function OnboardingStep1Page() {
 
           {/* Weight - Conditional based on units */}
           <div className="space-y-2">
-            <Label htmlFor="weight">Current Weight</Label>
+            <Label htmlFor="weight">Current Weight *</Label>
             {units === 'metric' ? (
               <Input
                 id="weight"
                 type="number"
-                placeholder="70"
+                placeholder="70 kg"
                 value={formData.weightKg}
                 onChange={(e) => setFormData({ ...formData, weightKg: e.target.value })}
                 required
@@ -283,7 +281,7 @@ export default function OnboardingStep1Page() {
               <Input
                 id="weight"
                 type="number"
-                placeholder="154"
+                placeholder="154 lbs"
                 value={formData.weightLbs}
                 onChange={(e) => setFormData({ ...formData, weightLbs: e.target.value })}
                 required
