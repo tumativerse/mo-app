@@ -9,9 +9,10 @@
  * - Loads user preferences from API
  */
 
-import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import { type ThemeProviderProps } from 'next-themes/dist/types';
+import { ThemeProvider as NextThemesProvider, type ThemeProviderProps as NextThemesProv } from 'next-themes';
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+
+type ThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>;
 
 interface ThemeContextType {
   accentColor: string;

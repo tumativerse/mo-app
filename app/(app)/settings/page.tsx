@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
 import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -18,9 +20,27 @@ import { pageTransition, staggerContainer, staggerItem } from "@/lib/animations"
 import { useTheme } from "@/lib/contexts/theme-context";
 import { checkProfileCompletion } from "@/lib/utils/profile-completion";
 
+interface UserProfile {
+  fullName?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  heightCm?: number;
+  currentWeight?: number;
+  goalWeight?: number;
+}
+
+interface UserPreferences {
+  fitnessGoal?: string;
+  experienceLevel?: string;
+  trainingFrequency?: number;
+  theme?: string;
+  accentColor?: string;
+  [key: string]: unknown;
+}
+
 interface SettingsData {
-  profile: any;
-  preferences: any;
+  profile: UserProfile;
+  preferences: UserPreferences;
 }
 
 export default function SettingsPage() {
@@ -91,13 +111,13 @@ export default function SettingsPage() {
   }, [currentTheme, currentAccentColor]);
 
   // Handle profile field changes
-  const handleProfileChange = (field: string, value: any) => {
-    setProfile((prev: any) => ({ ...prev, [field]: value }));
+  const handleProfileChange = (field: string, value: string | number) => {
+    setProfile((prev) => ({ ...prev, [field]: value }));
   };
 
   // Handle preferences field changes
-  const handlePreferencesChange = (field: string, value: any) => {
-    setPreferences((prev: any) => ({ ...prev, [field]: value }));
+  const handlePreferencesChange = (field: string, value: string | number | string[]) => {
+    setPreferences((prev) => ({ ...prev, [field]: value }));
 
     // Apply theme changes immediately for live preview
     if (field === "theme") {

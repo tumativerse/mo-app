@@ -1,9 +1,10 @@
 'use client';
 
-import { ThemeToggle } from '@/components/theme-toggle';
 import { CheckCircle2, Circle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { type ReactNode } from 'react';
+
+export const dynamic = 'force-dynamic';
 
 const STEPS = [
   { number: 1, name: 'Profile', path: '/onboarding/step-1' },
@@ -32,7 +33,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header with theme toggle */}
+      {/* Header */}
       <header className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
           <div>
@@ -41,7 +42,6 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
               Let's set up your fitness profile
             </p>
           </div>
-          <ThemeToggle />
         </div>
       </header>
 

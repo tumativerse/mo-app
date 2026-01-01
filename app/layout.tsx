@@ -6,6 +6,9 @@ import { ThemeProvider } from "@/lib/contexts/theme-provider";
 import { ThemedToaster } from "@/components/theme-aware-toaster";
 import "./globals.css";
 
+// Force dynamic rendering for all pages (required for next-themes)
+export const dynamic = 'force-dynamic';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -35,7 +38,7 @@ export default function RootLayout({
         },
       }}
     >
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased transition-colors duration-200`}
         >

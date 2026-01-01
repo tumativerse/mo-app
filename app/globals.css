@@ -1,200 +1,81 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    /* Orange primary color (HSL format for Tailwind) */
-    --primary: 24 100% 50%;           /* #f97316 - Orange 500 */
-    --primary-foreground: 0 0% 100%;  /* White text on orange */
+@theme {
+  /* Light theme colors */
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-card: #ffffff;
+  --color-card-foreground: #0a0a0a;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #0a0a0a;
+  --color-primary: #f97316;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f5f5f5;
+  --color-secondary-foreground: #171717;
+  --color-muted: #f5f5f5;
+  --color-muted-foreground: #737373;
+  --color-accent: #f5f5f5;
+  --color-accent-foreground: #171717;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #fafafa;
+  --color-border: #e5e5e5;
+  --color-input: #e5e5e5;
+  --color-ring: #f97316;
 
-    /* Light theme colors */
-    --background: 0 0% 100%;          /* White */
-    --foreground: 0 0% 3.9%;          /* Near black */
-
-    --card: 0 0% 100%;                /* White */
-    --card-foreground: 0 0% 3.9%;     /* Near black */
-
-    --popover: 0 0% 100%;             /* White */
-    --popover-foreground: 0 0% 3.9%;  /* Near black */
-
-    --secondary: 0 0% 96.1%;          /* Light gray */
-    --secondary-foreground: 0 0% 9%;  /* Dark gray */
-
-    --muted: 0 0% 96.1%;              /* Light gray */
-    --muted-foreground: 0 0% 45.1%;   /* Medium gray */
-
-    --accent: 0 0% 96.1%;             /* Light gray */
-    --accent-foreground: 0 0% 9%;     /* Dark gray */
-
-    --destructive: 0 84.2% 60.2%;     /* Red */
-    --destructive-foreground: 0 0% 98%; /* White */
-
-    --border: 0 0% 89.8%;             /* Light gray border */
-    --input: 0 0% 89.8%;              /* Light gray input border */
-    --ring: 24 100% 50%;              /* Orange ring (same as primary) */
-
-    --radius: 0.5rem;                 /* 8px default radius */
-
-    /* Status colors (light theme) */
-    --success: 142 71% 45%;           /* Green 600 */
-    --success-bg: 142 76% 96%;        /* Green 50 */
-    --success-border: 142 76% 70%;    /* Green 300 */
-
-    --warning: 48 96% 53%;            /* Yellow 400 */
-    --warning-bg: 48 96% 95%;         /* Yellow 50 */
-    --warning-border: 48 96% 77%;     /* Yellow 300 */
-
-    --info: 221 83% 53%;              /* Blue 500 */
-    --info-bg: 221 83% 96%;           /* Blue 50 */
-    --info-border: 221 83% 73%;       /* Blue 300 */
-
-    /* Fitness category colors (fixed for semantic meaning) */
-    --fitness-push: 174 81% 35%;      /* #0BA08B - Teal */
-    --fitness-pull: 221 83% 53%;      /* #3b82f6 - Blue */
-    --fitness-legs: 0 84% 60%;        /* #ef4444 - Red */
-    --fitness-energy: 38 92% 50%;     /* #f59e0b - Amber */
-    --fitness-mobility: 258 90% 66%;  /* #8b5cf6 - Purple */
-    --fitness-cardio: 188 94% 43%;    /* #06b6d4 - Cyan */
-  }
-
-  .dark {
-    /* Orange primary stays the same */
-    --primary: 24 100% 50%;           /* #f97316 - Orange 500 */
-    --primary-foreground: 0 0% 100%;  /* White text on orange */
-
-    /* Dark theme colors */
-    --background: 0 0% 3.9%;          /* Near black */
-    --foreground: 0 0% 98%;           /* Near white */
-
-    --card: 0 0% 3.9%;                /* Near black */
-    --card-foreground: 0 0% 98%;      /* Near white */
-
-    --popover: 0 0% 3.9%;             /* Near black */
-    --popover-foreground: 0 0% 98%;   /* Near white */
-
-    --secondary: 0 0% 14.9%;          /* Dark gray */
-    --secondary-foreground: 0 0% 98%; /* Near white */
-
-    --muted: 0 0% 14.9%;              /* Dark gray */
-    --muted-foreground: 0 0% 63.9%;   /* Medium gray */
-
-    --accent: 0 0% 14.9%;             /* Dark gray */
-    --accent-foreground: 0 0% 98%;    /* Near white */
-
-    --destructive: 0 62.8% 30.6%;     /* Dark red */
-    --destructive-foreground: 0 0% 98%; /* White */
-
-    --border: 0 0% 14.9%;             /* Dark gray border */
-    --input: 0 0% 14.9%;              /* Dark gray input border */
-    --ring: 24 100% 50%;              /* Orange ring (same as primary) */
-
-    /* Status colors (dark theme) */
-    --success: 142 76% 36%;           /* Green 700 */
-    --success-bg: 142 76% 10%;        /* Dark green */
-    --success-border: 142 76% 25%;    /* Green 800 */
-
-    --warning: 48 96% 53%;            /* Yellow 400 */
-    --warning-bg: 48 96% 10%;         /* Dark yellow */
-    --warning-border: 48 96% 35%;     /* Yellow 600 */
-
-    --info: 221 83% 53%;              /* Blue 500 */
-    --info-bg: 221 83% 12%;           /* Dark blue */
-    --info-border: 221 83% 30%;       /* Blue 700 */
-
-    /* Fitness colors (same in both themes for consistency) */
-    --fitness-push: 174 81% 35%;      /* #0BA08B - Teal */
-    --fitness-pull: 221 83% 53%;      /* #3b82f6 - Blue */
-    --fitness-legs: 0 84% 60%;        /* #ef4444 - Red */
-    --fitness-energy: 38 92% 50%;     /* #f59e0b - Amber */
-    --fitness-mobility: 258 90% 66%;  /* #8b5cf6 - Purple */
-    --fitness-cardio: 188 94% 43%;    /* #06b6d4 - Cyan */
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
-
-  /* Ensure smooth transitions when theme changes */
-  * {
-    transition-property: background-color, border-color, color, fill, stroke;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-  }
-
-  /* Disable transitions for specific elements */
-  button, input, select, textarea {
-    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
-  }
-}
-
-@layer utilities {
-  /* Custom utility for success status */
-  .bg-success {
-    background-color: hsl(var(--success-bg));
-    color: hsl(var(--success));
-    border-color: hsl(var(--success-border));
-  }
-
-  /* Custom utility for warning status */
-  .bg-warning {
-    background-color: hsl(var(--warning-bg));
-    color: hsl(var(--warning));
-    border-color: hsl(var(--warning-border));
-  }
-
-  /* Custom utility for info status */
-  .bg-info {
-    background-color: hsl(var(--info-bg));
-    color: hsl(var(--info));
-    border-color: hsl(var(--info-border));
-  }
-
-  /* Text colors for status */
-  .text-success {
-    color: hsl(var(--success));
-  }
-
-  .text-warning {
-    color: hsl(var(--warning));
-  }
-
-  .text-info {
-    color: hsl(var(--info));
-  }
+  /* Status colors */
+  --color-success: #16a34a;
+  --color-warning: #eab308;
+  --color-info: #3b82f6;
 
   /* Fitness category colors */
-  .text-fitness-push {
-    color: hsl(var(--fitness-push));
-  }
+  --color-fitness-push: #0BA08B;
+  --color-fitness-pull: #3b82f6;
+  --color-fitness-legs: #ef4444;
+  --color-fitness-energy: #f59e0b;
+  --color-fitness-mobility: #8b5cf6;
+  --color-fitness-cardio: #06b6d4;
 
-  .text-fitness-pull {
-    color: hsl(var(--fitness-pull));
-  }
+  /* Border radius */
+  --radius: 0.5rem;
+}
 
-  .text-fitness-legs {
-    color: hsl(var(--fitness-legs));
-  }
+/* Dark theme overrides */
+.dark {
+  --color-background: #0a0a0a;
+  --color-foreground: #fafafa;
+  --color-card: #0a0a0a;
+  --color-card-foreground: #fafafa;
+  --color-popover: #0a0a0a;
+  --color-popover-foreground: #fafafa;
+  --color-secondary: #262626;
+  --color-secondary-foreground: #fafafa;
+  --color-muted: #262626;
+  --color-muted-foreground: #a3a3a3;
+  --color-accent: #262626;
+  --color-accent-foreground: #fafafa;
+  --color-destructive: #7f1d1d;
+  --color-border: #262626;
+  --color-input: #262626;
+}
 
-  .bg-fitness-push {
-    background-color: hsl(var(--fitness-push) / 0.1);
-    color: hsl(var(--fitness-push));
-  }
+/* Base styles */
+* {
+  border-color: var(--color-border);
+}
 
-  .bg-fitness-pull {
-    background-color: hsl(var(--fitness-pull) / 0.1);
-    color: hsl(var(--fitness-pull));
-  }
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
 
-  .bg-fitness-legs {
-    background-color: hsl(var(--fitness-legs) / 0.1);
-    color: hsl(var(--fitness-legs));
-  }
+/* Smooth theme transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+button, input, select, textarea {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
 }

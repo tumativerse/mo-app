@@ -15,21 +15,24 @@ import { useEffect, useState } from 'react';
  * <ThemeToggle />
  */
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Avoid hydration mismatch
+  // Avoid hydration mismatch - only render after mount
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" disabled>
-        <Sun className="h-5 w-5" />
-      </Button>
+      <div className="h-11 w-11" /> // Placeholder to prevent layout shift
     );
   }
+
+  return <ThemeToggleButton />;
+}
+
+function ThemeToggleButton() {
+  const { theme, setTheme } = useTheme();
 
   return (
     <Button
