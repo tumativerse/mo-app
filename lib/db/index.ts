@@ -9,6 +9,7 @@ const getDatabaseUrl = () => {
     if (process.env.NODE_ENV === 'production') {
       console.warn('DATABASE_URL not set - database operations will fail');
     }
+    // secretlint-disable-next-line
     return 'postgresql://dummy:dummy@localhost:5432/dummy';
   }
   return url;

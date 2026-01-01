@@ -40,7 +40,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
           <div>
             <h1 className="text-xl font-bold text-foreground">Welcome to Mo</h1>
             <p className="text-sm text-muted-foreground">
-              Let's set up your fitness profile
+              Let&apos;s set up your fitness profile
             </p>
           </div>
           <ThemeToggle />
@@ -127,7 +127,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
       {/* Footer */}
       <footer className="border-t border-border py-4">
         <div className="mx-auto max-w-2xl px-4 text-center text-sm text-muted-foreground">
-          Your data is encrypted and secure. We'll never share your personal information.
+          Your data is encrypted and secure. We&apos;ll never share your personal information.
         </div>
       </footer>
     </div>

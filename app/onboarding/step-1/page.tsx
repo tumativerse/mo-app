@@ -145,7 +145,7 @@ export default function OnboardingStep1Page() {
               size="md"
             />
             <p className="text-xs text-muted-foreground">
-              We'll use this throughout the app (optional)
+              We&apos;ll use this throughout the app (optional)
             </p>
           </div>
 
@@ -318,7 +318,7 @@ export default function OnboardingStep1Page() {
               </div>
             )}
             <p className="text-xs text-muted-foreground">
-              We'll track your progress over time
+              We&apos;ll track your progress over time
             </p>
           </div>
 

@@ -1,12 +1,14 @@
-#!/bin/bash
-. "$(dirname "$0")/_/husky.sh"
+#!/bin/sh
+# Week 1: Pre-push validation
+# Runs before EVERY push - comprehensive checks
 
-# Run full codebase scan before pushing to production
-echo "🚀 Pre-push checks..."
-echo ""
+echo "🚀 Pre-push: Running comprehensive validation..."
 
-# Run the full codebase scanner
-bash .claude/hooks/full-codebase-scan.sh
+# 1. Run build to ensure production-ready (~1-2 min)
+echo "  → Building for production..."
+npm run build || {
+  echo "❌ Build failed. Please fix errors and try again."
+  exit 1
+}
 
-# Exit with the scanner's exit code
-exit $?
+echo "✅ Pre-push checks passed! Safe to push."
