@@ -51,9 +51,9 @@ if [ -n "$INLINE_STYLES" ]; then
   ERRORS=$((ERRORS + 1))
 fi
 
-# Check for 'any' type
+# Check for 'any' type (both : any and <any>)
 echo "Checking for TypeScript 'any'..."
-ANY_TYPES=$(echo "$STAGED_FILES" | xargs grep -n ': any' | grep -v "// @ts-ignore" || true)
+ANY_TYPES=$(echo "$STAGED_FILES" | xargs grep -n -E '(: any|<any>|<any,|, any>)' | grep -v "// @ts-ignore" || true)
 
 if [ -n "$ANY_TYPES" ]; then
   echo "❌ Found 'any' types:"
@@ -61,6 +61,18 @@ if [ -n "$ANY_TYPES" ]; then
   echo ""
   echo "Fix: Add proper TypeScript types"
   ERRORS=$((ERRORS + 1))
+fi
+
+# Run TypeScript compiler to catch implicit any and other type errors
+echo "Running TypeScript type check..."
+if command -v npm &> /dev/null; then
+  if npm run type-check --silent 2>&1 | grep -q "error TS"; then
+    echo "❌ TypeScript compilation errors found:"
+    npm run type-check 2>&1 | grep "error TS" | head -20
+    echo ""
+    echo "Fix: Run 'npm run type-check' to see all errors"
+    ERRORS=$((ERRORS + 1))
+  fi
 fi
 
 # Check for div with onClick (accessibility)
