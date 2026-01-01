@@ -23,23 +23,52 @@ interface ThemeProviderProps {
 export function ThemeProvider({
   children,
   defaultTheme = "dark",
-  defaultAccentColor = "#10b981",
+  defaultAccentColor = "#0BA08B",
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [accentColor, setAccentColorState] = useState<string>(defaultAccentColor);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load user's saved theme preference on mount
+  useEffect(() => {
+    async function loadThemePreference() {
+      try {
+        const res = await fetch("/api/preferences");
+        if (res.ok) {
+          const data = await res.json();
+          const savedTheme = data.preferences?.theme || defaultTheme;
+          const savedAccentColor = data.preferences?.accentColor || defaultAccentColor;
+
+          setThemeState(savedTheme);
+          setAccentColorState(savedAccentColor);
+        }
+      } catch (error) {
+        // Silently fail and use defaults
+        console.log("Could not load theme preference, using defaults");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadThemePreference();
+  }, [defaultTheme, defaultAccentColor]);
 
   // Apply theme class to HTML element
   useEffect(() => {
-    const root = document.documentElement;
-    root.classList.remove("light", "dark");
-    root.classList.add(theme);
-  }, [theme]);
+    if (!isLoading) {
+      const root = document.documentElement;
+      root.classList.remove("light", "dark");
+      root.classList.add(theme);
+    }
+  }, [theme, isLoading]);
 
   // Apply accent color as CSS custom property
   useEffect(() => {
-    const root = document.documentElement;
-    root.style.setProperty("--user-accent-color", accentColor);
-  }, [accentColor]);
+    if (!isLoading) {
+      const root = document.documentElement;
+      root.style.setProperty("--user-accent-color", accentColor);
+    }
+  }, [accentColor, isLoading]);
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
