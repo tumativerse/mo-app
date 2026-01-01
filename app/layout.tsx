@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
-import { ThemeProvider } from "@/lib/contexts/theme-context";
+import { ThemeProvider } from "@/lib/contexts/theme-provider";
 import { ThemedToaster } from "@/components/theme-aware-toaster";
 import "./globals.css";
 
