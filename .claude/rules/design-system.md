@@ -183,6 +183,141 @@ NEVER change:
 - Prevents layout bugs from breakpoint transitions
 - Simpler mental model for the team
 
+### Responsive Direction Rules:
+
+**Sizes and spacing should ALWAYS increase (or stay same) on larger screens:**
+
+```tsx
+// ✅ CORRECT: Sizes increase with viewport
+<div className="h-6 sm:h-10 w-6 sm:w-10">  // 24px → 40px
+<p className="text-sm sm:text-base">         // 14px → 16px
+<div className="gap-2 sm:gap-4">            // 8px → 16px
+
+// ❌ WRONG: Sizes decrease on larger screens
+<div className="h-10 sm:h-6">              // 40px → 24px (backwards!)
+<p className="text-base sm:text-sm">       // 16px → 14px (backwards!)
+<div className="gap-4 sm:gap-2">           // 16px → 8px (backwards!)
+```
+
+**Why?** Larger screens have more space - use it! Smaller values on desktop look cramped.
+
+### Breakpoint Standardization:
+
+**Use `sm:` (640px) as primary mobile/desktop breakpoint:**
+
+```tsx
+// ✅ CORRECT: sm: for mobile/desktop split
+<div className="h-6 sm:h-10">             // Mobile (0-639px) vs Desktop (640px+)
+<div className="grid grid-cols-1 sm:grid-cols-2">  // 1 col mobile, 2 cols desktop
+
+// ✅ ALSO CORRECT: Add md:/lg: for additional refinement
+<div className="h-6 sm:h-10 md:h-12 lg:h-14">  // Progressive enhancement
+
+// ⚠️  AVOID: Skipping sm: and using only md:/lg:
+<div className="h-6 md:h-10">             // What about sm: (640-768px)?
+```
+
+**Breakpoint Guidelines:**
+- `sm:` (640px) - **Primary split** - Mobile vs Desktop
+- `md:` (768px) - Tablet landscape, small desktop refinements
+- `lg:` (1024px) - Desktop refinements, multi-column layouts
+- `xl:` (1280px) - Large desktop, max-width containers
+
+### Grid Responsive Patterns:
+
+**Standard grid patterns for responsive layouts:**
+
+```tsx
+// ✅ Single column mobile, multi-column desktop
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  <Card />
+  <Card />
+  <Card />
+</div>
+
+// ✅ Auto-fit with minimum card width
+<div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4">
+  <Card />
+</div>
+
+// ✅ Responsive gap sizing
+<div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 lg:gap-6">
+  <Item />
+</div>
+```
+
+### Hidden/Block Patterns - When It's OK:
+
+**Acceptable use cases for hiding/showing elements:**
+
+```tsx
+// ✅ OK: Mobile-specific navigation (hamburger menu)
+<button className="block sm:hidden">Menu</button>
+<nav className="hidden sm:block">Desktop Nav</nav>
+
+// ✅ OK: Responsive text variants (shorter on mobile)
+<p className="block sm:hidden">Short text for mobile</p>
+<p className="hidden sm:block">Longer descriptive text for desktop</p>
+
+// ✅ OK: Different layouts for different contexts
+<div className="hidden sm:block">Sidebar on desktop</div>
+<div className="block sm:hidden">Mobile drawer</div>
+
+// ⚠️  AVOID: Hiding important content on mobile
+<button className="hidden sm:block">Primary CTA</button>  // Users can't click on mobile!
+
+// ⚠️  AVOID: Duplicating content (bad for SEO, accessibility)
+<div className="block sm:hidden">Same content</div>
+<div className="hidden sm:block">Same content</div>  // Just resize instead!
+```
+
+**When to hide vs resize:**
+- Hide: Different UI patterns (hamburger vs nav bar, drawer vs sidebar)
+- Resize: Same content, different sizes (images, text, buttons)
+
+### Aspect Ratio Consistency:
+
+```tsx
+// ✅ CORRECT: Consistent aspect ratio, different sizes
+<div className="aspect-square w-20 sm:w-32">
+  <Image />
+</div>
+
+// ⚠️  CAUTION: Changing aspect ratios causes layout shifts
+<div className="aspect-square sm:aspect-video">  // Shape fundamentally changes
+  <Image />  // May cause cumulative layout shift (CLS)
+</div>
+
+// ✅ BETTER: Use same aspect ratio, change object-fit
+<div className="aspect-video">
+  <Image className="object-cover sm:object-contain" />
+</div>
+```
+
+### Mobile Width Calculation:
+
+**Ensure elements fit in 375px (iPhone SE) viewport:**
+
+```tsx
+// Formula: (elements × size) + (gaps × spacing) + (margins × 2) ≤ 375px - 32px (padding)
+
+// ✅ CORRECT: Fits in mobile viewport
+// 5 circles (5×24px=120px) + 4 gaps (4×8px=32px) + padding (32px) = 184px ✓
+<div className="flex gap-2">
+  <Circle className="h-6 w-6" />  {/* ×5 */}
+</div>
+
+// ❌ WRONG: Overflows mobile viewport
+// 5 circles (5×40px=200px) + 4 gaps (4×16px=64px) + padding (32px) = 296px ✗ (needs 343px total)
+<div className="flex gap-4">
+  <Circle className="h-10 w-10" />  {/* ×5 */}
+</div>
+```
+
+**Quick calculation guide:**
+- Available width: 375px - 32px padding = **343px**
+- Always test on real mobile device or Chrome DevTools (375×667)
+
 ### Component Positioning Patterns:
 ```tsx
 // ✅ CORRECT: Centered container

@@ -313,10 +313,57 @@ if [ -n "$WRAP_CHANGES" ]; then
   echo "$WRAP_CHANGES"
 fi
 
+# Check for responsive sizes going the wrong direction (smaller on larger screens)
+SIZE_DIRECTION=$(echo "$STAGED_FILES" | xargs grep -n "h-\(8\|10\|12\|16\).*sm:h-\(4\|6\)\|w-\(8\|10\|12\|16\).*sm:w-\(4\|6\)\|text-\(base\|lg\|xl\).*sm:text-\(xs\|sm\)" || true)
+if [ -n "$SIZE_DIRECTION" ]; then
+  echo "⚠️  Found sizes getting smaller on larger screens:"
+  echo "$SIZE_DIRECTION"
+  echo ""
+  echo "Fix: Sizes should increase with viewport (h-6 sm:h-10, not h-10 sm:h-6)"
+fi
+
+# Check for spacing decreasing on larger screens
+SPACING_DIRECTION=$(echo "$STAGED_FILES" | xargs grep -n "gap-\(4\|6\|8\).*sm:gap-\(1\|2\)\|p-\(4\|6\|8\).*sm:p-\(1\|2\)\|m-\(4\|6\|8\).*sm:m-\(1\|2\)" || true)
+if [ -n "$SPACING_DIRECTION" ]; then
+  echo "⚠️  Found spacing decreasing on larger screens:"
+  echo "$SPACING_DIRECTION"
+  echo ""
+  echo "Fix: Spacing should increase with viewport (gap-2 sm:gap-4, not gap-4 sm:gap-2)"
+fi
+
+# Check for touch targets below 44px on mobile
+SMALL_MOBILE_TOUCH=$(echo "$STAGED_FILES" | xargs grep -n "h-\([1-9]\|10\)[^0-9]" | grep -E "(Button|button|clickable)" | grep -v "sm:h-" || true)
+if [ -n "$SMALL_MOBILE_TOUCH" ]; then
+  echo "⚠️  Found potentially small mobile touch targets without responsive sizing:"
+  echo "$SMALL_MOBILE_TOUCH"
+  echo ""
+  echo "Reminder: Mobile touch targets should be h-11+ (44px) or use responsive: h-8 sm:h-11"
+fi
+
+# Check for inconsistent breakpoint usage (should standardize on sm: for mobile/desktop split)
+MD_LG_WITHOUT_SM=$(echo "$STAGED_FILES" | xargs grep -n "md:\|lg:" | grep -v "sm:" || true)
+if [ -n "$MD_LG_WITHOUT_SM" ]; then
+  echo "ℹ️  Found md: or lg: breakpoints without sm: (may be intentional):"
+  echo "$MD_LG_WITHOUT_SM"
+  echo ""
+  echo "Consider: Use sm: (640px) for mobile/desktop split, md:/lg: for additional breakpoints"
+fi
+
+# Check for aspect ratio changes (changes fundamental shape)
+ASPECT_CHANGES=$(echo "$STAGED_FILES" | xargs grep -n "aspect-square.*sm:aspect-\|aspect-video.*sm:aspect-\|aspect-\[.*\].*sm:aspect-" || true)
+if [ -n "$ASPECT_CHANGES" ]; then
+  echo "⚠️  Found aspect ratio changes across breakpoints:"
+  echo "$ASPECT_CHANGES"
+  echo ""
+  echo "Consider: Changing aspect ratios can cause layout shifts"
+  echo "          Use consistent aspect ratio, adjust sizes instead"
+fi
+
 echo ""
 echo "💡 Standardization Principle:"
 echo "   Same strategy + Responsive sizing = Consistent UX"
 echo "   Example: justify-center gap-2 sm:gap-4 h-6 sm:h-10"
+echo "   Sizes/spacing should INCREASE on larger screens (not decrease)"
 echo ""
 if [ $ERRORS -gt 0 ]; then
   echo "❌ Design system violations found. Please fix before committing."
