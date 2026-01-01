@@ -214,45 +214,59 @@ export default function OnboardingStep1Page() {
           <div className="space-y-2">
             <Label htmlFor="height">Height *</Label>
             {units === 'metric' ? (
-              <Input
-                id="height"
-                type="number"
-                placeholder="175 cm"
-                value={formData.heightCm}
-                onChange={(e) => setFormData({ ...formData, heightCm: e.target.value })}
-                required
-                size="md"
-                min="100"
-                max="250"
-                step="0.1"
-              />
+              <div className="relative">
+                <Input
+                  id="height"
+                  type="number"
+                  placeholder="175"
+                  value={formData.heightCm}
+                  onChange={(e) => setFormData({ ...formData, heightCm: e.target.value })}
+                  required
+                  size="md"
+                  min="100"
+                  max="250"
+                  step="0.1"
+                  className="pr-12"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                  cm
+                </span>
+              </div>
             ) : (
               <div className="flex gap-2">
-                <div className="flex-1">
+                <div className="flex-1 relative">
                   <Input
                     id="heightFt"
                     type="number"
-                    placeholder="5 ft"
+                    placeholder="5"
                     value={formData.heightFt}
                     onChange={(e) => setFormData({ ...formData, heightFt: e.target.value })}
                     required
                     size="md"
                     min="3"
                     max="8"
+                    className="pr-10"
                   />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                    ft
+                  </span>
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 relative">
                   <Input
                     id="heightIn"
                     type="number"
-                    placeholder="10 in"
+                    placeholder="10"
                     value={formData.heightIn}
                     onChange={(e) => setFormData({ ...formData, heightIn: e.target.value })}
                     required
                     size="md"
                     min="0"
                     max="11"
+                    className="pr-10"
                   />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                    in
+                  </span>
                 </div>
               </div>
             )}
@@ -265,31 +279,43 @@ export default function OnboardingStep1Page() {
           <div className="space-y-2">
             <Label htmlFor="weight">Current Weight *</Label>
             {units === 'metric' ? (
-              <Input
-                id="weight"
-                type="number"
-                placeholder="70 kg"
-                value={formData.weightKg}
-                onChange={(e) => setFormData({ ...formData, weightKg: e.target.value })}
-                required
-                size="md"
-                min="30"
-                max="300"
-                step="0.1"
-              />
+              <div className="relative">
+                <Input
+                  id="weight"
+                  type="number"
+                  placeholder="70"
+                  value={formData.weightKg}
+                  onChange={(e) => setFormData({ ...formData, weightKg: e.target.value })}
+                  required
+                  size="md"
+                  min="30"
+                  max="300"
+                  step="0.1"
+                  className="pr-12"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                  kg
+                </span>
+              </div>
             ) : (
-              <Input
-                id="weight"
-                type="number"
-                placeholder="154 lbs"
-                value={formData.weightLbs}
-                onChange={(e) => setFormData({ ...formData, weightLbs: e.target.value })}
-                required
-                size="md"
-                min="66"
-                max="660"
-                step="0.1"
-              />
+              <div className="relative">
+                <Input
+                  id="weight"
+                  type="number"
+                  placeholder="154"
+                  value={formData.weightLbs}
+                  onChange={(e) => setFormData({ ...formData, weightLbs: e.target.value })}
+                  required
+                  size="md"
+                  min="66"
+                  max="660"
+                  step="0.1"
+                  className="pr-12"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                  lbs
+                </span>
+              </div>
             )}
             <p className="text-xs text-muted-foreground">
               We'll track your progress over time
