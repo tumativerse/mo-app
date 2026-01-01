@@ -94,17 +94,17 @@ export function MultiSelectDropdown({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-3 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 font-medium text-center cursor-pointer hover:border-zinc-600 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20 transition-colors flex items-center justify-between gap-2 touch-manipulation"
+        className="w-full px-3 py-3 text-base bg-secondary border border-border rounded-lg text-foreground font-medium text-center cursor-pointer hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors flex items-center justify-between gap-2 touch-manipulation"
       >
         <span className="flex-1 text-left">{getDisplayText()}</span>
-        <ChevronDown className={`h-4 w-4 text-zinc-500 transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
         <div
           ref={menuRef}
-          className={`absolute z-50 w-full mt-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-xl ${maxHeight} overflow-y-auto custom-dropdown-menu`}
+          className={`absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-xl ${maxHeight} overflow-y-auto custom-dropdown-menu`}
         >
           {options.map((option, index) => {
             const isSelected = value.includes(option.value);
@@ -116,26 +116,29 @@ export function MultiSelectDropdown({
                 ref={isFirstSelected ? firstSelectedRef : null}
                 type="button"
                 onClick={() => toggleOption(option.value)}
-                className="w-full px-3 py-3 text-base text-left transition-colors flex items-start gap-3 hover:bg-zinc-800 touch-manipulation"
+                className="w-full px-3 py-3 text-base text-left transition-colors flex items-start gap-3 hover:bg-secondary touch-manipulation text-foreground"
               >
                 {/* Checkbox */}
                 <div
-                  className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 ${
-                    isSelected
-                      ? "bg-green-600 border-green-600"
-                      : "border-zinc-600 bg-zinc-800"
-                  }`}
+                  className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 transition-colors`}
+                  style={isSelected ? {
+                    backgroundColor: 'var(--user-accent-color, #0BA08B)',
+                    borderColor: 'var(--user-accent-color, #0BA08B)'
+                  } : {
+                    borderColor: 'var(--border)',
+                    backgroundColor: 'var(--secondary)'
+                  }}
                 >
                   {isSelected && <Check className="h-3 w-3 text-white" />}
                 </div>
 
                 {/* Label and Description */}
                 <div className="flex-1 min-w-0">
-                  <div className={`text-sm font-medium ${isSelected ? "text-green-400" : "text-zinc-100"}`}>
+                  <div className={`text-sm font-medium ${isSelected ? "font-semibold" : ""}`}>
                     {option.label}
                   </div>
                   {option.description && (
-                    <div className="text-xs text-zinc-500 mt-0.5">
+                    <div className="text-xs text-muted-foreground mt-0.5">
                       {option.description}
                     </div>
                   )}
