@@ -132,6 +132,18 @@ if [ -n "$FIXED_WIDTH" ]; then
   # Don't increment ERRORS - this is a warning
 fi
 
+# Check for fixed Tailwind widths in flex containers without responsive variants
+FIXED_FLEX_WIDTH=$(echo "$STAGED_FILES" | xargs grep -n "flex.*w-[0-9]" | grep -v "sm:w-\|md:w-\|lg:w-\|flex-1\|flex-auto" || true)
+if [ -n "$FIXED_FLEX_WIDTH" ]; then
+  echo "⚠️  Found fixed widths in flex containers without responsive variants:"
+  echo "$FIXED_FLEX_WIDTH"
+  echo ""
+  echo "Reminder: Fixed widths may overflow on mobile (375px). Use responsive classes:"
+  echo "          - Mobile: flex-1 (stretch to fit)"
+  echo "          - Desktop: sm:w-12 sm:flex-initial (fixed width)"
+  # Don't increment ERRORS - this is a warning
+fi
+
 # Check for text size below 16px on inputs (causes iOS zoom)
 SMALL_INPUT_TEXT=$(echo "$STAGED_FILES" | xargs grep -n '<Input' | grep -E 'text-(xs|sm)' || true)
 if [ -n "$SMALL_INPUT_TEXT" ]; then
