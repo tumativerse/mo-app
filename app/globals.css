@@ -58,7 +58,7 @@
 
 :root {
   --radius: 0.625rem;
-  --user-accent-color: #10b981; /* Default accent color */
+  --user-accent-color: #0BA08B; /* Default accent color - Vibrant Teal */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -100,21 +100,21 @@
   --card-foreground: #fafafa;
   --popover: #1a1a1a;
   --popover-foreground: #fafafa;
-  --primary: var(--user-accent-color, #10b981);
+  --primary: var(--user-accent-color, #0BA08B);
   --primary-foreground: #000000;
   --secondary: #27272a;
   --secondary-foreground: #fafafa;
   --muted: #27272a;
   --muted-foreground: #a1a1aa;
-  --accent: var(--user-accent-color, #10b981);
+  --accent: var(--user-accent-color, #0BA08B);
   --accent-foreground: #000000;
   --destructive: #ef4444;
   --border: #27272a;
   --input: #27272a;
-  --ring: var(--user-accent-color, #10b981);
+  --ring: var(--user-accent-color, #0BA08B);
 
   /* Chart colors */
-  --chart-1: var(--user-accent-color, #10b981);
+  --chart-1: var(--user-accent-color, #0BA08B);
   --chart-2: #3b82f6;
   --chart-3: #f59e0b;
   --chart-4: #8b5cf6;
@@ -123,15 +123,15 @@
   /* Sidebar */
   --sidebar: #1a1a1a;
   --sidebar-foreground: #fafafa;
-  --sidebar-primary: var(--user-accent-color, #10b981);
+  --sidebar-primary: var(--user-accent-color, #0BA08B);
   --sidebar-primary-foreground: #000000;
   --sidebar-accent: #27272a;
   --sidebar-accent-foreground: #fafafa;
   --sidebar-border: #27272a;
-  --sidebar-ring: var(--user-accent-color, #10b981);
+  --sidebar-ring: var(--user-accent-color, #0BA08B);
 
   /* Custom fitness colors - Keep fixed for semantic consistency */
-  --fitness-push: #10b981;
+  --fitness-push: #0BA08B;
   --fitness-pull: #3b82f6;
   --fitness-legs: #ef4444;
   --fitness-energy: #f59e0b;

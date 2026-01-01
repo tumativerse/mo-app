@@ -143,8 +143,8 @@ export function PreferencesTab({
         </h3>
 
         {/* Theme Toggle */}
-        <div className="py-2">
-          <label className="text-sm font-medium text-foreground block mb-3">App Theme</label>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 py-2">
+          <label className="text-sm font-medium text-foreground flex-shrink-0">Theme</label>
           <div className="flex items-center gap-3">
             <Sun className="h-5 w-5 text-muted-foreground flex-shrink-0" />
             <button
@@ -170,7 +170,7 @@ export function PreferencesTab({
 
         {/* Accent Color Picker */}
         <ColorPicker
-          value={preferences?.accentColor || "#10b981"}
+          value={preferences?.accentColor || "#0BA08B"}
           onChange={(color) => onPreferencesChange("accentColor", color)}
         />
       </div>
@@ -189,7 +189,7 @@ export function PreferencesTab({
           disabled={isSaving}
           className="w-full sm:w-auto px-6 py-3 text-base rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
           style={{
-            backgroundColor: 'var(--user-accent-color, #10b981)',
+            backgroundColor: 'var(--user-accent-color, #0BA08B)',
             color: 'white'
           }}
         >

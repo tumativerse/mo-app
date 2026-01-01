@@ -72,7 +72,7 @@ export default function SettingsPage() {
           // Preferences tab defaults
           warmupDuration: preferencesData.preferences?.warmupDuration || "10", // String to match schema
           theme: preferencesData.preferences?.theme || "dark",
-          accentColor: preferencesData.preferences?.accentColor || "#10b981",
+          accentColor: preferencesData.preferences?.accentColor || "#0BA08B",
         };
 
         // Initialize local state for editing with defaults
