@@ -1,13 +1,2 @@
-echo "🔍 Running pre-commit checks..."
-
-# Run TypeScript type checking
-echo "📝 Checking TypeScript..."
-npm run type-check
-
-# If type-check passes, proceed with commit
-if [ $? -eq 0 ]; then
-  echo "✅ TypeScript check passed!"
-else
-  echo "❌ TypeScript errors found. Please fix them before committing."
-  exit 1
-fi
+#!/bin/sh
+bash .claude/hooks/pre-commit-design-check.sh
