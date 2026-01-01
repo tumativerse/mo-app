@@ -76,6 +76,10 @@ import { cn } from '@/lib/utils';
 - [ ] **Flexbox Alignment**: All flex containers have items-*, justify-*, or gap-* properties
 - [ ] **Grid Layouts**: Use CSS Grid for complex 2D layouts, Flexbox for 1D
 - [ ] **Container Centering**: max-w-* containers use mx-auto for centering
+- [ ] **Container Width Consistency**: Use same max-width across header, content, footer for alignment
+  - Example: If content is max-w-2xl, header/footer should also be max-w-2xl
+  - Different widths create visible misalignment on desktop browsers
+  - Exception: Hero sections or full-width backgrounds (intentional design)
 - [ ] **Fixed Positioning**: Test with virtual keyboards on mobile (may shift viewport)
 - [ ] **Absolute Positioning**: Only use within positioned parent (relative/absolute/fixed)
 - [ ] **Z-Index Scale**: Use consistent scale (modals: 50, dropdowns: 40, tooltips: 30, sticky: 20)

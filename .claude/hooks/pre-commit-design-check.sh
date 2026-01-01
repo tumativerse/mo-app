@@ -225,6 +225,24 @@ if [ -n "$NO_SAFE_AREA" ]; then
   # Don't increment ERRORS - this is a warning
 fi
 
+# Check for inconsistent max-width values in layout files
+echo "Checking for container width consistency..."
+for file in $STAGED_FILES; do
+  if [[ $file == *"layout.tsx"* ]] || [[ $file == *"page.tsx"* ]]; then
+    MAX_WIDTHS=$(grep -o "max-w-[a-z0-9]*" "$file" 2>/dev/null | sort -u)
+    WIDTH_COUNT=$(echo "$MAX_WIDTHS" | grep -c "max-w-" || true)
+
+    if [ "$WIDTH_COUNT" -gt 1 ]; then
+      echo "⚠️  Found multiple max-width values in $file:"
+      echo "$MAX_WIDTHS" | sed 's/^/    /'
+      echo ""
+      echo "Reminder: Consider using consistent max-width for aligned layouts"
+      echo "          (Different widths may cause misalignment on desktop)"
+      # Don't increment ERRORS - this is a warning
+    fi
+  fi
+done
+
 echo ""
 if [ $ERRORS -gt 0 ]; then
   echo "❌ Design system violations found. Please fix before committing."
