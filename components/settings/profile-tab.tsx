@@ -144,55 +144,55 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
   return (
     <div className="space-y-6 pb-4">
       <div>
-        <h2 className="text-lg sm:text-xl font-semibold text-zinc-100 mb-2">
+        <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-2">
           Personal Information
         </h2>
-        <p className="text-sm text-zinc-400 mb-4 sm:mb-6">
+        <p className="text-sm text-muted-foreground mb-4 sm:mb-6">
           🔒 All personal data is encrypted and stored securely
         </p>
       </div>
 
       {/* Basic Info */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-zinc-300 uppercase tracking-wide">
+        <h3 className="text-sm font-medium text-foreground uppercase tracking-wide">
           Basic Info
         </h3>
 
         {/* Full Name */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Full Name <span className="text-red-400">*</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Full Name <span className="text-destructive">*</span>
           </label>
           <input
             type="text"
             value={profile?.fullName || ""}
             onChange={(e) => onChange("fullName", e.target.value)}
             placeholder="Enter your full name"
-            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-base placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground text-base placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
             required
           />
         </div>
 
         {/* Email (read-only) */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             Email
           </label>
           <input
             type="email"
             value={profile?.email || ""}
             disabled
-            className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-zinc-500 text-base cursor-not-allowed"
+            className="w-full px-4 py-3 bg-muted border border-border rounded-lg text-muted-foreground text-base cursor-not-allowed"
           />
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Email is managed through your account settings
           </p>
         </div>
 
         {/* Date of Birth */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Date of Birth <span className="text-red-400">*</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Date of Birth <span className="text-destructive">*</span>
           </label>
           <DatePicker
             value={profile?.dateOfBirth || ""}
@@ -202,8 +202,8 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
 
         {/* Gender */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Gender <span className="text-red-400">*</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Gender <span className="text-destructive">*</span>
           </label>
           <OptionSelector
             value={profile?.gender || "male"}
@@ -219,22 +219,22 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
       </div>
 
       {/* Body Metrics */}
-      <div className="space-y-4 pt-6 border-t border-zinc-800">
-        <h3 className="text-sm font-medium text-zinc-300 uppercase tracking-wide">
+      <div className="space-y-4 pt-6 border-t border-border">
+        <h3 className="text-sm font-medium text-foreground uppercase tracking-wide">
           Body Metrics
         </h3>
 
         {/* Height */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Height <span className="text-red-400">*</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Height <span className="text-destructive">*</span>
           </label>
           <div className="flex flex-col sm:flex-row gap-2">
-            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-2 sm:px-3 py-2">
+            <div className="flex-1 bg-secondary border border-border rounded-lg px-2 sm:px-3 py-2 transition-colors">
               {heightUnit === "ft_in" ? (
                 <div className="flex gap-2 sm:gap-4">
                   <div className="flex-1">
-                    <p className="text-xs text-zinc-500 text-center mb-1">Feet</p>
+                    <p className="text-xs text-muted-foreground text-center mb-1">Feet</p>
                     <NumberPicker
                       value={parseInt(displayHeightFeet) || 6}
                       onChange={(val) => handleFeetChange(String(val))}
@@ -244,7 +244,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
                     />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs text-zinc-500 text-center mb-1">Inches</p>
+                    <p className="text-xs text-muted-foreground text-center mb-1">Inches</p>
                     <NumberPicker
                       value={parseInt(displayHeightInches) || 0}
                       onChange={(val) => handleInchesChange(String(val))}
@@ -256,7 +256,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
                 </div>
               ) : (
                 <div>
-                  <p className="text-xs text-zinc-500 text-center mb-1">Centimeters</p>
+                  <p className="text-xs text-muted-foreground text-center mb-1">Centimeters</p>
                   <NumberPicker
                     value={parseInt(displayHeight) || 183}
                     onChange={(val) => handleHeightChange(String(val))}
@@ -270,24 +270,24 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={toggleHeightUnit}
-              className="px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
+              className="px-4 py-3 text-base bg-secondary border border-border rounded-lg text-foreground hover:bg-muted transition-colors min-w-[80px] shrink-0 touch-manipulation"
             >
               {heightUnit === "ft_in" ? "ft/in" : "cm"}
             </button>
           </div>
-          <p className="text-xs text-zinc-500 mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             💡 Unit preference applies throughout the app (workouts, weight tracking, etc.)
           </p>
         </div>
 
         {/* Current Weight */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             Current Weight
           </label>
           <div className="flex flex-col sm:flex-row gap-2">
-            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-2 sm:px-3 py-2">
-              <p className="text-xs text-zinc-500 text-center mb-1">
+            <div className="flex-1 bg-secondary border border-border rounded-lg px-2 sm:px-3 py-2 transition-colors">
+              <p className="text-xs text-muted-foreground text-center mb-1">
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
               <NumberPicker
@@ -301,24 +301,24 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={() => onChange("units", profile?.units === "imperial" ? "metric" : "imperial")}
-              className="px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
+              className="px-4 py-3 text-base bg-secondary border border-border rounded-lg text-foreground hover:bg-muted transition-colors min-w-[80px] shrink-0 touch-manipulation"
             >
               {profile?.units === "imperial" ? "lbs" : "kg"}
             </button>
           </div>
-          <p className="text-xs text-zinc-500 mt-2">
+          <p className="text-xs text-muted-foreground mt-2">
             💡 Unit preference applies throughout the app (workouts, weight tracking, etc.)
           </p>
         </div>
 
         {/* Goal Weight */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Goal Weight <span className="text-zinc-500">(Optional)</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Goal Weight <span className="text-muted-foreground">(Optional)</span>
           </label>
           <div className="flex flex-col sm:flex-row gap-2">
-            <div className="flex-1 bg-zinc-800 border border-zinc-700 rounded-lg px-2 sm:px-3 py-2">
-              <p className="text-xs text-zinc-500 text-center mb-1">
+            <div className="flex-1 bg-secondary border border-border rounded-lg px-2 sm:px-3 py-2 transition-colors">
+              <p className="text-xs text-muted-foreground text-center mb-1">
                 {profile?.units === "imperial" ? "Pounds" : "Kilograms"}
               </p>
               <NumberPicker
@@ -332,7 +332,7 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             <button
               type="button"
               onClick={() => onChange("units", profile?.units === "imperial" ? "metric" : "imperial")}
-              className="px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 hover:bg-zinc-700 active:bg-zinc-600 transition-colors min-w-[80px] shrink-0 touch-manipulation"
+              className="px-4 py-3 text-base bg-secondary border border-border rounded-lg text-foreground hover:bg-muted transition-colors min-w-[80px] shrink-0 touch-manipulation"
             >
               {profile?.units === "imperial" ? "lbs" : "kg"}
             </button>
@@ -341,20 +341,20 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
       </div>
 
       {/* Health & Safety */}
-      <div className="space-y-4 pt-6 border-t border-zinc-800">
+      <div className="space-y-4 pt-6 border-t border-border">
         <div>
-          <h3 className="text-sm font-medium text-zinc-300 uppercase tracking-wide">
+          <h3 className="text-sm font-medium text-foreground uppercase tracking-wide">
             Health & Safety Information
           </h3>
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             This information helps us provide safer recommendations
           </p>
         </div>
 
         {/* Injury History */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Injury History <span className="text-zinc-500">(Optional)</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Injury History <span className="text-muted-foreground">(Optional)</span>
           </label>
           <textarea
             value={profile?.injuryHistory || ""}
@@ -362,14 +362,14 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             placeholder="e.g., Lower back pain, knee issues, shoulder injury..."
             rows={3}
             maxLength={1000}
-            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-base placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+            className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground text-base placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none transition-colors"
           />
         </div>
 
         {/* Chronic Conditions */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Chronic Conditions <span className="text-zinc-500">(Optional)</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Chronic Conditions <span className="text-muted-foreground">(Optional)</span>
           </label>
           <textarea
             value={profile?.chronicConditions || ""}
@@ -377,14 +377,14 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             placeholder="e.g., Asthma, diabetes, hypertension..."
             rows={3}
             maxLength={1000}
-            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-base placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+            className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground text-base placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none transition-colors"
           />
         </div>
 
         {/* Medications */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Medications <span className="text-zinc-500">(Optional)</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Medications <span className="text-muted-foreground">(Optional)</span>
           </label>
           <textarea
             value={profile?.medications || ""}
@@ -392,18 +392,18 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
             placeholder="e.g., Beta blockers, blood thinners, supplements..."
             rows={3}
             maxLength={1000}
-            className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 text-base placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+            className="w-full px-4 py-3 bg-secondary border border-border rounded-lg text-foreground text-base placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary resize-none transition-colors"
           />
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-zinc-800">
+      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-border">
         <button
           type="button"
           onClick={onCancel}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-3 text-base bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+          className="w-full sm:w-auto px-6 py-3 text-base border border-border text-foreground rounded-lg hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
         >
           Cancel
         </button>
@@ -411,7 +411,11 @@ export function ProfileTab({ profile, onChange, onSave, onCancel, isSaving = fal
           type="button"
           onClick={onSave}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-3 text-base bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 touch-manipulation"
+          className="w-full sm:w-auto px-6 py-3 text-base rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 touch-manipulation"
+          style={{
+            backgroundColor: 'var(--user-accent-color, #0BA08B)',
+            color: 'white'
+          }}
         >
           {isSaving ? (
             <>
