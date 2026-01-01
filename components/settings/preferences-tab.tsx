@@ -102,7 +102,8 @@ export function PreferencesTab({
             id="skipGeneralWarmup"
             checked={preferences?.skipGeneralWarmup || false}
             onChange={(e) => onPreferencesChange("skipGeneralWarmup", e.target.checked)}
-            className="mt-1 w-4 h-4 bg-secondary border-border rounded text-black focus:ring-2 focus:ring-primary focus:ring-offset-0 focus:ring-offset-background transition-colors"
+            className="mt-1 w-4 h-4 rounded border-border focus:ring-2 focus:ring-primary focus:ring-offset-0 transition-colors"
+            style={{ accentColor: 'black' }}
           />
           <div className="flex-1">
             <label htmlFor="skipGeneralWarmup" className="text-sm font-medium text-foreground cursor-pointer">
@@ -121,7 +122,8 @@ export function PreferencesTab({
             id="includeMobilityWork"
             checked={preferences?.includeMobilityWork || false}
             onChange={(e) => onPreferencesChange("includeMobilityWork", e.target.checked)}
-            className="mt-1 w-4 h-4 bg-secondary border-border rounded text-black focus:ring-2 focus:ring-primary focus:ring-offset-0 focus:ring-offset-background transition-colors"
+            className="mt-1 w-4 h-4 rounded border-border focus:ring-2 focus:ring-primary focus:ring-offset-0 transition-colors"
+            style={{ accentColor: 'black' }}
           />
           <div className="flex-1">
             <label htmlFor="includeMobilityWork" className="text-sm font-medium text-foreground cursor-pointer">
@@ -141,31 +143,29 @@ export function PreferencesTab({
         </h3>
 
         {/* Theme Toggle */}
-        <div className="flex items-center justify-between py-2">
-          <div>
-            <label className="text-sm font-medium text-foreground">App Theme</label>
-            <p className="text-xs text-muted-foreground mt-1">Toggle between light and dark mode</p>
-          </div>
-          <button
-            type="button"
-            onClick={() => onPreferencesChange("theme", preferences?.theme === "dark" ? "light" : "dark")}
-            className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background ${
-              preferences?.theme === "dark" ? "bg-primary" : "bg-muted"
-            }`}
-          >
-            <span className="sr-only">Toggle theme</span>
-            <span
-              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform flex items-center justify-center ${
-                preferences?.theme === "dark" ? "translate-x-7" : "translate-x-1"
+        <div className="py-2">
+          <label className="text-sm font-medium text-foreground block mb-3">App Theme</label>
+          <div className="flex items-center gap-3">
+            <Sun className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+            <button
+              type="button"
+              onClick={() => onPreferencesChange("theme", preferences?.theme === "dark" ? "light" : "dark")}
+              className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background ${
+                preferences?.theme === "dark" ? "bg-primary" : "bg-muted"
               }`}
             >
-              {preferences?.theme === "dark" ? (
-                <Moon className="h-3 w-3 text-gray-800" />
-              ) : (
-                <Sun className="h-3 w-3 text-gray-800" />
-              )}
+              <span className="sr-only">Toggle theme</span>
+              <span
+                className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform ${
+                  preferences?.theme === "dark" ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </button>
+            <Moon className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+            <span className="text-sm text-muted-foreground ml-1">
+              {preferences?.theme === "dark" ? "Dark" : "Light"}
             </span>
-          </button>
+          </div>
         </div>
 
         {/* Accent Color Picker */}
@@ -187,7 +187,11 @@ export function PreferencesTab({
         <button
           onClick={onSave}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-3 text-base bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
+          className="w-full sm:w-auto px-6 py-3 text-base rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
+          style={{
+            backgroundColor: 'var(--user-accent-color, #10b981)',
+            color: 'white'
+          }}
         >
           {isSaving ? (
             <>
