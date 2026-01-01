@@ -386,7 +386,7 @@ export default function SettingsPage() {
                 <TabsTrigger
                   key={tab.id}
                   value={tab.id}
-                  className="flex flex-col items-center justify-center gap-1 px-1 py-3 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-lg transition-all"
+                  className="flex flex-col items-center justify-center gap-1 px-1 py-3 text-xs sm:text-sm rounded-lg transition-all"
                   style={{ minHeight: "60px" }}
                 >
                   <Icon className="h-5 w-5 sm:h-5 sm:w-5 shrink-0" />
