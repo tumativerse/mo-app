@@ -180,12 +180,24 @@ type MovementPattern =
 
 ## UI Guidelines
 
-### Dark Theme Colors
-- Background: `bg-zinc-950` or `bg-background`
-- Cards: `bg-zinc-900 rounded-xl border border-zinc-800`
-- Text: `text-zinc-100` (primary), `text-zinc-400` (muted)
-- Primary actions: `bg-green-600 hover:bg-green-700`
-- Destructive: `bg-red-600` or `text-destructive`
+**IMPORTANT:** Mo is a **fun, energetic, and motivating** app. See `.claude/DESIGN_SYSTEM.md` for complete design patterns.
+
+### Design Requirements (Always Apply)
+- ✅ Use Framer Motion with stagger animations
+- ✅ Gradient text headers
+- ✅ Cards with gradient backgrounds and colored borders
+- ✅ Icons that bounce/rotate on hover
+- ✅ Interactive elements scale on hover/tap
+- ✅ Shadow effects on primary actions
+- ✅ Semantic color tokens (never hardcoded colors)
+
+### Theme Colors (Use Semantic Tokens)
+- Background: `bg-background`
+- Cards: `bg-card border-border`
+- Text: `text-foreground` (primary), `text-muted-foreground` (secondary)
+- Primary actions: `bg-primary text-primary-foreground`
+- Destructive: `text-destructive`
+- Inputs: `bg-secondary border-border`
 
 ### Toast Notifications
 ```typescript

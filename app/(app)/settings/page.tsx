@@ -365,41 +365,49 @@ export default function SettingsPage() {
       animate="animate"
     >
       {/* Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold mb-1">Settings</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">
+      <motion.div variants={staggerItem}>
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+          Settings
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground mt-1">
           Manage your profile, training preferences, and app settings
         </p>
-      </div>
+      </motion.div>
 
       {/* Profile Completion Banner */}
       {completionStatus && <ProfileCompletionBanner status={completionStatus} />}
 
       {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Tab Navigation - Mobile optimized, sticky on scroll */}
-        <div className="sticky top-0 z-10 bg-background pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 pt-2">
-          <TabsList className="w-full h-auto grid grid-cols-5 gap-2 p-1.5 bg-muted/50 rounded-xl">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <TabsTrigger
-                  key={tab.id}
-                  value={tab.id}
-                  className="flex flex-col items-center justify-center gap-1 px-1 py-3 text-xs sm:text-sm rounded-lg transition-all"
-                  style={{ minHeight: "60px" }}
-                >
-                  <Icon className="h-5 w-5 sm:h-5 sm:w-5 shrink-0" />
-                  <span className="text-[10px] sm:text-xs leading-tight text-center">{tab.label}</span>
-                </TabsTrigger>
-              );
-            })}
-          </TabsList>
-        </div>
+      <motion.div variants={staggerItem}>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          {/* Tab Navigation - Mobile optimized, sticky on scroll */}
+          <div className="sticky top-0 z-10 bg-background pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 pt-2">
+            <TabsList className="w-full h-auto grid grid-cols-5 gap-2 p-1.5 bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                return (
+                  <TabsTrigger
+                    key={tab.id}
+                    value={tab.id}
+                    className="flex flex-col items-center justify-center gap-1 px-1 py-3 text-xs sm:text-sm rounded-lg transition-all"
+                    style={{ minHeight: "60px" }}
+                  >
+                    <motion.div
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                      <Icon className="h-5 w-5 sm:h-5 sm:w-5 shrink-0" />
+                    </motion.div>
+                    <span className="text-[10px] sm:text-xs leading-tight text-center">{tab.label}</span>
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </div>
 
-        {/* Tab Content */}
-        <Card>
-          <CardContent className="p-4 sm:p-6">
+          {/* Tab Content */}
+          <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent transition-all duration-300">
+            <CardContent className="p-4 sm:p-6">
             <TabsContent value="profile" className="mt-0">
               <motion.div
                 variants={staggerContainer}
@@ -483,7 +491,8 @@ export default function SettingsPage() {
             </TabsContent>
           </CardContent>
         </Card>
-      </Tabs>
+        </Tabs>
+      </motion.div>
     </motion.div>
   );
 }
