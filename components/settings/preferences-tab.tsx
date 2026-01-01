@@ -102,7 +102,7 @@ export function PreferencesTab({
             id="skipGeneralWarmup"
             checked={preferences?.skipGeneralWarmup || false}
             onChange={(e) => onPreferencesChange("skipGeneralWarmup", e.target.checked)}
-            className="mt-1 w-4 h-4 bg-secondary border-border rounded text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 focus:ring-offset-background transition-colors"
+            className="mt-1 w-4 h-4 bg-secondary border-border rounded text-black focus:ring-2 focus:ring-primary focus:ring-offset-0 focus:ring-offset-background transition-colors"
           />
           <div className="flex-1">
             <label htmlFor="skipGeneralWarmup" className="text-sm font-medium text-foreground cursor-pointer">
@@ -121,7 +121,7 @@ export function PreferencesTab({
             id="includeMobilityWork"
             checked={preferences?.includeMobilityWork || false}
             onChange={(e) => onPreferencesChange("includeMobilityWork", e.target.checked)}
-            className="mt-1 w-4 h-4 bg-secondary border-border rounded text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0 focus:ring-offset-background transition-colors"
+            className="mt-1 w-4 h-4 bg-secondary border-border rounded text-black focus:ring-2 focus:ring-primary focus:ring-offset-0 focus:ring-offset-background transition-colors"
           />
           <div className="flex-1">
             <label htmlFor="includeMobilityWork" className="text-sm font-medium text-foreground cursor-pointer">
@@ -140,65 +140,39 @@ export function PreferencesTab({
           Display
         </h3>
 
-        {/* Theme Selection */}
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
-            App Theme
-          </label>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => onPreferencesChange("theme", "light")}
-              className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all ${
-                preferences?.theme === "light"
-                  ? "border-primary bg-secondary"
-                  : "border-border bg-muted/50 hover:bg-secondary"
-              }`}
-            >
-              <Sun className="h-5 w-5 text-foreground" />
-              <div className="text-left">
-                <p className="text-sm font-medium text-foreground">Light</p>
-                <p className="text-xs text-muted-foreground">Bright theme</p>
-              </div>
-            </button>
-            <button
-              type="button"
-              onClick={() => onPreferencesChange("theme", "dark")}
-              className={`flex items-center gap-3 p-4 rounded-lg border-2 transition-all ${
-                preferences?.theme === "dark"
-                  ? "border-primary bg-secondary"
-                  : "border-border bg-muted/50 hover:bg-secondary"
-              }`}
-            >
-              <Moon className="h-5 w-5 text-foreground" />
-              <div className="text-left">
-                <p className="text-sm font-medium text-foreground">Dark</p>
-                <p className="text-xs text-muted-foreground">Default theme</p>
-              </div>
-            </button>
+        {/* Theme Toggle */}
+        <div className="flex items-center justify-between py-2">
+          <div>
+            <label className="text-sm font-medium text-foreground">App Theme</label>
+            <p className="text-xs text-muted-foreground mt-1">Toggle between light and dark mode</p>
           </div>
+          <button
+            type="button"
+            onClick={() => onPreferencesChange("theme", preferences?.theme === "dark" ? "light" : "dark")}
+            className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background ${
+              preferences?.theme === "dark" ? "bg-primary" : "bg-muted"
+            }`}
+          >
+            <span className="sr-only">Toggle theme</span>
+            <span
+              className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-lg transition-transform flex items-center justify-center ${
+                preferences?.theme === "dark" ? "translate-x-7" : "translate-x-1"
+              }`}
+            >
+              {preferences?.theme === "dark" ? (
+                <Moon className="h-3 w-3 text-gray-800" />
+              ) : (
+                <Sun className="h-3 w-3 text-gray-800" />
+              )}
+            </span>
+          </button>
         </div>
 
         {/* Accent Color Picker */}
-        <div>
-          <ColorPicker
-            value={preferences?.accentColor || "#10b981"}
-            onChange={(color) => onPreferencesChange("accentColor", color)}
-          />
-        </div>
-
-        {/* Notifications - Coming Soon */}
-        <div className="p-4 bg-muted/50 border border-border rounded-lg transition-colors">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-foreground">Notifications</p>
-              <p className="text-xs text-muted-foreground mt-1">Rest timer alerts, PR celebrations, streak reminders</p>
-            </div>
-            <div className="px-3 py-1 bg-background border border-border rounded text-xs text-muted-foreground">
-              Coming soon
-            </div>
-          </div>
-        </div>
+        <ColorPicker
+          value={preferences?.accentColor || "#10b981"}
+          onChange={(color) => onPreferencesChange("accentColor", color)}
+        />
       </div>
 
       {/* Action Buttons */}

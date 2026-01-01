@@ -108,13 +108,13 @@ export function SingleSelectDropdown({
                 onClick={() => handleSelect(option.value)}
                 className={`w-full px-3 py-3 text-base text-left transition-colors flex items-start gap-3 touch-manipulation ${
                   isSelected
-                    ? "bg-primary text-primary-foreground font-medium"
+                    ? "bg-primary/10 text-foreground font-medium"
                     : "text-foreground hover:bg-secondary"
                 }`}
               >
                 {/* Icon */}
                 {Icon && showIcons && (
-                  <Icon className={`h-5 w-5 flex-shrink-0 mt-0.5 ${isSelected ? "text-primary-foreground" : "text-muted-foreground"}`} />
+                  <Icon className={`h-5 w-5 flex-shrink-0 mt-0.5 text-muted-foreground`} />
                 )}
 
                 {/* Label and Description */}
@@ -123,7 +123,7 @@ export function SingleSelectDropdown({
                     {option.label}
                   </div>
                   {option.description && (
-                    <div className={`text-xs mt-0.5 ${isSelected ? "text-primary-foreground/75" : "text-muted-foreground"}`}>
+                    <div className="text-xs mt-0.5 text-muted-foreground">
                       {option.description}
                     </div>
                   )}
