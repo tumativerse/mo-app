@@ -36,7 +36,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card">
-        <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-4">
+        <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-4">
           <div>
             <h1 className="text-xl font-bold text-foreground">Welcome to Mo</h1>
             <p className="text-sm text-muted-foreground">
@@ -49,7 +49,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
 
       {/* Step Progress Indicator */}
       <div className="border-b border-border bg-card">
-        <div className="mx-auto max-w-4xl px-4 py-6">
+        <div className="mx-auto max-w-2xl px-4 py-6">
           <div className="flex items-center justify-between">
             {STEPS.map((step, index) => {
               const isCompleted = currentStep > step.number;
@@ -126,7 +126,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
 
       {/* Footer */}
       <footer className="border-t border-border py-4">
-        <div className="mx-auto max-w-4xl px-4 text-center text-sm text-muted-foreground">
+        <div className="mx-auto max-w-2xl px-4 text-center text-sm text-muted-foreground">
           Your data is encrypted and secure. We'll never share your personal information.
         </div>
       </footer>
