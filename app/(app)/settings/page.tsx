@@ -52,8 +52,8 @@ export default function SettingsPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Local state for form changes (not yet saved)
-  const [profile, setProfile] = useState<any>(null);
-  const [preferences, setPreferences] = useState<any>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [preferences, setPreferences] = useState<UserPreferences | null>(null);
 
   // Fetch profile and preferences data
   useEffect(() => {
