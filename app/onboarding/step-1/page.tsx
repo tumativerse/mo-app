@@ -177,7 +177,7 @@ export default function OnboardingStep1Page() {
               width="100%"
             />
             <p className="text-xs text-muted-foreground">
-              Helps us provide more accurate calorie and nutrition recommendations
+              Helps us personalize your fitness experience
             </p>
           </div>
 
