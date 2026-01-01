@@ -3,6 +3,7 @@
 import { CheckCircle2, Circle } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { type ReactNode } from 'react';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,6 +43,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
               Let's set up your fitness profile
             </p>
           </div>
+          <ThemeToggle />
         </div>
       </header>
 
