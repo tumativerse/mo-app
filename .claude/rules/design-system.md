@@ -93,6 +93,28 @@ import { cn } from '@/lib/utils';
 - [ ] **Sticky Elements**: Test behavior during scroll on all devices
 - [ ] **Content Width**: Main content containers max at 1280px-1440px for readability
 
+### Responsive Standardization Pattern:
+
+**ALWAYS prefer consistent alignment with responsive sizing:**
+
+```tsx
+// ✅ CORRECT: Same alignment strategy, different sizes
+<div className="flex justify-center gap-2 sm:gap-4">
+  <Circle className="h-6 w-6 sm:h-10 sm:w-10" />
+</div>
+
+// ❌ WRONG: Different alignment strategies per breakpoint
+<div className="flex justify-between sm:justify-center">
+  {/* Mobile spreads, desktop centers - inconsistent UX */}
+</div>
+```
+
+**Why?**
+- Consistent visual center point across all devices
+- Predictable user experience
+- Easier to maintain (one alignment rule)
+- Only size/spacing changes, not positioning logic
+
 ### Component Positioning Patterns:
 ```tsx
 // ✅ CORRECT: Centered container
@@ -100,9 +122,9 @@ import { cn } from '@/lib/utils';
   <Content />
 </div>
 
-// ✅ CORRECT: Flex with alignment
-<div className="flex items-center justify-between gap-4">
-  <Item />
+// ✅ CORRECT: Flex with alignment (consistent across breakpoints)
+<div className="flex items-center justify-center gap-2 sm:gap-4">
+  <Item className="h-6 sm:h-10" />
 </div>
 
 // ✅ CORRECT: Fixed with safe area
@@ -115,6 +137,9 @@ import { cn } from '@/lib/utils';
 
 // ❌ WRONG: Flex without alignment
 <div className="flex"> {/* Items may not align as expected */}
+
+// ❌ WRONG: Different alignment per breakpoint
+<div className="justify-between sm:justify-center"> {/* Inconsistent */}
 
 // ❌ WRONG: Fixed without safe area
 <header className="fixed top-0"> {/* May be hidden by notch */}

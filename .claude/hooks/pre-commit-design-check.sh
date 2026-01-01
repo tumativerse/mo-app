@@ -255,6 +255,18 @@ for file in $STAGED_FILES; do
   fi
 done
 
+# Check for inconsistent alignment strategies across breakpoints
+ALIGNMENT_INCONSISTENCY=$(echo "$STAGED_FILES" | xargs grep -n "justify-between.*sm:justify-\|justify-start.*sm:justify-\|justify-end.*sm:justify-" || true)
+if [ -n "$ALIGNMENT_INCONSISTENCY" ]; then
+  echo "⚠️  Found different alignment strategies per breakpoint:"
+  echo "$ALIGNMENT_INCONSISTENCY"
+  echo ""
+  echo "Reminder: Use consistent alignment (e.g., always justify-center)"
+  echo "          Only change size/spacing with responsive classes, not alignment"
+  echo "          Example: justify-center gap-2 sm:gap-4 (consistent alignment, different spacing)"
+  # Don't increment ERRORS - this is a warning
+fi
+
 echo ""
 if [ $ERRORS -gt 0 ]; then
   echo "❌ Design system violations found. Please fix before committing."
