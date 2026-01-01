@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DatePicker } from '@/components/ui/date-picker';
+import { CustomDropdown } from '@/components/ui/custom-dropdown';
 import { ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -25,28 +26,77 @@ import { toast } from 'sonner';
 export default function OnboardingStep1Page() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [units, setUnits] = useState<'metric' | 'imperial'>('metric');
   const [formData, setFormData] = useState({
     fullName: '',
     dateOfBirth: '',
     gender: '',
     heightCm: '',
-    currentWeight: '',
+    heightFt: '',
+    heightIn: '',
+    weightKg: '',
+    weightLbs: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate all fields are filled
-    if (!formData.fullName || !formData.dateOfBirth || !formData.gender || !formData.heightCm || !formData.currentWeight) {
+    if (!formData.fullName || !formData.dateOfBirth || !formData.gender) {
       toast.error('Please fill in all fields');
+      return;
+    }
+
+    // Validate height based on units
+    if (units === 'metric' && !formData.heightCm) {
+      toast.error('Please enter your height');
+      return;
+    }
+    if (units === 'imperial' && (!formData.heightFt || !formData.heightIn)) {
+      toast.error('Please enter your height');
+      return;
+    }
+
+    // Validate weight based on units
+    if (units === 'metric' && !formData.weightKg) {
+      toast.error('Please enter your weight');
+      return;
+    }
+    if (units === 'imperial' && !formData.weightLbs) {
+      toast.error('Please enter your weight');
       return;
     }
 
     setLoading(true);
     try {
+      // Convert to metric for storage (backend expects cm and kg)
+      let heightCm: number;
+      let weightKg: number;
+
+      if (units === 'metric') {
+        heightCm = parseFloat(formData.heightCm);
+        weightKg = parseFloat(formData.weightKg);
+      } else {
+        // Convert imperial to metric
+        const feet = parseFloat(formData.heightFt);
+        const inches = parseFloat(formData.heightIn);
+        heightCm = ((feet * 12) + inches) * 2.54; // 1 inch = 2.54 cm
+
+        weightKg = parseFloat(formData.weightLbs) * 0.453592; // 1 lb = 0.453592 kg
+      }
+
+      const dataToSave = {
+        fullName: formData.fullName,
+        dateOfBirth: formData.dateOfBirth,
+        gender: formData.gender,
+        heightCm,
+        currentWeight: weightKg,
+        units,
+      };
+
       // Save to localStorage for now (will save to DB at the end)
-      localStorage.setItem('onboarding_step1', JSON.stringify(formData));
-      
+      localStorage.setItem('onboarding_step1', JSON.stringify(dataToSave));
+
       // Navigate to next step
       router.push('/onboarding/step-2');
     } catch (error) {
@@ -67,6 +117,31 @@ export default function OnboardingStep1Page() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Units Toggle */}
+          <div className="space-y-2">
+            <Label>Measurement Units</Label>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant={units === 'metric' ? 'primary' : 'outline'}
+                size="md"
+                onClick={() => setUnits('metric')}
+                className="flex-1"
+              >
+                Metric (kg, cm)
+              </Button>
+              <Button
+                type="button"
+                variant={units === 'imperial' ? 'primary' : 'outline'}
+                size="md"
+                onClick={() => setUnits('imperial')}
+                className="flex-1"
+              >
+                Imperial (lbs, ft/in)
+              </Button>
+            </div>
+          </div>
+
           {/* Full Name */}
           <div className="space-y-2">
             <Label htmlFor="fullName">Full Name</Label>
@@ -96,59 +171,106 @@ export default function OnboardingStep1Page() {
           {/* Gender */}
           <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
-            <select
-              id="gender"
+            <CustomDropdown
               value={formData.gender}
-              onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-              required
-              className="flex h-11 w-full rounded-lg border border-border bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px]"
-            >
-              <option value="">Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="non_binary">Non-binary</option>
-              <option value="prefer_not_to_say">Prefer not to say</option>
-            </select>
+              options={[
+                { value: 'male', label: 'Male' },
+                { value: 'female', label: 'Female' },
+                { value: 'non_binary', label: 'Non-binary' },
+                { value: 'prefer_not_to_say', label: 'Prefer not to say' },
+              ]}
+              onChange={(value) => setFormData({ ...formData, gender: String(value) })}
+              placeholder="Select gender"
+              width="100%"
+            />
             <p className="text-xs text-muted-foreground">
               Helps us provide more accurate calorie and nutrition recommendations
             </p>
           </div>
 
-          {/* Height */}
+          {/* Height - Conditional based on units */}
           <div className="space-y-2">
-            <Label htmlFor="heightCm">Height (cm)</Label>
-            <Input
-              id="heightCm"
-              type="number"
-              placeholder="175"
-              value={formData.heightCm}
-              onChange={(e) => setFormData({ ...formData, heightCm: e.target.value })}
-              required
-              size="md"
-              min="100"
-              max="250"
-              step="0.1"
-            />
+            <Label htmlFor="height">Height</Label>
+            {units === 'metric' ? (
+              <Input
+                id="height"
+                type="number"
+                placeholder="175"
+                value={formData.heightCm}
+                onChange={(e) => setFormData({ ...formData, heightCm: e.target.value })}
+                required
+                size="md"
+                min="100"
+                max="250"
+                step="0.1"
+              />
+            ) : (
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <Input
+                    id="heightFt"
+                    type="number"
+                    placeholder="5"
+                    value={formData.heightFt}
+                    onChange={(e) => setFormData({ ...formData, heightFt: e.target.value })}
+                    required
+                    size="md"
+                    min="3"
+                    max="8"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">Feet</p>
+                </div>
+                <div className="flex-1">
+                  <Input
+                    id="heightIn"
+                    type="number"
+                    placeholder="10"
+                    value={formData.heightIn}
+                    onChange={(e) => setFormData({ ...formData, heightIn: e.target.value })}
+                    required
+                    size="md"
+                    min="0"
+                    max="11"
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">Inches</p>
+                </div>
+              </div>
+            )}
             <p className="text-xs text-muted-foreground">
               Used for calculating BMI and other health metrics
             </p>
           </div>
 
-          {/* Current Weight */}
+          {/* Weight - Conditional based on units */}
           <div className="space-y-2">
-            <Label htmlFor="currentWeight">Current Weight (kg)</Label>
-            <Input
-              id="currentWeight"
-              type="number"
-              placeholder="70"
-              value={formData.currentWeight}
-              onChange={(e) => setFormData({ ...formData, currentWeight: e.target.value })}
-              required
-              size="md"
-              min="30"
-              max="300"
-              step="0.1"
-            />
+            <Label htmlFor="weight">Current Weight</Label>
+            {units === 'metric' ? (
+              <Input
+                id="weight"
+                type="number"
+                placeholder="70"
+                value={formData.weightKg}
+                onChange={(e) => setFormData({ ...formData, weightKg: e.target.value })}
+                required
+                size="md"
+                min="30"
+                max="300"
+                step="0.1"
+              />
+            ) : (
+              <Input
+                id="weight"
+                type="number"
+                placeholder="154"
+                value={formData.weightLbs}
+                onChange={(e) => setFormData({ ...formData, weightLbs: e.target.value })}
+                required
+                size="md"
+                min="66"
+                max="660"
+                step="0.1"
+              />
+            )}
             <p className="text-xs text-muted-foreground">
               We'll track your progress over time
             </p>
