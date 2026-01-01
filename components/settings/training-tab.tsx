@@ -47,24 +47,24 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
   return (
     <div className="space-y-6 pb-4">
       <div>
-        <h2 className="text-lg sm:text-xl font-semibold text-zinc-100 mb-2">
+        <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-2">
           Training Profile
         </h2>
-        <p className="text-sm text-zinc-400 mb-4 sm:mb-6">
+        <p className="text-sm text-muted-foreground mb-4 sm:mb-6">
           Configure your training goals, experience, and schedule
         </p>
       </div>
 
       {/* Training Goals & Experience */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium text-zinc-300 uppercase tracking-wide">
+        <h3 className="text-sm font-medium text-foreground uppercase tracking-wide">
           Goals & Experience
         </h3>
 
         {/* Fitness Goal */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Fitness Goal <span className="text-red-400">*</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Fitness Goal <span className="text-destructive">*</span>
           </label>
           <SingleSelectDropdown
             value={preferences?.fitnessGoal || ""}
@@ -77,8 +77,8 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
 
         {/* Experience Level */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Experience Level <span className="text-red-400">*</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Experience Level <span className="text-destructive">*</span>
           </label>
           <SingleSelectDropdown
             value={preferences?.experienceLevel || ""}
@@ -91,15 +91,15 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
       </div>
 
       {/* Training Schedule */}
-      <div className="space-y-4 pt-6 border-t border-zinc-800">
-        <h3 className="text-sm font-medium text-zinc-300 uppercase tracking-wide">
+      <div className="space-y-4 pt-6 border-t border-border">
+        <h3 className="text-sm font-medium text-foreground uppercase tracking-wide">
           Training Schedule
         </h3>
 
         {/* Training Frequency */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Training Frequency (days/week) <span className="text-red-400">*</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Training Frequency (days/week) <span className="text-destructive">*</span>
           </label>
           <input
             type="number"
@@ -107,18 +107,18 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
             onChange={(e) => onChange("trainingFrequency", parseInt(e.target.value))}
             min={1}
             max={7}
-            className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 text-base bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
             required
           />
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             How many days per week do you plan to train?
           </p>
         </div>
 
         {/* Session Duration */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Session Duration (minutes) <span className="text-red-400">*</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Session Duration (minutes) <span className="text-destructive">*</span>
           </label>
           <input
             type="number"
@@ -127,18 +127,18 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
             min={15}
             max={180}
             step={5}
-            className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-4 py-3 text-base bg-secondary border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
             required
           />
-          <p className="text-xs text-zinc-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Average length of your training sessions
           </p>
         </div>
 
         {/* Preferred Training Times */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Preferred Training Times <span className="text-zinc-500">(Optional)</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Preferred Training Times <span className="text-muted-foreground">(Optional)</span>
           </label>
           <MultiSelectDropdown
             value={preferences?.preferredTrainingTimes || []}
@@ -150,8 +150,8 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
 
         {/* Rest Days Preference */}
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Rest Days Preference <span className="text-zinc-500">(Optional)</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Rest Days Preference <span className="text-muted-foreground">(Optional)</span>
           </label>
           <MultiSelectDropdown
             value={preferences?.restDaysPreference || []}
@@ -163,45 +163,52 @@ export function TrainingTab({ preferences, onChange, onSave, onCancel, isSaving 
       </div>
 
       {/* Cardio Preference */}
-      <div className="space-y-4 pt-6 border-t border-zinc-800">
-        <h3 className="text-sm font-medium text-zinc-300 uppercase tracking-wide">
+      <div className="space-y-4 pt-6 border-t border-border">
+        <h3 className="text-sm font-medium text-foreground uppercase tracking-wide">
           Cardio
         </h3>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
-            Preferred Cardio Type <span className="text-zinc-500">(Optional)</span>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Preferred Cardio Type <span className="text-muted-foreground">(Optional)</span>
           </label>
-          <select
+          <SingleSelectDropdown
             value={preferences?.preferredCardio || ""}
-            onChange={(e) => onChange("preferredCardio", e.target.value || null)}
-            className="w-full px-4 py-3 text-base bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-100 focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            <option value="">None / No preference</option>
-            <option value="running">Running</option>
-            <option value="cycling">Cycling</option>
-            <option value="rowing">Rowing</option>
-            <option value="swimming">Swimming</option>
-            <option value="walking">Walking</option>
-            <option value="elliptical">Elliptical</option>
-            <option value="jump_rope">Jump Rope</option>
-          </select>
+            options={[
+              { value: "", label: "None / No preference", description: "Skip cardio" },
+              { value: "running", label: "Running", description: "Outdoor or treadmill" },
+              { value: "cycling", label: "Cycling", description: "Bike or stationary" },
+              { value: "rowing", label: "Rowing", description: "Full body cardio" },
+              { value: "swimming", label: "Swimming", description: "Low impact" },
+              { value: "walking", label: "Walking", description: "Light cardio" },
+              { value: "elliptical", label: "Elliptical", description: "Low impact machine" },
+              { value: "jump_rope", label: "Jump Rope", description: "High intensity" },
+            ]}
+            onChange={(value) => onChange("preferredCardio", value || null)}
+            placeholder="Select cardio preference"
+            width="100%"
+            showIcons={false}
+          />
         </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-zinc-800">
+      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-border">
         <button
           onClick={onCancel}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-3 text-base border border-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+          className="w-full sm:w-auto px-6 py-3 text-base border border-border text-foreground rounded-lg hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
         >
           Cancel
         </button>
         <button
           onClick={onSave}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-3 text-base bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
+          className="w-full sm:w-auto px-6 py-3 text-base rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
+          style={{
+            backgroundColor: 'var(--user-accent-color, #0BA08B)',
+            color: 'white'
+          }}
         >
           {isSaving ? (
             <>

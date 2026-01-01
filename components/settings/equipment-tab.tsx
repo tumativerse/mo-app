@@ -37,18 +37,18 @@ export function EquipmentTab({ preferences, onChange, onSave, onCancel, isSaving
   return (
     <div className="space-y-6 pb-4">
       <div>
-        <h2 className="text-lg sm:text-xl font-semibold text-zinc-100 mb-2">
+        <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-2">
           Equipment Setup
         </h2>
-        <p className="text-sm text-zinc-400 mb-4 sm:mb-6">
+        <p className="text-sm text-muted-foreground mb-4 sm:mb-6">
           Tell us what equipment you have access to
         </p>
       </div>
 
       {/* Equipment Level */}
       <div>
-        <label className="block text-sm font-medium text-zinc-300 mb-2">
-          Equipment Level <span className="text-red-400">*</span>
+        <label className="block text-sm font-medium text-foreground mb-2">
+          Equipment Level <span className="text-destructive">*</span>
         </label>
         <SingleSelectDropdown
           value={preferences?.defaultEquipmentLevel || ""}
@@ -61,11 +61,11 @@ export function EquipmentTab({ preferences, onChange, onSave, onCancel, isSaving
 
       {/* Available Equipment */}
       {preferences?.defaultEquipmentLevel !== "bodyweight" && (
-        <div className="pt-6 border-t border-zinc-800">
-          <label className="block text-sm font-medium text-zinc-300 mb-2">
+        <div className="pt-6 border-t border-border">
+          <label className="block text-sm font-medium text-foreground mb-2">
             Available Equipment
           </label>
-          <p className="text-xs text-zinc-500 mb-3">
+          <p className="text-xs text-muted-foreground mb-3">
             Select all equipment you have access to (helps us suggest better exercises)
           </p>
           <MultiSelectDropdown
@@ -78,27 +78,31 @@ export function EquipmentTab({ preferences, onChange, onSave, onCancel, isSaving
       )}
 
       {preferences?.defaultEquipmentLevel === "bodyweight" && (
-        <div className="p-4 bg-zinc-800/50 border border-zinc-700 rounded-lg flex items-start gap-3">
-          <User className="h-5 w-5 text-zinc-400 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-zinc-400">
+        <div className="p-4 bg-muted/50 border border-border rounded-lg flex items-start gap-3 transition-colors">
+          <User className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-muted-foreground">
             You selected Bodyweight Only. We'll suggest bodyweight and minimal equipment exercises for your workouts.
           </p>
         </div>
       )}
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-zinc-800">
+      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-border">
         <button
           onClick={onCancel}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-3 text-base border border-zinc-700 text-zinc-300 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+          className="w-full sm:w-auto px-6 py-3 text-base border border-border text-foreground rounded-lg hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
         >
           Cancel
         </button>
         <button
           onClick={onSave}
           disabled={isSaving}
-          className="w-full sm:w-auto px-6 py-3 text-base bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
+          className="w-full sm:w-auto px-6 py-3 text-base rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 justify-center touch-manipulation"
+          style={{
+            backgroundColor: 'var(--user-accent-color, #0BA08B)',
+            color: 'white'
+          }}
         >
           {isSaving ? (
             <>
