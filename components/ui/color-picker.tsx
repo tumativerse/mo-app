@@ -50,17 +50,17 @@ export function ColorPicker({ value, onChange, className = "" }: ColorPickerProp
         <label className="text-sm font-medium text-foreground flex-shrink-0">Accent Color</label>
 
         {/* Color Grid */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-1.5 flex-wrap">
           {PRESET_COLORS.map((preset) => (
             <button
               key={preset.value}
               type="button"
               onClick={() => handlePresetClick(preset.value)}
-              className="relative group flex-shrink-0"
+              className="relative group flex-shrink-0 touch-manipulation p-1"
               title={preset.name}
             >
               <div
-                className={`w-10 h-10 rounded-lg transition-all ${
+                className={`w-7 h-7 rounded-md transition-all ${
                   value === preset.value
                     ? "ring-2 ring-foreground ring-offset-2 ring-offset-background scale-110"
                     : "hover:scale-105"
@@ -69,7 +69,7 @@ export function ColorPicker({ value, onChange, className = "" }: ColorPickerProp
               />
               {value === preset.value && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Check className="h-4 w-4 text-white drop-shadow-lg" />
+                  <Check className="h-3.5 w-3.5 text-white drop-shadow-lg" />
                 </div>
               )}
             </button>
