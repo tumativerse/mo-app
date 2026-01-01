@@ -72,6 +72,50 @@ import { cn } from '@/lib/utils';
   - [ ] Hover states visible but not required for interaction
   - [ ] Focus indicators always visible
 
+### Layout & Positioning Checklist:
+- [ ] **Flexbox Alignment**: All flex containers have items-*, justify-*, or gap-* properties
+- [ ] **Grid Layouts**: Use CSS Grid for complex 2D layouts, Flexbox for 1D
+- [ ] **Container Centering**: max-w-* containers use mx-auto for centering
+- [ ] **Fixed Positioning**: Test with virtual keyboards on mobile (may shift viewport)
+- [ ] **Absolute Positioning**: Only use within positioned parent (relative/absolute/fixed)
+- [ ] **Z-Index Scale**: Use consistent scale (modals: 50, dropdowns: 40, tooltips: 30, sticky: 20)
+- [ ] **Overflow Handling**:
+  - [ ] No overflow-hidden that cuts off content
+  - [ ] Horizontal scroll only for intentional cases (carousels, tables)
+  - [ ] Scrollable areas have visible indicators
+- [ ] **Safe Areas**: Fixed headers/footers account for notches and home indicators
+- [ ] **Spacing Consistency**: Use gap-* for flex/grid spacing instead of margins
+- [ ] **Viewport Units**: Avoid vh on mobile (virtual keyboard issues), use dvh or min-h-screen
+- [ ] **Sticky Elements**: Test behavior during scroll on all devices
+- [ ] **Content Width**: Main content containers max at 1280px-1440px for readability
+
+### Component Positioning Patterns:
+```tsx
+// ✅ CORRECT: Centered container
+<div className="mx-auto max-w-4xl px-4">
+  <Content />
+</div>
+
+// ✅ CORRECT: Flex with alignment
+<div className="flex items-center justify-between gap-4">
+  <Item />
+</div>
+
+// ✅ CORRECT: Fixed with safe area
+<header className="fixed top-0 inset-x-0 pt-safe bg-background">
+  <Nav />
+</header>
+
+// ❌ WRONG: Max width without centering
+<div className="max-w-4xl"> {/* Will stick to left */}
+
+// ❌ WRONG: Flex without alignment
+<div className="flex"> {/* Items may not align as expected */}
+
+// ❌ WRONG: Fixed without safe area
+<header className="fixed top-0"> {/* May be hidden by notch */}
+```
+
 ### Theme Checklist:
 - [ ] Uses CSS variables (hsl(var(--primary)))
 - [ ] Works in both light AND dark mode

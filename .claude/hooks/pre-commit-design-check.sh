@@ -152,6 +152,79 @@ if [ -n "$HOVER_ONLY" ]; then
   # Don't increment ERRORS - this is a warning
 fi
 
+# Check for layout and positioning issues
+echo "Checking for layout and positioning..."
+
+# Check for fixed/absolute positioning without proper context
+FIXED_POS=$(echo "$STAGED_FILES" | xargs grep -n "position.*fixed\|position.*absolute" || true)
+if [ -n "$FIXED_POS" ]; then
+  echo "⚠️  Found fixed/absolute positioning (verify mobile behavior):"
+  echo "$FIXED_POS"
+  echo ""
+  echo "Reminder: Test on mobile - may cause layout issues with virtual keyboards"
+  # Don't increment ERRORS - this is a warning
+fi
+
+# Check for overflow-hidden that might hide content
+OVERFLOW_HIDDEN=$(echo "$STAGED_FILES" | xargs grep -n "overflow-hidden" | grep -v "overflow-x-hidden\|overflow-y-hidden" || true)
+if [ -n "$OVERFLOW_HIDDEN" ]; then
+  echo "⚠️  Found overflow-hidden (verify content isn't being cut off):"
+  echo "$OVERFLOW_HIDDEN"
+  echo ""
+  echo "Reminder: Ensure all content is accessible, especially on mobile"
+  # Don't increment ERRORS - this is a warning
+fi
+
+# Check for hardcoded z-index values
+ZINDEX=$(echo "$STAGED_FILES" | xargs grep -n "z-\[.*\]" || true)
+if [ -n "$ZINDEX" ]; then
+  echo "⚠️  Found hardcoded z-index values:"
+  echo "$ZINDEX"
+  echo ""
+  echo "Reminder: Use consistent z-index scale (modals: 50, dropdowns: 40, tooltips: 30, etc.)"
+  # Don't increment ERRORS - this is a warning
+fi
+
+# Check for flexbox without proper alignment
+FLEX_NO_ALIGN=$(echo "$STAGED_FILES" | xargs grep -n "className=.*flex" | grep -v "items-\|justify-\|gap-" || true)
+if [ -n "$FLEX_NO_ALIGN" ]; then
+  echo "⚠️  Found flex without alignment properties:"
+  echo "$FLEX_NO_ALIGN"
+  echo ""
+  echo "Reminder: Add items-*, justify-*, or gap-* for proper alignment"
+  # Don't increment ERRORS - this is a warning
+fi
+
+# Check for max-width containers without centering
+MAX_WIDTH_NO_CENTER=$(echo "$STAGED_FILES" | xargs grep -n "max-w-" | grep -v "mx-auto" || true)
+if [ -n "$MAX_WIDTH_NO_CENTER" ]; then
+  echo "⚠️  Found max-width without horizontal centering:"
+  echo "$MAX_WIDTH_NO_CENTER"
+  echo ""
+  echo "Reminder: Add mx-auto to center max-width containers"
+  # Don't increment ERRORS - this is a warning
+fi
+
+# Check for horizontal scroll issues
+OVERFLOW_X=$(echo "$STAGED_FILES" | xargs grep -n "overflow-x-scroll\|overflow-x-auto" || true)
+if [ -n "$OVERFLOW_X" ]; then
+  echo "⚠️  Found horizontal scroll (verify it's intentional):"
+  echo "$OVERFLOW_X"
+  echo ""
+  echo "Reminder: Horizontal scroll should be intentional (carousels, tables)"
+  # Don't increment ERRORS - this is a warning
+fi
+
+# Check for safe area insets on iOS
+NO_SAFE_AREA=$(echo "$STAGED_FILES" | xargs grep -n "fixed.*top-0\|fixed.*bottom-0" | grep -v "safe-" || true)
+if [ -n "$NO_SAFE_AREA" ]; then
+  echo "⚠️  Found fixed positioning at top/bottom without safe area handling:"
+  echo "$NO_SAFE_AREA"
+  echo ""
+  echo "Reminder: Consider safe-top, safe-bottom, or padding for notched devices"
+  # Don't increment ERRORS - this is a warning
+fi
+
 echo ""
 if [ $ERRORS -gt 0 ]; then
   echo "❌ Design system violations found. Please fix before committing."
