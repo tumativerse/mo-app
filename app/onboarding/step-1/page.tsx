@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { DatePicker } from '@/components/ui/date-picker';
 import { ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -83,14 +84,9 @@ export default function OnboardingStep1Page() {
           {/* Date of Birth */}
           <div className="space-y-2">
             <Label htmlFor="dateOfBirth">Date of Birth</Label>
-            <Input
-              id="dateOfBirth"
-              type="date"
+            <DatePicker
               value={formData.dateOfBirth}
-              onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
-              required
-              size="md"
-              max={new Date().toISOString().split('T')[0]}
+              onChange={(value) => setFormData({ ...formData, dateOfBirth: value })}
             />
             <p className="text-xs text-muted-foreground">
               We use this to calculate age-appropriate training recommendations
