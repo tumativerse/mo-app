@@ -26,7 +26,7 @@ import { toast } from 'sonner';
 export default function OnboardingStep1Page() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [units, setUnits] = useState<'metric' | 'imperial'>('metric');
+  const [units, setUnits] = useState<'metric' | 'imperial'>('imperial');
   const [formData, setFormData] = useState({
     fullName: '',
     dateOfBirth: '',
