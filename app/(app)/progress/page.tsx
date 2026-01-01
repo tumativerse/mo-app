@@ -66,6 +66,37 @@ interface ProgressionData {
   recommendations: string[];
 }
 
+// Helper function to get theme-aware fatigue colors
+function getFatigueStyles(color: string) {
+  const styleMap: Record<string, { border: string; bg: string; text: string; badgeBg: string; badgeBorder: string; barBg: string }> = {
+    green: {
+      border: 'var(--status-success-border)',
+      bg: 'var(--status-success-bg)',
+      text: 'var(--status-success)',
+      badgeBg: 'var(--status-success-bg)',
+      badgeBorder: 'var(--status-success-border)',
+      barBg: 'var(--status-success)'
+    },
+    yellow: {
+      border: 'var(--status-warning-border)',
+      bg: 'var(--status-warning-bg)',
+      text: 'var(--status-warning)',
+      badgeBg: 'var(--status-warning-bg)',
+      badgeBorder: 'var(--status-warning-border)',
+      barBg: 'var(--status-warning)'
+    },
+    red: {
+      border: 'var(--status-danger-border)',
+      bg: 'var(--status-danger-bg)',
+      text: 'var(--status-danger)',
+      badgeBg: 'var(--status-danger-bg)',
+      badgeBorder: 'var(--status-danger-border)',
+      barBg: 'var(--status-danger)'
+    }
+  };
+  return styleMap[color] || styleMap.green;
+}
+
 export default function ProgressPage() {
   // Route guard - redirect to dashboard if mandatory profile fields incomplete
   const { isChecking: profileChecking, isUnlocked } = useProfileGuard();
@@ -212,23 +243,15 @@ export default function ProgressPage() {
 
       {/* Fatigue Score */}
       <motion.div variants={staggerItem}>
-        <Card className={`${
-          fatigueColor === "green" ? "border-green-500/30" :
-          fatigueColor === "yellow" ? "border-yellow-500/30" :
-          "border-red-500/30"
-        }`}>
+        <Card style={{ borderColor: getFatigueStyles(fatigueColor).border }}>
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-start gap-3 sm:gap-4">
-              <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0 ${
-                fatigueColor === "green" ? "bg-green-500/10" :
-                fatigueColor === "yellow" ? "bg-yellow-500/10" :
-                "bg-red-500/10"
-              }`}>
-                <span className={`text-2xl sm:text-3xl font-bold ${
-                  fatigueColor === "green" ? "text-green-400" :
-                  fatigueColor === "yellow" ? "text-yellow-400" :
-                  "text-red-400"
-                }`}>
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center shrink-0" style={{
+                backgroundColor: getFatigueStyles(fatigueColor).bg
+              }}>
+                <span className="text-2xl sm:text-3xl font-bold" style={{
+                  color: getFatigueStyles(fatigueColor).text
+                }}>
                   {Math.round(animatedFatigue)}
                 </span>
               </div>
@@ -238,11 +261,12 @@ export default function ProgressPage() {
                   <h3 className="font-semibold text-base sm:text-lg">Fatigue Score</h3>
                   <Badge
                     variant="outline"
-                    className={`text-xs shrink-0 ${
-                      fatigueColor === "green" ? "bg-green-500/10 text-green-400 border-green-500/30" :
-                      fatigueColor === "yellow" ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30" :
-                      "bg-red-500/10 text-red-400 border-red-500/30"
-                    }`}
+                    className="text-xs shrink-0"
+                    style={{
+                      backgroundColor: getFatigueStyles(fatigueColor).badgeBg,
+                      color: getFatigueStyles(fatigueColor).text,
+                      borderColor: getFatigueStyles(fatigueColor).badgeBorder
+                    }}
                   >
                     {data.fatigueStatus.level}
                   </Badge>
@@ -264,11 +288,8 @@ export default function ProgressPage() {
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <motion.div
-                  className={`h-full ${
-                    fatigueColor === "green" ? "bg-green-500" :
-                    fatigueColor === "yellow" ? "bg-yellow-500" :
-                    "bg-red-500"
-                  }`}
+                  className="h-full"
+                  style={{ backgroundColor: getFatigueStyles(fatigueColor).barBg }}
                   initial={{ width: 0 }}
                   animate={{ width: `${(data.fatigueScore / 10) * 100}%` }}
                   transition={{ duration: 1, ease: "easeOut" }}

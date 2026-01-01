@@ -475,8 +475,8 @@ export default function WorkoutPage() {
   // Loading state (including profile guard check)
   if (isLoading || profileChecking) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center -mt-6">
-        <div className="text-zinc-400">Loading...</div>
+      <div className="min-h-screen bg-background flex items-center justify-center -mt-6">
+        <div className="text-muted-foreground">Loading...</div>
       </div>
     );
   }
@@ -486,20 +486,20 @@ export default function WorkoutPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-100">Today's Workout</h1>
-          <p className="text-zinc-300">Get started with your training</p>
+          <h1 className="text-2xl font-bold text-foreground">Today's Workout</h1>
+          <p className="text-muted-foreground">Get started with your training</p>
         </div>
-        <div className="bg-zinc-900 rounded-xl border border-zinc-800 p-8 text-center">
-          <Dumbbell className="h-16 w-16 mx-auto mb-4 text-zinc-500" />
+        <div className="bg-card rounded-xl border border-border p-8 text-center">
+          <Dumbbell className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
           <h2 className="text-xl font-semibold mb-2">{error || "No workout available"}</h2>
-          <p className="text-zinc-300 mb-6">
+          <p className="text-muted-foreground mb-6">
             {error?.includes("No active program")
               ? "Enroll in a training program to start logging workouts."
               : "Something went wrong loading your workout."}
           </p>
           <a
             href="/programs"
-            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors"
+            className="inline-block px-6 py-3 bg-primary hover:opacity-90 text-primary-foreground rounded-lg font-medium transition-colors"
           >
             Browse Programs
           </a>
@@ -539,7 +539,7 @@ export default function WorkoutPage() {
       {/* Rest Timer Overlay */}
       {restTimer !== null && (
         <div className="fixed inset-x-0 top-16 z-40 mx-4">
-          <div className="bg-blue-600 rounded-xl p-4 shadow-lg">
+          <div className="bg-primary text-primary-foreground rounded-xl p-4 shadow-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Timer className="h-6 w-6" />
@@ -549,15 +549,15 @@ export default function WorkoutPage() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-32 h-2 bg-blue-400/30 rounded-full overflow-hidden">
+                <div className="w-32 h-2 bg-primary-foreground/30 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-white transition-all duration-1000"
+                    className="h-full bg-primary-foreground transition-all duration-1000"
                     style={{ width: `${(restTimer / restDuration) * 100}%` }}
                   />
                 </div>
                 <button
                   onClick={() => setRestTimer(null)}
-                  className="p-1 hover:bg-blue-500 rounded"
+                  className="p-1 hover:opacity-80 rounded"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -664,34 +664,45 @@ function OverviewMode({
       {/* Fatigue/Deload Banner - Phase 5 */}
       {data.fatigue && data.fatigue.score >= 6 && (
         <div
-          className={`rounded-xl border p-4 ${
-            data.fatigue.color === "orange"
-              ? "bg-orange-950/30 border-orange-900/50"
-              : "bg-red-950/30 border-red-900/50"
-          }`}
+          className="rounded-xl border p-4"
+          style={{
+            backgroundColor: data.fatigue.color === "orange"
+              ? 'var(--status-moderate-bg)'
+              : 'var(--status-danger-bg)',
+            borderColor: data.fatigue.color === "orange"
+              ? 'var(--status-moderate-border)'
+              : 'var(--status-danger-border)'
+          }}
         >
           <div className="flex items-start gap-3">
             <AlertTriangle
-              className={`h-5 w-5 mt-0.5 ${
-                data.fatigue.color === "orange" ? "text-orange-400" : "text-red-400"
-              }`}
+              className="h-5 w-5 mt-0.5"
+              style={{
+                color: data.fatigue.color === "orange"
+                  ? 'var(--status-moderate)'
+                  : 'var(--status-danger)'
+              }}
             />
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-medium text-zinc-100">
+                <span className="font-medium text-foreground">
                   Fatigue: {data.fatigue.score}/10
                 </span>
                 <span
-                  className={`text-xs px-2 py-0.5 rounded ${
-                    data.fatigue.color === "orange"
-                      ? "bg-orange-600/20 text-orange-400"
-                      : "bg-red-600/20 text-red-400"
-                  }`}
+                  className="text-xs px-2 py-0.5 rounded"
+                  style={{
+                    backgroundColor: data.fatigue.color === "orange"
+                      ? 'var(--status-moderate-bg)'
+                      : 'var(--status-danger-bg)',
+                    color: data.fatigue.color === "orange"
+                      ? 'var(--status-moderate)'
+                      : 'var(--status-danger)'
+                  }}
                 >
                   {data.fatigue.level}
                 </span>
               </div>
-              <p className="text-sm text-zinc-400">{data.fatigue.action}</p>
+              <p className="text-sm text-muted-foreground">{data.fatigue.action}</p>
             </div>
           </div>
         </div>
@@ -699,14 +710,17 @@ function OverviewMode({
 
       {/* Deload Active Banner */}
       {data.deload?.isActive && (
-        <div className="rounded-xl border p-4 bg-blue-950/30 border-blue-900/50">
+        <div className="rounded-xl border p-4" style={{
+          backgroundColor: 'var(--status-info-bg)',
+          borderColor: 'var(--status-info-border)'
+        }}>
           <div className="flex items-center gap-3">
-            <Zap className="h-5 w-5 text-blue-400" />
+            <Zap className="h-5 w-5" style={{ color: 'var(--status-info)' }} />
             <div>
-              <span className="font-medium text-zinc-100">
+              <span className="font-medium text-foreground">
                 Deload Week Active
               </span>
-              <p className="text-sm text-zinc-400">
+              <p className="text-sm text-muted-foreground">
                 {data.deload.daysRemaining} days remaining •{" "}
                 {Math.round((data.modifiers?.volume || 1) * 100)}% volume
               </p>

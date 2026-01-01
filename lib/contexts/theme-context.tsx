@@ -27,7 +27,6 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [accentColor, setAccentColorState] = useState<string>(defaultAccentColor);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Load user's saved theme preference on mount
   useEffect(() => {
@@ -36,39 +35,34 @@ export function ThemeProvider({
         const res = await fetch("/api/preferences");
         if (res.ok) {
           const data = await res.json();
-          const savedTheme = data.preferences?.theme || defaultTheme;
-          const savedAccentColor = data.preferences?.accentColor || defaultAccentColor;
+          const savedTheme = data.preferences?.theme;
+          const savedAccentColor = data.preferences?.accentColor;
 
-          setThemeState(savedTheme);
-          setAccentColorState(savedAccentColor);
+          // Only update if values exist in database
+          if (savedTheme) setThemeState(savedTheme);
+          if (savedAccentColor) setAccentColorState(savedAccentColor);
         }
       } catch (error) {
         // Silently fail and use defaults
         console.log("Could not load theme preference, using defaults");
-      } finally {
-        setIsLoading(false);
       }
     }
 
     loadThemePreference();
-  }, [defaultTheme, defaultAccentColor]);
+  }, []);
 
-  // Apply theme class to HTML element
+  // Apply theme class to HTML element - runs immediately and on theme change
   useEffect(() => {
-    if (!isLoading) {
-      const root = document.documentElement;
-      root.classList.remove("light", "dark");
-      root.classList.add(theme);
-    }
-  }, [theme, isLoading]);
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+  }, [theme]);
 
-  // Apply accent color as CSS custom property
+  // Apply accent color as CSS custom property - runs immediately and on color change
   useEffect(() => {
-    if (!isLoading) {
-      const root = document.documentElement;
-      root.style.setProperty("--user-accent-color", accentColor);
-    }
-  }, [accentColor, isLoading]);
+    const root = document.documentElement;
+    root.style.setProperty("--user-accent-color", accentColor);
+  }, [accentColor]);
 
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);

@@ -46,6 +46,26 @@
   --color-fitness-mobility: var(--fitness-mobility);
   --color-fitness-cardio: var(--fitness-cardio);
 
+  /* Status colors */
+  --color-status-success: var(--status-success);
+  --color-status-success-bg: var(--status-success-bg);
+  --color-status-success-border: var(--status-success-border);
+  --color-status-warning: var(--status-warning);
+  --color-status-warning-bg: var(--status-warning-bg);
+  --color-status-warning-border: var(--status-warning-border);
+  --color-status-moderate: var(--status-moderate);
+  --color-status-moderate-bg: var(--status-moderate-bg);
+  --color-status-moderate-border: var(--status-moderate-border);
+  --color-status-danger: var(--status-danger);
+  --color-status-danger-bg: var(--status-danger-bg);
+  --color-status-danger-border: var(--status-danger-border);
+  --color-status-info: var(--status-info);
+  --color-status-info-bg: var(--status-info-bg);
+  --color-status-info-border: var(--status-info-border);
+  --color-status-rest: var(--status-rest);
+  --color-status-rest-bg: var(--status-rest-bg);
+  --color-status-rest-border: var(--status-rest-border);
+
   /* Radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -104,6 +124,26 @@
   --fitness-energy: #f59e0b;
   --fitness-mobility: #8b5cf6;
   --fitness-cardio: #06b6d4;
+
+  /* Status colors - Light theme */
+  --status-success: #16a34a;
+  --status-success-bg: #f0fdf4;
+  --status-success-border: #86efac;
+  --status-warning: #ca8a04;
+  --status-warning-bg: #fefce8;
+  --status-warning-border: #fde047;
+  --status-moderate: #ea580c;
+  --status-moderate-bg: #fff7ed;
+  --status-moderate-border: #fdba74;
+  --status-danger: #dc2626;
+  --status-danger-bg: #fef2f2;
+  --status-danger-border: #fca5a5;
+  --status-info: #2563eb;
+  --status-info-bg: #eff6ff;
+  --status-info-border: #93c5fd;
+  --status-rest: #2563eb;
+  --status-rest-bg: #eff6ff;
+  --status-rest-border: #93c5fd;
 }
 
 .dark {
@@ -151,6 +191,26 @@
   --fitness-energy: #f59e0b;
   --fitness-mobility: #8b5cf6;
   --fitness-cardio: #06b6d4;
+
+  /* Status colors - Dark theme */
+  --status-success: #22c55e;
+  --status-success-bg: rgba(34, 197, 94, 0.1);
+  --status-success-border: rgba(34, 197, 94, 0.3);
+  --status-warning: #eab308;
+  --status-warning-bg: rgba(234, 179, 8, 0.1);
+  --status-warning-border: rgba(234, 179, 8, 0.3);
+  --status-moderate: #f97316;
+  --status-moderate-bg: rgba(249, 115, 22, 0.1);
+  --status-moderate-border: rgba(249, 115, 22, 0.3);
+  --status-danger: #ef4444;
+  --status-danger-bg: rgba(239, 68, 68, 0.1);
+  --status-danger-border: rgba(239, 68, 68, 0.3);
+  --status-info: #3b82f6;
+  --status-info-bg: rgba(59, 130, 246, 0.15);
+  --status-info-border: rgba(59, 130, 246, 0.3);
+  --status-rest: #3b82f6;
+  --status-rest-bg: rgba(59, 130, 246, 0.15);
+  --status-rest-border: rgba(59, 130, 246, 0.3);
 }
 
 @layer base {

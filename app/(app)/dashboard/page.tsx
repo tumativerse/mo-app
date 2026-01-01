@@ -103,6 +103,42 @@ function getWorkoutTypeColor(type: string | null): string {
   return typeMap[type.toLowerCase()] || "bg-gradient-to-br from-primary/20 to-primary/5";
 }
 
+// Get fatigue status colors
+function getFatigueColors(color: string) {
+  const colorMap: Record<string, { border: string; bg: string; text: string; badgeBg: string; badgeBorder: string }> = {
+    green: {
+      border: 'var(--status-success-border)',
+      bg: 'var(--status-success-bg)',
+      text: 'var(--status-success)',
+      badgeBg: 'var(--status-success-bg)',
+      badgeBorder: 'var(--status-success-border)'
+    },
+    yellow: {
+      border: 'var(--status-warning-border)',
+      bg: 'var(--status-warning-bg)',
+      text: 'var(--status-warning)',
+      badgeBg: 'var(--status-warning-bg)',
+      badgeBorder: 'var(--status-warning-border)'
+    },
+    orange: {
+      border: 'var(--status-moderate-border)',
+      bg: 'var(--status-moderate-bg)',
+      text: 'var(--status-moderate)',
+      badgeBg: 'var(--status-moderate-bg)',
+      badgeBorder: 'var(--status-moderate-border)'
+    },
+    red: {
+      border: 'var(--status-danger-border)',
+      bg: 'var(--status-danger-bg)',
+      text: 'var(--status-danger)',
+      badgeBg: 'var(--status-danger-bg)',
+      badgeBorder: 'var(--status-danger-border)'
+    }
+  };
+
+  return colorMap[color] || colorMap.green;
+}
+
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [recovery, setRecovery] = useState<RecoveryData | null>(null);
@@ -260,23 +296,30 @@ export default function DashboardPage() {
               >
                 <Card className={`border-2 ${
                   data.todayWorkout?.isRestDay
-                    ? "border-blue-500/30 bg-gradient-to-br from-blue-950/30 to-blue-900/5"
-                    : `border-primary/30 ${getWorkoutTypeColor(data.todayWorkout?.type || null)}`
-                } transition-all duration-300`}>
+                    ? "transition-all duration-300"
+                    : `border-primary/30 ${getWorkoutTypeColor(data.todayWorkout?.type || null)} transition-all duration-300`
+                }`}
+                  style={data.todayWorkout?.isRestDay ? {
+                    borderColor: 'var(--status-rest-border)',
+                    background: 'var(--status-rest-bg)'
+                  } : undefined}>
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                         <motion.div
                           className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 ${
                             data.todayWorkout?.isRestDay
-                              ? "bg-blue-500/20"
+                              ? ""
                               : "bg-primary/20"
                           }`}
+                          style={data.todayWorkout?.isRestDay ? {
+                            backgroundColor: 'var(--status-rest-bg)'
+                          } : undefined}
                           whileHover={{ scale: 1.1, rotate: 5 }}
                           transition={{ type: "spring", stiffness: 400, damping: 10 }}
                         >
                           {data.todayWorkout?.isRestDay ? (
-                            <Bed className="h-6 w-6 sm:h-7 sm:w-7 text-blue-400" />
+                            <Bed className="h-6 w-6 sm:h-7 sm:w-7" style={{ color: 'var(--status-rest)' }} />
                           ) : (
                             <Dumbbell className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
                           )}
@@ -317,11 +360,16 @@ export default function DashboardPage() {
           </motion.div>
         ) : (
           <motion.div variants={staggerItem}>
-            <Card className="border-yellow-500/50 bg-gradient-to-br from-yellow-950/30 to-yellow-900/5">
+            <Card style={{
+              borderColor: 'var(--status-warning-border)',
+              background: 'var(--status-warning-bg)'
+            }}>
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center gap-3 sm:gap-4">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-yellow-500/20 flex items-center justify-center shrink-0">
-                    <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-400" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0" style={{
+                    backgroundColor: 'var(--status-warning-bg)'
+                  }}>
+                    <Sparkles className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: 'var(--status-warning)' }} />
                   </div>
                   <div className="min-w-0">
                     <p className="font-semibold text-base sm:text-lg mb-1">Setup Required</p>
@@ -338,42 +386,27 @@ export default function DashboardPage() {
         {/* Fatigue Indicator */}
         {trainingStatus && data?.hasProgram && (
           <motion.div variants={staggerItem}>
-            <Card className={`border-2 ${
-              trainingStatus.fatigue.color === "green"
-                ? "border-green-500/30 bg-gradient-to-br from-green-950/20 to-green-900/5"
-                : trainingStatus.fatigue.color === "yellow"
-                ? "border-yellow-500/30 bg-gradient-to-br from-yellow-950/20 to-yellow-900/5"
-                : trainingStatus.fatigue.color === "orange"
-                ? "border-orange-500/30 bg-gradient-to-br from-orange-950/20 to-orange-900/5"
-                : "border-red-500/30 bg-gradient-to-br from-red-950/20 to-red-900/5"
-            }`}>
+            <Card className="border-2" style={{
+              borderColor: getFatigueColors(trainingStatus.fatigue.color).border,
+              background: getFatigueColors(trainingStatus.fatigue.color).bg
+            }}>
               <CardContent className="p-4 sm:p-5">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0 flex-1">
                     <motion.div
-                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 ${
-                        trainingStatus.fatigue.color === "green"
-                          ? "bg-green-500/20"
-                          : trainingStatus.fatigue.color === "yellow"
-                          ? "bg-yellow-500/20"
-                          : trainingStatus.fatigue.color === "orange"
-                          ? "bg-orange-500/20"
-                          : "bg-red-500/20"
-                      }`}
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0"
+                      style={{ backgroundColor: getFatigueColors(trainingStatus.fatigue.color).bg }}
                       whileHover={{ scale: 1.1 }}
                     >
                       {trainingStatus.fatigue.score <= 4 ? (
                         <Zap
-                          className={`h-5 w-5 sm:h-6 sm:w-6 ${
-                            trainingStatus.fatigue.color === "green"
-                              ? "text-green-400"
-                              : "text-yellow-400"
-                          }`}
+                          className="h-5 w-5 sm:h-6 sm:w-6"
+                          style={{ color: getFatigueColors(trainingStatus.fatigue.color).text }}
                         />
                       ) : trainingStatus.fatigue.score <= 6 ? (
-                        <Battery className="h-5 w-5 sm:h-6 sm:w-6 text-orange-400" />
+                        <Battery className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: getFatigueColors(trainingStatus.fatigue.color).text }} />
                       ) : (
-                        <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 text-red-400" />
+                        <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: getFatigueColors(trainingStatus.fatigue.color).text }} />
                       )}
                     </motion.div>
                     <div className="min-w-0 flex-1">
@@ -383,15 +416,12 @@ export default function DashboardPage() {
                         </span>
                         <Badge
                           variant="outline"
-                          className={`text-xs ${
-                            trainingStatus.fatigue.color === "green"
-                              ? "bg-green-600/20 text-green-400 border-green-500/50"
-                              : trainingStatus.fatigue.color === "yellow"
-                              ? "bg-yellow-600/20 text-yellow-400 border-yellow-500/50"
-                              : trainingStatus.fatigue.color === "orange"
-                              ? "bg-orange-600/20 text-orange-400 border-orange-500/50"
-                              : "bg-red-600/20 text-red-400 border-red-500/50"
-                          }`}
+                          className="text-xs"
+                          style={{
+                            backgroundColor: getFatigueColors(trainingStatus.fatigue.color).badgeBg,
+                            color: getFatigueColors(trainingStatus.fatigue.color).text,
+                            borderColor: getFatigueColors(trainingStatus.fatigue.color).badgeBorder
+                          }}
                         >
                           {trainingStatus.fatigue.level}
                         </Badge>
@@ -412,14 +442,14 @@ export default function DashboardPage() {
                 {/* Deload banner */}
                 {trainingStatus.deload.status === "active" && (
                   <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border">
-                    <p className="text-xs sm:text-sm text-orange-400">
+                    <p className="text-xs sm:text-sm" style={{ color: 'var(--status-moderate)' }}>
                       🏋️ Deload active: {trainingStatus.deload.daysRemaining} days remaining
                     </p>
                   </div>
                 )}
                 {trainingStatus.deload.status === "recommended" && (
                   <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border">
-                    <p className="text-xs sm:text-sm text-yellow-400">
+                    <p className="text-xs sm:text-sm" style={{ color: 'var(--status-warning)' }}>
                       ⚠️ Deload recommended: {trainingStatus.deload.reason}
                     </p>
                   </div>
@@ -514,14 +544,15 @@ export default function DashboardPage() {
               whileHover="hover"
               whileTap="tap"
             >
-              <Card className="h-full hover:border-blue-500/50 transition-all">
+              <Card className="h-full transition-all" style={{ borderColor: 'var(--status-info-border)' }}>
                 <CardContent className="flex flex-col items-center gap-2 sm:gap-3 p-4 sm:p-6 text-center">
                   <motion.div
-                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center"
+                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center"
+                    style={{ backgroundColor: 'var(--status-info-bg)' }}
                     whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Scale className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
+                    <Scale className="h-6 w-6 sm:h-8 sm:w-8" style={{ color: 'var(--status-info)' }} />
                   </motion.div>
                   <div>
                     <p className="font-semibold text-sm sm:text-base mb-1">Log Weight</p>
@@ -540,14 +571,15 @@ export default function DashboardPage() {
               whileHover="hover"
               whileTap="tap"
             >
-              <Card className="h-full hover:border-orange-500/50 transition-all">
+              <Card className="h-full transition-all" style={{ borderColor: 'var(--status-moderate-border)' }}>
                 <CardContent className="flex flex-col items-center gap-2 sm:gap-3 p-4 sm:p-6 text-center">
                   <motion.div
-                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-orange-500/20 flex items-center justify-center"
+                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl flex items-center justify-center"
+                    style={{ backgroundColor: 'var(--status-moderate-bg)' }}
                     whileHover={{ rotate: 360 }}
                     transition={{ duration: 0.5 }}
                   >
-                    <Activity className="h-6 w-6 sm:h-8 sm:w-8 text-orange-400" />
+                    <Activity className="h-6 w-6 sm:h-8 sm:w-8" style={{ color: 'var(--status-moderate)' }} />
                   </motion.div>
                   <div>
                     <p className="font-semibold text-sm sm:text-base mb-1">Progress</p>
@@ -594,7 +626,7 @@ export default function DashboardPage() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex items-center justify-center gap-1 sm:gap-2">
-                    <Flame className="h-5 w-5 sm:h-6 sm:w-6 text-orange-500" />
+                    <Flame className="h-5 w-5 sm:h-6 sm:w-6" style={{ color: 'var(--status-moderate)' }} />
                     <p className="text-2xl sm:text-3xl font-bold">{data?.streak || 0}</p>
                   </div>
                   <p className="text-xs sm:text-sm text-muted-foreground mt-1">Day Streak</p>
@@ -607,25 +639,28 @@ export default function DashboardPage() {
         {/* Setup Instructions */}
         {!data?.hasProgram && (
           <motion.div variants={staggerItem}>
-            <Card className="border-yellow-500/50 bg-gradient-to-br from-yellow-950/30 to-yellow-900/5">
+            <Card style={{
+              borderColor: 'var(--status-warning-border)',
+              background: 'var(--status-warning-bg)'
+            }}>
               <CardContent className="p-4 sm:p-6">
-                <h3 className="font-semibold text-yellow-400 mb-3 flex items-center gap-2 text-sm sm:text-base">
+                <h3 className="font-semibold mb-3 flex items-center gap-2 text-sm sm:text-base" style={{ color: 'var(--status-warning)' }}>
                   <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
                   Setup Instructions
                 </h3>
                 <ul className="text-xs sm:text-sm text-muted-foreground space-y-2">
                   <li className="flex items-start gap-2">
-                    <span className="text-yellow-400 font-bold shrink-0">1.</span>
+                    <span className="font-bold shrink-0" style={{ color: 'var(--status-warning)' }}>1.</span>
                     <span>
                       Run <code className="bg-secondary px-2 py-0.5 rounded text-xs">npm run db:seed</code> to create the PPL template
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-yellow-400 font-bold shrink-0">2.</span>
+                    <span className="font-bold shrink-0" style={{ color: 'var(--status-warning)' }}>2.</span>
                     <span>Refresh this page</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-yellow-400 font-bold shrink-0">3.</span>
+                    <span className="font-bold shrink-0" style={{ color: 'var(--status-warning)' }}>3.</span>
                     <span>Start your first workout!</span>
                   </li>
                 </ul>

@@ -166,15 +166,15 @@ export default function WeightPage() {
 
   const getTrendIcon = () => {
     if (weekChange === null) return null;
-    if (weekChange < 0) return <TrendingDown className="h-5 w-5 text-green-500" />;
-    if (weekChange > 0) return <TrendingUp className="h-5 w-5 text-orange-500" />;
+    if (weekChange < 0) return <TrendingDown className="h-5 w-5" style={{ color: 'var(--status-success)' }} />;
+    if (weekChange > 0) return <TrendingUp className="h-5 w-5" style={{ color: 'var(--status-moderate)' }} />;
     return <Minus className="h-5 w-5 text-muted-foreground" />;
   };
 
   const getTrendColor = () => {
     if (weekChange === null) return "";
-    if (weekChange < 0) return "text-green-500";
-    if (weekChange > 0) return "text-orange-500";
+    if (weekChange < 0) return "text-status-success";
+    if (weekChange > 0) return "text-status-moderate";
     return "text-muted-foreground";
   };
 
@@ -217,11 +217,11 @@ export default function WeightPage() {
       >
         {/* Quick Log Form - Mobile Optimized */}
         <motion.div variants={staggerItem}>
-          <Card className="border-2 border-blue-500/30 bg-gradient-to-br from-blue-950/20 to-blue-900/5">
+          <Card className="border-2 border-primary/30 bg-gradient-to-br from-primary/10 to-primary/5">
             <CardContent className="p-4 sm:p-6">
               <form onSubmit={handleSubmit} className="space-y-3">
                 <div className="relative">
-                  <Scale className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-blue-400 pointer-events-none" />
+                  <Scale className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
                   <input
                     type="number"
                     step="0.1"
@@ -229,7 +229,7 @@ export default function WeightPage() {
                     placeholder="Enter weight"
                     value={weight}
                     onChange={(e) => setWeight(e.target.value)}
-                    className="w-full pl-12 pr-16 py-4 text-lg bg-secondary border-2 border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    className="w-full pl-12 pr-16 py-4 text-lg bg-secondary border-2 border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
                     style={{ minHeight: '56px' }} // Touch-friendly
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">
@@ -241,7 +241,7 @@ export default function WeightPage() {
                   <Button
                     type="submit"
                     disabled={!weight || isSubmitting}
-                    className="w-full h-14 text-lg bg-blue-600 hover:bg-blue-700 disabled:opacity-50 relative overflow-hidden"
+                    className="w-full h-14 text-lg bg-primary hover:opacity-90 text-primary-foreground disabled:opacity-50 relative overflow-hidden"
                   >
                     <AnimatePresence mode="wait">
                       {isSubmitting ? (
@@ -299,7 +299,7 @@ export default function WeightPage() {
               <Card className="h-full">
                 <CardContent className="p-4 sm:p-5">
                   <p className="text-xs sm:text-sm text-muted-foreground mb-2">Current</p>
-                  <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
+                  <p className="text-2xl sm:text-3xl font-bold text-primary">
                     {stats.current ? `${animatedCurrent.toFixed(1)}` : "--"}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">{unitLabel}</p>

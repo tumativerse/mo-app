@@ -24,7 +24,7 @@ interface SettingsData {
 }
 
 export default function SettingsPage() {
-  const { setTheme, setAccentColor } = useTheme();
+  const { theme: currentTheme, accentColor: currentAccentColor, setTheme, setAccentColor } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [data, setData] = useState<SettingsData | null>(null);
@@ -71,17 +71,14 @@ export default function SettingsPage() {
           sessionDuration: preferencesData.preferences?.sessionDuration || 75,
           // Preferences tab defaults
           warmupDuration: preferencesData.preferences?.warmupDuration || "10", // String to match schema
-          theme: preferencesData.preferences?.theme || "dark",
-          accentColor: preferencesData.preferences?.accentColor || "#0BA08B",
+          // Theme values from ThemeProvider (which loads from DB and has proper defaults)
+          theme: preferencesData.preferences?.theme || currentTheme,
+          accentColor: preferencesData.preferences?.accentColor || currentAccentColor,
         };
 
-        // Initialize local state for editing with defaults
+        // Initialize local state for editing
         setProfile(profileWithDefaults);
         setPreferences(preferencesWithDefaults);
-
-        // Sync theme context with defaults
-        setTheme(preferencesWithDefaults.theme);
-        setAccentColor(preferencesWithDefaults.accentColor);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
         toast.error("Failed to load settings");
@@ -91,7 +88,7 @@ export default function SettingsPage() {
     }
 
     fetchData();
-  }, [setTheme, setAccentColor]);
+  }, [currentTheme, currentAccentColor]);
 
   // Handle profile field changes
   const handleProfileChange = (field: string, value: any) => {
