@@ -150,6 +150,8 @@
   /* Tab trigger active state with accent color underline */
   .tabs-trigger-custom[data-state="active"] {
     color: var(--user-accent-color, #0BA08B) !important;
+    background-color: transparent !important;
     border-bottom: 2px solid var(--user-accent-color, #0BA08B) !important;
+    box-shadow: none !important;
   }
 }
