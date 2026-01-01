@@ -110,7 +110,7 @@ export default function OnboardingStep2Page() {
           {/* Fitness Goals (Multi-select) */}
           <div className="space-y-2">
             <Label>What are your fitness goals? *</Label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
               {[
                 { value: 'strength', label: 'Build Strength' },
                 { value: 'muscle', label: 'Build Muscle' },
@@ -163,7 +163,7 @@ export default function OnboardingStep2Page() {
           {/* Preferred Training Times (Multi-select) */}
           <div className="space-y-2">
             <Label>When do you prefer to train? *</Label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
               {[
                 { value: 'early_morning', label: 'Early Morning' },
                 { value: 'morning', label: 'Morning' },

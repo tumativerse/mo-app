@@ -182,16 +182,16 @@ export default function OnboardingStep1Page() {
           </div>
 
           {/* Units Toggle - Compact */}
-          <div className="flex items-center justify-between py-2 px-3 bg-secondary/50 rounded-lg border border-border">
+          <div className="flex items-center justify-between py-1 sm:py-2 px-2 sm:px-3 bg-secondary/50 rounded-lg border border-border">
             <span className="text-sm text-muted-foreground">Units:</span>
-            <div className="flex gap-1">
+            <div className="flex gap-1 sm:gap-2">
               <button
                 type="button"
                 onClick={() => setUnits('metric')}
-                className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
+                className={`px-2 sm:px-3 py-1 sm:py-2 text-xs font-medium rounded transition-colors ${
                   units === 'metric'
                     ? 'bg-primary text-primary-foreground'
-                    : 'bg-transparent text-muted-foreground hover:text-foreground'
+                    : 'bg-transparent text-muted-foreground hover:text-foreground active:text-foreground focus:text-foreground'
                 }`}
               >
                 Metric
@@ -199,10 +199,10 @@ export default function OnboardingStep1Page() {
               <button
                 type="button"
                 onClick={() => setUnits('imperial')}
-                className={`px-3 py-1 text-xs font-medium rounded transition-colors ${
+                className={`px-2 sm:px-3 py-1 sm:py-2 text-xs font-medium rounded transition-colors ${
                   units === 'imperial'
                     ? 'bg-primary text-primary-foreground'
-                    : 'bg-transparent text-muted-foreground hover:text-foreground'
+                    : 'bg-transparent text-muted-foreground hover:text-foreground active:text-foreground focus:text-foreground'
                 }`}
               >
                 Imperial
@@ -233,7 +233,7 @@ export default function OnboardingStep1Page() {
                 </span>
               </div>
             ) : (
-              <div className="flex gap-2">
+              <div className="flex gap-1 sm:gap-2">
                 <div className="flex-1 relative">
                   <Input
                     id="heightFt"
@@ -323,15 +323,16 @@ export default function OnboardingStep1Page() {
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-end pt-4">
+          <div className="flex justify-end items-center pt-2 sm:pt-4">
             <Button
               type="submit"
               variant="primary"
               size="lg"
               disabled={loading}
+              className="flex items-center gap-1 sm:gap-2"
             >
-              {loading ? 'Saving...' : 'Continue'}
-              <ChevronRight className="ml-2 h-5 w-5" />
+              <span>{loading ? 'Saving...' : 'Continue'}</span>
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </div>
         </CardContent>

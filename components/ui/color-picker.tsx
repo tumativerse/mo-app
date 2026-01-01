@@ -63,7 +63,7 @@ export function ColorPicker({ value, onChange, className = "" }: ColorPickerProp
                 className={`w-7 h-7 rounded-md transition-all ${
                   value === preset.value
                     ? "ring-2 ring-foreground ring-offset-2 ring-offset-background scale-110"
-                    : "hover:scale-105"
+                    : "hover:scale-105 active:scale-105"
                 }`}
                 style={{ backgroundColor: preset.value }}
               />

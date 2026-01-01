@@ -93,7 +93,7 @@ export function CustomDropdown({
                 className={`w-full px-3 py-2 text-sm text-left transition-colors ${
                   isSelected
                     ? "bg-primary/10 text-foreground font-medium"
-                    : "text-foreground hover:bg-secondary"
+                    : "text-foreground hover:bg-secondary active:bg-secondary"
                 }`}
               >
                 {option.label}

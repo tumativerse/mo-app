@@ -109,7 +109,7 @@ export function SingleSelectDropdown({
                 className={`w-full px-3 py-3 text-base text-left transition-colors flex items-start gap-3 touch-manipulation ${
                   isSelected
                     ? "bg-primary/10 text-foreground font-medium"
-                    : "text-foreground hover:bg-secondary"
+                    : "text-foreground hover:bg-secondary active:bg-secondary"
                 }`}
               >
                 {/* Icon */}

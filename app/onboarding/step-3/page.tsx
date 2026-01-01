@@ -108,7 +108,7 @@ export default function OnboardingStep3Page() {
           {showEquipmentSelection && (
             <div className="space-y-2">
               <Label>What equipment do you have access to? *</Label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                 {[
                   { value: 'barbell', label: 'Barbell' },
                   { value: 'dumbbells', label: 'Dumbbells' },

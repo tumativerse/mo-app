@@ -1,0 +1,12 @@
+#!/bin/bash
+. "$(dirname "$0")/_/husky.sh"
+
+# Run full codebase scan before pushing to production
+echo "🚀 Pre-push checks..."
+echo ""
+
+# Run the full codebase scanner
+bash .claude/hooks/full-codebase-scan.sh
+
+# Exit with the scanner's exit code
+exit $?

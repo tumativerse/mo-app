@@ -116,7 +116,7 @@ export function MultiSelectDropdown({
                 ref={isFirstSelected ? firstSelectedRef : null}
                 type="button"
                 onClick={() => toggleOption(option.value)}
-                className="w-full px-3 py-3 text-base text-left transition-colors flex items-start gap-3 hover:bg-secondary touch-manipulation text-foreground"
+                className="w-full px-3 py-3 text-base text-left transition-colors flex items-start gap-3 hover:bg-secondary active:bg-secondary touch-manipulation text-foreground"
               >
                 {/* Checkbox */}
                 <div

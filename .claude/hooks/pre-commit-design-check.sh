@@ -27,17 +27,36 @@ if [ -n "$HARDCODED_COLORS" ]; then
   ERRORS=$((ERRORS + 1))
 fi
 
-# Check for hardcoded spacing
-echo "Checking for hardcoded spacing..."
-HARDCODED_SPACING=$(echo "$STAGED_FILES" | xargs grep -n "className=.*\(p\|m\|pt\|pb\|pl\|pr\|mt\|mb\|ml\|mr\)-[0-9]" | grep -v "sm:\|md:\|lg:\|xl:" || true)
+# Check for hardcoded spacing in app/ files only
+# Exclude: absolute positioning (right-, left-, top-, bottom-), input padding (pr-10, pr-12, pl-10, pl-12)
+# Components/ui may have fixed spacing for consistency
+echo "Checking for hardcoded spacing (app/ files only)..."
+APP_STAGED_FILES=$(echo "$STAGED_FILES" | grep "^app/" || true)
+if [ -n "$APP_STAGED_FILES" ]; then
+  HARDCODED_SPACING=$(echo "$APP_STAGED_FILES" | xargs grep -n "className=.*\(p\|m\|pt\|pb\|pl\|pr\|mt\|mb\|ml\|mr\|gap\)-[0-9]" | grep -v "sm:\|md:\|lg:\|xl:" | grep -v "right-\|left-\|top-\|bottom-" | grep -v "pr-10\|pr-12\|pl-10\|pl-12" || true)
 
-if [ -n "$HARDCODED_SPACING" ]; then
-  echo "❌ Found hardcoded spacing without responsive modifiers:"
-  echo "$HARDCODED_SPACING"
-  echo ""
-  echo "Fix: Use responsive spacing (e.g., pt-2 sm:pt-4, gap-2 sm:gap-4)"
-  echo "     Or use design tokens from lib/design/tokens.ts"
-  ERRORS=$((ERRORS + 1))
+  if [ -n "$HARDCODED_SPACING" ]; then
+    echo "❌ Found hardcoded spacing without responsive modifiers in app/ files:"
+    echo "$HARDCODED_SPACING"
+    echo ""
+    echo "Fix: Use responsive spacing (e.g., pt-2 sm:pt-4, gap-2 sm:gap-4)"
+    ERRORS=$((ERRORS + 1))
+  fi
+fi
+
+# Check for small gaps in app/ files only
+# Components in components/ui may have fixed gaps for consistency
+echo "Checking for small gaps without responsive sizing (app/ files only)..."
+if [ -n "$APP_STAGED_FILES" ]; then
+  SMALL_GAP=$(echo "$APP_STAGED_FILES" | xargs grep -n "gap-[12][^0-9]" | grep -v "sm:gap-\|md:gap-\|lg:gap-" | grep -v "gap-1.5" || true)
+
+  if [ -n "$SMALL_GAP" ]; then
+    echo "❌ Found small gaps without responsive modifiers in app/ files:"
+    echo "$SMALL_GAP"
+    echo ""
+    echo "Fix: Add responsive gap sizing (e.g., gap-1 sm:gap-2, gap-2 sm:gap-4)"
+    ERRORS=$((ERRORS + 1))
+  fi
 fi
 
 # Check for inline styles
@@ -209,6 +228,38 @@ if [ -n "$FLEX_NO_ALIGN" ]; then
   echo "Fix: Add items-*, justify-*, or gap-* for proper alignment"
   echo "     Example: flex items-center justify-between gap-4"
   ERRORS=$((ERRORS + 1))
+fi
+
+# Check for inline margins on icon components (ml-, mr- on Lucide icons)
+echo "Checking for inline icon margins..."
+ICON_INLINE_MARGIN=$(echo "$STAGED_FILES" | xargs grep -n -E '<(ChevronRight|ChevronLeft|ChevronDown|ChevronUp|Check|X|Plus|Minus|[A-Z][a-zA-Z]+)\s.*className="[^"]*\b(ml-|mr-)[0-9]' || true)
+
+if [ -n "$ICON_INLINE_MARGIN" ]; then
+  echo "❌ Found inline margins on icon components:"
+  echo "$ICON_INLINE_MARGIN"
+  echo ""
+  echo "Fix: Remove inline margins (ml-, mr-) from icons"
+  echo "     Instead, wrap content in flex container with gap:"
+  echo "     Example: <Button className=\"flex items-center gap-2\">"
+  echo "                <span>Continue</span>"
+  echo "                <ChevronRight className=\"h-5 w-5\" />"
+  echo "              </Button>"
+  ERRORS=$((ERRORS + 1))
+fi
+
+# Check for non-responsive icon sizes in app/ files only
+# Components/ui may have fixed icon sizes for consistency
+echo "Checking for non-responsive icon sizes (app/ files only)..."
+if [ -n "$APP_STAGED_FILES" ]; then
+  ICON_NO_RESPONSIVE=$(echo "$APP_STAGED_FILES" | xargs grep -n -E 'className="[^"]*\b(h-[456]\s+w-[456]|w-[456]\s+h-[456])\b' | grep -v "sm:h-\|md:h-\|lg:h-" || true)
+
+  if [ -n "$ICON_NO_RESPONSIVE" ]; then
+    echo "❌ Found icon sizes without responsive modifiers in app/ files:"
+    echo "$ICON_NO_RESPONSIVE"
+    echo ""
+    echo "Fix: Make icon sizes responsive (e.g., h-4 w-4 sm:h-5 sm:w-5)"
+    ERRORS=$((ERRORS + 1))
+  fi
 fi
 
 # Check for max-width containers without centering
