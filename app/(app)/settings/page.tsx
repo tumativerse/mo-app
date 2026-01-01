@@ -27,12 +27,15 @@ interface UserProfile {
   heightCm?: number;
   currentWeight?: number;
   goalWeight?: number;
+  units?: string;
 }
 
 interface UserPreferences {
   fitnessGoal?: string;
   experienceLevel?: string;
   trainingFrequency?: number;
+  sessionDuration?: number;
+  defaultEquipmentLevel?: string;
   theme?: string;
   accentColor?: string;
   [key: string]: unknown;
@@ -120,9 +123,9 @@ export default function SettingsPage() {
     setPreferences((prev) => ({ ...prev, [field]: value }));
 
     // Apply theme changes immediately for live preview
-    if (field === "theme") {
+    if (field === "theme" && typeof value === "string" && (value === "light" || value === "dark")) {
       setTheme(value);
-    } else if (field === "accentColor") {
+    } else if (field === "accentColor" && typeof value === "string") {
       setAccentColor(value);
     }
   };
@@ -194,7 +197,9 @@ export default function SettingsPage() {
       }
 
       toast.success("Profile saved successfully!");
-      setData((prev) => prev ? { ...prev, profile } : null);
+      if (profile) {
+        setData((prev) => prev ? { ...prev, profile } : null);
+      }
     } catch (err) {
       console.error("Save error:", err);
       toast.error("Failed to save profile");
@@ -224,7 +229,9 @@ export default function SettingsPage() {
       }
 
       toast.success("Preferences saved successfully!");
-      setData((prev) => prev ? { ...prev, preferences } : null);
+      if (preferences) {
+        setData((prev) => prev ? { ...prev, preferences } : null);
+      }
     } catch (err) {
       console.error("Save error:", err);
       toast.error("Failed to save preferences");
@@ -248,7 +255,9 @@ export default function SettingsPage() {
       }
 
       toast.success("Preferences saved successfully!");
-      setData((prev) => prev ? { ...prev, preferences } : null);
+      if (preferences) {
+        setData((prev) => prev ? { ...prev, preferences } : null);
+      }
     } catch (err) {
       console.error("Save error:", err);
       toast.error("Failed to save preferences");
@@ -300,7 +309,9 @@ export default function SettingsPage() {
       }
 
       toast.success("Settings saved successfully!");
-      setData({ profile, preferences });
+      if (profile && preferences) {
+        setData({ profile, preferences });
+      }
     } catch (err) {
       console.error("Save error:", err);
       toast.error(err instanceof Error ? err.message : "Failed to save settings");
