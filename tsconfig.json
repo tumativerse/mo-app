@@ -35,6 +35,7 @@
     "lib/db/seed*.ts",
     "lib/db/analyze*.ts",
     "lib/db/check*.ts",
-    "scripts/**/*.ts"
+    "scripts/**/*.ts",
+    "archive/**/*"
   ]
 }
