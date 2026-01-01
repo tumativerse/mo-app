@@ -111,7 +111,7 @@ export default function OnboardingStep5Page() {
           {/* Theme Preference */}
           <div className="space-y-2">
             <Label>Theme Preference *</Label>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:gap-4">
               <button
                 type="button"
                 onClick={() => setTheme('light')}
@@ -147,43 +147,45 @@ export default function OnboardingStep5Page() {
           </div>
 
           {/* Summary Info */}
-          <div className="rounded-lg border border-border bg-muted/30 p-4">
-            <h3 className="text-sm font-medium text-foreground mb-2">What happens next?</h3>
+          <div className="rounded-lg border border-border bg-muted/30 p-3 sm:p-4">
+            <h3 className="text-sm font-medium text-foreground mb-1 sm:mb-2">What happens next?</h3>
             <ul className="space-y-1 text-sm text-muted-foreground">
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+              <li className="flex items-start gap-1 sm:gap-2">
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                 <span>Mo will create your personalized workout program</span>
               </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+              <li className="flex items-start gap-1 sm:gap-2">
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                 <span>Your training will adapt based on your progress and feedback</span>
               </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+              <li className="flex items-start gap-1 sm:gap-2">
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
                 <span>Track your workouts, PRs, and overall progress</span>
               </li>
             </ul>
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between pt-4">
+          <div className="flex justify-between items-center pt-2 sm:pt-4">
             <Button
               type="button"
               variant="secondary"
               size="lg"
               onClick={handleBack}
+              className="flex items-center gap-1 sm:gap-2"
             >
-              <ChevronLeft className="mr-2 h-5 w-5" />
-              Back
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span>Back</span>
             </Button>
             <Button
               type="submit"
               variant="primary"
               size="lg"
               disabled={loading}
+              className="flex items-center gap-1 sm:gap-2"
             >
-              {loading ? 'Setting up...' : 'Complete Setup'}
-              <CheckCircle2 className="ml-2 h-5 w-5" />
+              <span>{loading ? 'Setting up...' : 'Complete Setup'}</span>
+              <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </div>
         </CardContent>

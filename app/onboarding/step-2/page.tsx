@@ -215,24 +215,26 @@ export default function OnboardingStep2Page() {
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between pt-4">
+          <div className="flex justify-between items-center pt-2 sm:pt-4">
             <Button
               type="button"
               variant="secondary"
               size="lg"
               onClick={handleBack}
+              className="flex items-center gap-1 sm:gap-2"
             >
-              <ChevronLeft className="mr-2 h-5 w-5" />
-              Back
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span>Back</span>
             </Button>
             <Button
               type="submit"
               variant="primary"
               size="lg"
               disabled={loading}
+              className="flex items-center gap-1 sm:gap-2"
             >
-              {loading ? 'Saving...' : 'Continue'}
-              <ChevronRight className="ml-2 h-5 w-5" />
+              <span>{loading ? 'Saving...' : 'Continue'}</span>
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </div>
         </CardContent>

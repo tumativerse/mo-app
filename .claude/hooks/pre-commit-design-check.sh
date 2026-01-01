@@ -32,11 +32,12 @@ echo "Checking for hardcoded spacing..."
 HARDCODED_SPACING=$(echo "$STAGED_FILES" | xargs grep -n "className=.*\(p\|m\|pt\|pb\|pl\|pr\|mt\|mb\|ml\|mr\)-[0-9]" | grep -v "sm:\|md:\|lg:\|xl:" || true)
 
 if [ -n "$HARDCODED_SPACING" ]; then
-  echo "⚠️  Found hardcoded spacing (may be intentional with responsive modifiers):"
+  echo "❌ Found hardcoded spacing without responsive modifiers:"
   echo "$HARDCODED_SPACING"
   echo ""
-  echo "Warning: Consider using tokens from lib/design/tokens.ts"
-  # Don't increment ERRORS - this is a warning
+  echo "Fix: Use responsive spacing (e.g., pt-2 sm:pt-4, gap-2 sm:gap-4)"
+  echo "     Or use design tokens from lib/design/tokens.ts"
+  ERRORS=$((ERRORS + 1))
 fi
 
 # Check for inline styles
@@ -157,11 +158,12 @@ fi
 # Check for hover-only interactions (mobile accessibility)
 HOVER_ONLY=$(echo "$STAGED_FILES" | xargs grep -n 'hover:' | grep -v 'active:\|focus:' || true)
 if [ -n "$HOVER_ONLY" ]; then
-  echo "⚠️  Found hover-only styles (may not work on touch devices):"
+  echo "❌ Found hover-only styles without active/focus states:"
   echo "$HOVER_ONLY"
   echo ""
-  echo "Reminder: Add active: and focus: states for mobile/keyboard users"
-  # Don't increment ERRORS - this is a warning
+  echo "Fix: Add active: and focus: states for mobile/keyboard users"
+  echo "     Example: hover:bg-primary/50 active:bg-primary/50 focus:bg-primary"
+  ERRORS=$((ERRORS + 1))
 fi
 
 # Check for layout and positioning issues
@@ -198,13 +200,15 @@ if [ -n "$ZINDEX" ]; then
 fi
 
 # Check for flexbox without proper alignment
-FLEX_NO_ALIGN=$(echo "$STAGED_FILES" | xargs grep -n "className=.*flex" | grep -v "items-\|justify-\|gap-" || true)
+# Exclude flex-shrink, flex-grow, flex-1, flex-auto as these are flex item properties, not containers
+FLEX_NO_ALIGN=$(echo "$STAGED_FILES" | xargs grep -n "className=.*flex[\" ]" | grep -v "items-\|justify-\|gap-\|flex-shrink\|flex-grow\|flex-1\|flex-auto\|flex-none" || true)
 if [ -n "$FLEX_NO_ALIGN" ]; then
-  echo "⚠️  Found flex without alignment properties:"
+  echo "❌ Found flex container without alignment properties:"
   echo "$FLEX_NO_ALIGN"
   echo ""
-  echo "Reminder: Add items-*, justify-*, or gap-* for proper alignment"
-  # Don't increment ERRORS - this is a warning
+  echo "Fix: Add items-*, justify-*, or gap-* for proper alignment"
+  echo "     Example: flex items-center justify-between gap-4"
+  ERRORS=$((ERRORS + 1))
 fi
 
 # Check for max-width containers without centering
@@ -245,12 +249,13 @@ for file in $STAGED_FILES; do
     WIDTH_COUNT=$(echo "$MAX_WIDTHS" | grep -c "max-w-" || true)
 
     if [ "$WIDTH_COUNT" -gt 1 ]; then
-      echo "⚠️  Found multiple max-width values in $file:"
+      echo "❌ Found multiple max-width values in $file:"
       echo "$MAX_WIDTHS" | sed 's/^/    /'
       echo ""
-      echo "Reminder: Consider using consistent max-width for aligned layouts"
-      echo "          (Different widths may cause misalignment on desktop)"
-      # Don't increment ERRORS - this is a warning
+      echo "Fix: Use consistent max-width for aligned layouts"
+      echo "     Different widths cause visible misalignment on desktop"
+      echo "     Example: Use max-w-2xl throughout header, content, footer"
+      ERRORS=$((ERRORS + 1))
     fi
   fi
 done
@@ -261,20 +266,22 @@ echo "Checking for responsive strategy consistency..."
 # Check justify alignment changes
 JUSTIFY_CHANGES=$(echo "$STAGED_FILES" | xargs grep -n "justify-\(between\|start\|end\|around\|evenly\).*sm:justify-\|justify-\(between\|start\|end\|around\|evenly\).*md:justify-\|justify-\(between\|start\|end\|around\|evenly\).*lg:justify-" || true)
 if [ -n "$JUSTIFY_CHANGES" ]; then
-  echo "⚠️  Found different justify strategies per breakpoint:"
+  echo "❌ Found different justify strategies per breakpoint:"
   echo "$JUSTIFY_CHANGES"
   echo ""
   echo "Fix: Use consistent justify (e.g., always justify-center)"
   echo "     Only change gap/spacing: justify-center gap-2 sm:gap-4"
+  ERRORS=$((ERRORS + 1))
 fi
 
 # Check items alignment changes
 ITEMS_CHANGES=$(echo "$STAGED_FILES" | xargs grep -n "items-start.*sm:items-\|items-end.*sm:items-\|items-start.*md:items-\|items-end.*md:items-" || true)
 if [ -n "$ITEMS_CHANGES" ]; then
-  echo "⚠️  Found different items alignment per breakpoint:"
+  echo "❌ Found different items alignment per breakpoint:"
   echo "$ITEMS_CHANGES"
   echo ""
   echo "Fix: Use consistent items alignment (e.g., always items-center)"
+  ERRORS=$((ERRORS + 1))
 fi
 
 # Check display strategy changes
@@ -316,19 +323,21 @@ fi
 # Check for responsive sizes going the wrong direction (smaller on larger screens)
 SIZE_DIRECTION=$(echo "$STAGED_FILES" | xargs grep -n "h-\(8\|10\|12\|16\).*sm:h-\(4\|6\)\|w-\(8\|10\|12\|16\).*sm:w-\(4\|6\)\|text-\(base\|lg\|xl\).*sm:text-\(xs\|sm\)" || true)
 if [ -n "$SIZE_DIRECTION" ]; then
-  echo "⚠️  Found sizes getting smaller on larger screens:"
+  echo "❌ Found sizes getting smaller on larger screens:"
   echo "$SIZE_DIRECTION"
   echo ""
   echo "Fix: Sizes should increase with viewport (h-6 sm:h-10, not h-10 sm:h-6)"
+  ERRORS=$((ERRORS + 1))
 fi
 
 # Check for spacing decreasing on larger screens
 SPACING_DIRECTION=$(echo "$STAGED_FILES" | xargs grep -n "gap-\(4\|6\|8\).*sm:gap-\(1\|2\)\|p-\(4\|6\|8\).*sm:p-\(1\|2\)\|m-\(4\|6\|8\).*sm:m-\(1\|2\)" || true)
 if [ -n "$SPACING_DIRECTION" ]; then
-  echo "⚠️  Found spacing decreasing on larger screens:"
+  echo "❌ Found spacing decreasing on larger screens:"
   echo "$SPACING_DIRECTION"
   echo ""
   echo "Fix: Spacing should increase with viewport (gap-2 sm:gap-4, not gap-4 sm:gap-2)"
+  ERRORS=$((ERRORS + 1))
 fi
 
 # Check for touch targets below 44px on mobile
