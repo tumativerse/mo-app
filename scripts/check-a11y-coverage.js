@@ -14,6 +14,12 @@ const A11Y_DIR = path.join(__dirname, '../tests/accessibility');
 
 function getAllPages(dir, baseDir = dir) {
   const pages = [];
+
+  // Check if directory exists before trying to read it
+  if (!fs.existsSync(dir)) {
+    return pages;
+  }
+
   const items = fs.readdirSync(dir, { withFileTypes: true });
 
   for (const item of items) {
