@@ -1,5 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { checkProgressionGates, getProgressionRecommendation } from './progression';
+import {
+  checkProgressionGates,
+  getProgressionRecommendation,
+  getPlateauStrategies,
+  getExercisesReadyToProgress,
+  getPlateauedExercises,
+} from './progression';
 import * as dbModule from '@/lib/db';
 import * as fatigueModule from './fatigue';
 
@@ -65,6 +71,97 @@ describe('MoProgression', () => {
       expect(result.blockedBy).toBe('fatigue');
     });
 
+    it('should allow progression for new exercise with no history', async () => {
+      vi.mocked(fatigueModule.calculateFatigue).mockResolvedValue({
+        score: 3,
+        status: {
+          level: 'normal',
+          color: 'green',
+          message: 'Training load is appropriate',
+          action: 'Continue current training',
+        },
+        recommendations: [],
+        factors: {
+          rpeCreep: 1,
+          performanceDrop: 0,
+          recoveryDebt: 1,
+          volumeLoad: 1,
+          streak: 0,
+        },
+      });
+
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'compound',
+      });
+
+      // No workout sessions (new exercise)
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([]);
+
+      const result = await checkProgressionGates(mockUserId, mockExerciseId);
+
+      expect(result.canProgress).toBe(true);
+      expect(result.reason).toContain('No history');
+    });
+
+    it('should block when target reps not hit', async () => {
+      vi.mocked(fatigueModule.calculateFatigue).mockResolvedValue({
+        score: 3,
+        status: {
+          level: 'normal',
+          color: 'green',
+          message: 'Training load is appropriate',
+          action: 'Continue current training',
+        },
+        recommendations: [],
+        factors: {
+          rpeCreep: 1,
+          performanceDrop: 0,
+          recoveryDebt: 1,
+          volumeLoad: 1,
+          streak: 0,
+        },
+      });
+
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'compound', // minRepsForProgress: 8
+      });
+
+      // Recent sessions where reps < 8
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([
+        {
+          date: new Date(),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: 'Bench Press' },
+              sets: [
+                { weight: 185, reps: 6, rpe: 7, isWarmup: false }, // Below target
+              ],
+            },
+          ],
+        },
+        {
+          date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: 'Bench Press' },
+              sets: [
+                { weight: 185, reps: 7, rpe: 7, isWarmup: false }, // Below target
+              ],
+            },
+          ],
+        },
+      ]);
+
+      const result = await checkProgressionGates(mockUserId, mockExerciseId);
+
+      expect(result.canProgress).toBe(false);
+      expect(result.blockedBy).toBe('performance');
+    });
+
     it('should allow progression when all gates pass', async () => {
       vi.mocked(fatigueModule.calculateFatigue).mockResolvedValue({
         score: 4, // Low fatigue
@@ -119,6 +216,64 @@ describe('MoProgression', () => {
       const result = await checkProgressionGates(mockUserId, mockExerciseId);
 
       expect(result.canProgress).toBe(true);
+    });
+
+    it('should block when average RPE is too high', async () => {
+      vi.mocked(fatigueModule.calculateFatigue).mockResolvedValue({
+        score: 4,
+        status: {
+          level: 'normal',
+          color: 'green',
+          message: 'Training load is appropriate',
+          action: 'Continue current training',
+        },
+        recommendations: [],
+        factors: {
+          rpeCreep: 1,
+          performanceDrop: 0,
+          recoveryDebt: 1,
+          volumeLoad: 1,
+          streak: 0,
+        },
+      });
+
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'compound', // maxRpeForProgress: 8
+      });
+
+      // Recent sessions with average RPE > 8.5 (8 + 0.5)
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([
+        {
+          date: new Date(),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: 'Bench Press' },
+              sets: [
+                { weight: 185, reps: 8, rpe: 9, isWarmup: false }, // High RPE
+              ],
+            },
+          ],
+        },
+        {
+          date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: 'Bench Press' },
+              sets: [
+                { weight: 185, reps: 8, rpe: 9, isWarmup: false }, // High RPE
+              ],
+            },
+          ],
+        },
+      ]);
+
+      const result = await checkProgressionGates(mockUserId, mockExerciseId);
+
+      expect(result.canProgress).toBe(false);
+      expect(result.blockedBy).toBe('rpe');
     });
 
     it('should block when recovery debt is high', async () => {
@@ -272,6 +427,446 @@ describe('MoProgression', () => {
 
       expect(result.status).toBe('maintain');
       expect(result.suggestedWeight).toBe(result.currentWeight);
+    });
+
+    it('should handle no performance history', async () => {
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'compound',
+      });
+
+      // Empty sessions
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([]);
+
+      const result = await getProgressionRecommendation(mockUserId, mockExerciseId);
+
+      expect(result.status).toBe('maintain');
+      expect(result.currentWeight).toBe(0);
+      expect(result.suggestedWeight).toBe(0);
+      expect(result.sessionsAtWeight).toBe(0);
+      expect(result.message).toBe('No history for this exercise');
+    });
+
+    it('should recommend regression when weight is too heavy', async () => {
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'compound',
+      });
+
+      // Recent sessions with very high RPE (>9.5)
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([
+        {
+          date: new Date(),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: 'Squat' },
+              sets: [
+                { weight: 315, reps: 3, rpe: 10, isWarmup: false }, // Max effort
+              ],
+            },
+          ],
+        },
+        {
+          date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: 'Squat' },
+              sets: [
+                { weight: 315, reps: 3, rpe: 10, isWarmup: false }, // Max effort
+              ],
+            },
+          ],
+        },
+      ]);
+
+      const result = await getProgressionRecommendation(mockUserId, mockExerciseId);
+
+      expect(result.status).toBe('regress');
+      expect(result.currentWeight).toBe(315);
+      expect(result.suggestedWeight).toBeLessThan(result.currentWeight);
+      expect(result.message).toContain('too heavy');
+    });
+  });
+
+  describe('getPlateauStrategies', () => {
+    it('should return array of plateau strategies', () => {
+      const strategies = getPlateauStrategies();
+
+      expect(Array.isArray(strategies)).toBe(true);
+      expect(strategies.length).toBeGreaterThan(0);
+    });
+
+    it('should include expected strategy types', () => {
+      const strategies = getPlateauStrategies();
+
+      const strategyTypes = strategies.map((s) => s.strategy);
+      expect(strategyTypes).toContain('rep_range_shift');
+      expect(strategyTypes).toContain('variation_swap');
+      expect(strategyTypes).toContain('volume_increase');
+      expect(strategyTypes).toContain('deload_then_push');
+    });
+
+    it('should have required fields for each strategy', () => {
+      const strategies = getPlateauStrategies();
+
+      strategies.forEach((strategy) => {
+        expect(strategy).toHaveProperty('strategy');
+        expect(strategy).toHaveProperty('description');
+        expect(strategy).toHaveProperty('duration');
+        expect(typeof strategy.strategy).toBe('string');
+        expect(typeof strategy.description).toBe('string');
+        expect(typeof strategy.duration).toBe('string');
+      });
+    });
+  });
+
+  describe('getExercisesReadyToProgress', () => {
+    it('should return exercises passing progression gates', async () => {
+      // Provide realistic data that will result in 'ready' status:
+      // - Low fatigue (pass gate 1)
+      // - Hit target reps in recent sessions (pass gate 2)
+      // - Low recovery debt (pass gate 3)
+      const mockSessions = [
+        {
+          date: new Date(),
+          userId: mockUserId,
+          status: 'completed' as const,
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { id: mockExerciseId, name: 'Bench Press' },
+              sets: [
+                { weight: 185, reps: 8, rpe: 7, isWarmup: false },
+              ],
+            },
+          ],
+        },
+        {
+          date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          userId: mockUserId,
+          status: 'completed' as const,
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { id: mockExerciseId, name: 'Bench Press' },
+              sets: [
+                { weight: 185, reps: 9, rpe: 7, isWarmup: false },
+              ],
+            },
+          ],
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(mockSessions);
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'compound',
+      });
+
+      // Mock fatigue check (low fatigue)
+      vi.mocked(fatigueModule.calculateFatigue).mockResolvedValue({
+        score: 3,
+        status: {
+          level: 'normal',
+          color: 'green',
+          message: 'Training load is appropriate',
+          action: 'Continue current training',
+        },
+        recommendations: [],
+        factors: {
+          rpeCreep: 1,
+          performanceDrop: 0,
+          recoveryDebt: 1,
+          volumeLoad: 1,
+          streak: 0,
+        },
+      });
+
+      const result = await getExercisesReadyToProgress(mockUserId, 5);
+
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBeGreaterThan(0);
+      expect(result[0]).toHaveProperty('exerciseId');
+      expect(result[0]).toHaveProperty('exerciseName');
+      expect(result[0]).toHaveProperty('currentWeight');
+      expect(result[0]).toHaveProperty('suggestedWeight');
+      expect(result[0].suggestedWeight).toBeGreaterThan(result[0].currentWeight);
+    });
+
+    it('should respect limit parameter', async () => {
+      // Create 10 unique exercises
+      const mockExercises = Array.from({ length: 10 }, (_, i) => ({
+        exerciseId: `exercise_${i}`,
+        exercise: { id: `exercise_${i}`, name: `Exercise ${i}` },
+        sets: [{ weight: 100, reps: 8, rpe: 7, isWarmup: false }],
+      }));
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([
+        {
+          date: new Date(),
+          userId: mockUserId,
+          status: 'completed' as const,
+          exercises: mockExercises,
+        },
+      ]);
+
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: 'any',
+        category: 'compound',
+      });
+
+      vi.mocked(fatigueModule.calculateFatigue).mockResolvedValue({
+        score: 3,
+        status: {
+          level: 'normal',
+          color: 'green',
+          message: 'Training load is appropriate',
+          action: 'Continue current training',
+        },
+        recommendations: [],
+        factors: {
+          rpeCreep: 1,
+          performanceDrop: 0,
+          recoveryDebt: 1,
+          volumeLoad: 1,
+          streak: 0,
+        },
+      });
+
+      const result = await getExercisesReadyToProgress(mockUserId, 3);
+
+      expect(result.length).toBeLessThanOrEqual(3);
+    });
+
+    it('should only include exercises from last 14 days', async () => {
+      const oldSession = {
+        date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
+        userId: mockUserId,
+        status: 'completed' as const,
+        exercises: [
+          {
+            exerciseId: 'old_exercise',
+            exercise: { id: 'old_exercise', name: 'Old Exercise' },
+            sets: [{ weight: 100, reps: 8, rpe: 7, isWarmup: false }],
+          },
+        ],
+      };
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([oldSession]);
+
+      const result = await getExercisesReadyToProgress(mockUserId, 5);
+
+      // Should not include old exercises (query filters by date)
+      expect(result.length).toBe(0);
+    });
+
+    it('should handle empty session history', async () => {
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([]);
+
+      const result = await getExercisesReadyToProgress(mockUserId, 5);
+
+      expect(result).toEqual([]);
+    });
+
+    it('should filter out exercises not passing gates', async () => {
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([
+        {
+          date: new Date(),
+          userId: mockUserId,
+          status: 'completed' as const,
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { id: mockExerciseId, name: 'Bench Press' },
+              sets: [{ weight: 185, reps: 8, rpe: 7, isWarmup: false }],
+            },
+          ],
+        },
+      ]);
+
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'compound',
+      });
+
+      // Mock high fatigue (blocks progression)
+      vi.mocked(fatigueModule.calculateFatigue).mockResolvedValue({
+        score: 9,
+        status: {
+          level: 'high',
+          color: 'red',
+          message: 'High fatigue detected',
+          action: 'Consider a deload week',
+        },
+        recommendations: ['Consider a deload week'],
+        factors: {
+          rpeCreep: 2,
+          performanceDrop: 2,
+          recoveryDebt: 3,
+          volumeLoad: 2,
+          streak: 0,
+        },
+      });
+
+      const result = await getExercisesReadyToProgress(mockUserId, 5);
+
+      // Should be empty because fatigue blocks progression
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('getPlateauedExercises', () => {
+    it('should return exercises with plateau status', async () => {
+      // Create sessions with same weight for 5 weeks (plateau)
+      const sessions = Array.from({ length: 5 }, (_, i) => ({
+        date: new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000),
+        userId: mockUserId,
+        status: 'completed' as const,
+        exercises: [
+          {
+            exerciseId: mockExerciseId,
+            exercise: { id: mockExerciseId, name: 'Curl' },
+            sets: [{ weight: 30, reps: 10, rpe: 8, isWarmup: false }],
+          },
+        ],
+      }));
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'isolation',
+      });
+
+      const result = await getPlateauedExercises(mockUserId, 5);
+
+      expect(Array.isArray(result)).toBe(true);
+      if (result.length > 0) {
+        expect(result[0]).toHaveProperty('exerciseId');
+        expect(result[0]).toHaveProperty('exerciseName');
+        expect(result[0]).toHaveProperty('currentWeight');
+        expect(result[0]).toHaveProperty('sessionsAtWeight');
+        expect(result[0]).toHaveProperty('suggestions');
+        expect(result[0].sessionsAtWeight).toBeGreaterThanOrEqual(4);
+      }
+    });
+
+    it('should respect limit parameter', async () => {
+      // Create 5 different exercises, all plateaued
+      const mockExercises = Array.from({ length: 5 }, (_, i) => ({
+        exerciseId: `exercise_${i}`,
+        exercise: { id: `exercise_${i}`, name: `Exercise ${i}` },
+        sets: [{ weight: 100, reps: 10, rpe: 8, isWarmup: false }],
+      }));
+
+      // 5 sessions with all exercises at same weight
+      const sessions = Array.from({ length: 5 }, (_, i) => ({
+        date: new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000),
+        userId: mockUserId,
+        status: 'completed' as const,
+        exercises: mockExercises,
+      }));
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: 'any',
+        category: 'isolation',
+      });
+
+      const result = await getPlateauedExercises(mockUserId, 2);
+
+      expect(result.length).toBeLessThanOrEqual(2);
+    });
+
+    it('should only include exercises from last 30 days', async () => {
+      const oldSession = {
+        date: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000), // 40 days ago
+        userId: mockUserId,
+        status: 'completed' as const,
+        exercises: [
+          {
+            exerciseId: 'old_exercise',
+            exercise: { id: 'old_exercise', name: 'Old Exercise' },
+            sets: [{ weight: 100, reps: 10, rpe: 8, isWarmup: false }],
+          },
+        ],
+      };
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([oldSession]);
+
+      const result = await getPlateauedExercises(mockUserId, 5);
+
+      // Should not include old exercises (query filters by date)
+      expect(result.length).toBe(0);
+    });
+
+    it('should handle empty session history', async () => {
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([]);
+
+      const result = await getPlateauedExercises(mockUserId, 5);
+
+      expect(result).toEqual([]);
+    });
+
+    it('should include plateau strategies for each exercise', async () => {
+      const sessions = Array.from({ length: 5 }, (_, i) => ({
+        date: new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000),
+        userId: mockUserId,
+        status: 'completed' as const,
+        exercises: [
+          {
+            exerciseId: mockExerciseId,
+            exercise: { id: mockExerciseId, name: 'Curl' },
+            sets: [{ weight: 30, reps: 10, rpe: 8, isWarmup: false }],
+          },
+        ],
+      }));
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'isolation',
+      });
+
+      const result = await getPlateauedExercises(mockUserId, 5);
+
+      if (result.length > 0) {
+        const suggestions = result[0].suggestions;
+        expect(Array.isArray(suggestions)).toBe(true);
+        expect(suggestions.length).toBeGreaterThan(0);
+        expect(suggestions[0]).toHaveProperty('strategy');
+        expect(suggestions[0]).toHaveProperty('description');
+        expect(suggestions[0]).toHaveProperty('duration');
+      }
+    });
+
+    it('should not include exercises that are progressing', async () => {
+      // Sessions with increasing weight (not plateaued)
+      const sessions = Array.from({ length: 5 }, (_, i) => ({
+        date: new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000),
+        userId: mockUserId,
+        status: 'completed' as const,
+        exercises: [
+          {
+            exerciseId: mockExerciseId,
+            exercise: { id: mockExerciseId, name: 'Bench Press' },
+            sets: [{ weight: 185 + i * 5, reps: 8, rpe: 7, isWarmup: false }], // Increasing weight
+          },
+        ],
+      }));
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'compound',
+      });
+
+      const result = await getPlateauedExercises(mockUserId, 5);
+
+      // Should not include this exercise (it's progressing)
+      const plateauedIds = result.map((ex) => ex.exerciseId);
+      expect(plateauedIds).not.toContain(mockExerciseId);
     });
   });
 });
