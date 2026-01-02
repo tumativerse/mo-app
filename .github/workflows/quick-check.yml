@@ -43,8 +43,9 @@ jobs:
         # BLOCKING: Formatting issues fail the build
 
       - name: Check for secrets
-        run: npx secretlint "**/*" --secretlintrc .secretlintrc.json
+        run: npm run secretlint
         # BLOCKING: Any detected secrets fail the build
+        # Note: Scans app/, lib/, components/, scripts/ - excludes docs
 
   # Summary job - required status check
   quick-check-status:
