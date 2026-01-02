@@ -42,7 +42,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=mo-app
+            -Dsonar.projectKey=tumativerse_mo-app
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.qualitygate.wait=true
