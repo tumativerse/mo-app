@@ -1,0 +1,69 @@
+name: Performance Check
+
+# MANDATORY performance checks for PRs
+# Runs Lighthouse CI on Vercel preview deployments
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Wait for Vercel preview deployment
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
+        id: waitForDeploy
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 300
+          check_interval: 10
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            ${{ steps.waitForDeploy.outputs.url }}
+            ${{ steps.waitForDeploy.outputs.url }}/dashboard
+            ${{ steps.waitForDeploy.outputs.url }}/workout
+          budgetPath: ./lighthouse-budget.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        # BLOCKING: Performance budgets must be met
+
+      - name: Check Lighthouse scores
+        run: |
+          echo "Lighthouse CI must pass all performance budgets"
+          echo "View detailed results in the Lighthouse CI artifacts"
+
+  # Summary job - REQUIRED status check
+  performance-status:
+    name: Performance Status
+    runs-on: ubuntu-latest
+    needs: [lighthouse]
+    if: always()
+
+    steps:
+      - name: Check performance passed
+        run: |
+          if [ "${{ needs.lighthouse.result }}" != "success" ]; then
+            echo "❌ Lighthouse CI failed"
+            echo "Action required: Review performance issues and optimize"
+            echo "Common fixes:"
+            echo "  - Reduce bundle size"
+            echo "  - Optimize images"
+            echo "  - Reduce layout shift"
+            echo "  - Minimize blocking scripts"
+            exit 1
+          fi
+
+          echo "✅ Performance checks passed"
