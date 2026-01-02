@@ -66,10 +66,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run secretlint
-        run: npx secretlint "**/*" --secretlintrc .secretlintrc.json
+        run: npm run secretlint
         # BLOCKING: Any detected secrets fail the build
+        # Note: Scans app/, lib/, components/, scripts/ - excludes docs
 
   # Summary job - REQUIRED status check
   security-status:
