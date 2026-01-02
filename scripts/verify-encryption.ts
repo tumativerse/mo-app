@@ -30,8 +30,8 @@ async function verifyEncryption() {
     ];
 
     for (const field of fieldsToCheck) {
-      const value = (user as any)[field];
-      if (value) {
+      const value = (user as Record<string, unknown>)[field];
+      if (value && typeof value === 'string') {
         // Try to decrypt it - if it decrypts, it's encrypted
         try {
           const decrypted = decrypt(value);
@@ -40,7 +40,7 @@ async function verifyEncryption() {
           } else {
             console.log(`  ⚠️  ${field}: PLAIN TEXT - "${value}"`);
           }
-        } catch (error) {
+        } catch {
           console.log(`  ⚠️  ${field}: Failed to decrypt (corrupted?) - "${value.substring(0, 30)}..."`);
         }
       } else {

@@ -11,7 +11,7 @@ import { resolve } from 'path';
 // Load .env.local
 config({ path: resolve(__dirname, '../.env.local') });
 
-import { encrypt, decrypt, testEncryption } from '../lib/security/encryption';
+import { encrypt, decrypt } from '../lib/security/encryption';
 
 console.log('🔐 Testing MO:SELF Encryption Setup\n');
 

@@ -45,7 +45,7 @@ export function useProfileGuard() {
           // If we can't fetch profile data, redirect to dashboard
           router.push("/dashboard");
         }
-      } catch (error) {
+      } catch {
         // On error, redirect to dashboard
         router.push("/dashboard");
       } finally {

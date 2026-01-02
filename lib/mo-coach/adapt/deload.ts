@@ -11,7 +11,7 @@
 import { db } from '@/lib/db';
 import { deloadPeriods, workoutSessions } from '@/lib/db/schema';
 import { eq, desc, and, gte, lte } from 'drizzle-orm';
-import { calculateFatigue, getFatigueHistory, type FatigueResult } from './fatigue';
+import { calculateFatigue, getFatigueHistory } from './fatigue';
 
 // ============================================
 // TYPES

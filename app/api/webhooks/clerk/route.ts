@@ -74,18 +74,18 @@ export async function POST(req: NextRequest) {
 
   // Handle the event
   const eventType = evt.type;
-  const { id: clerkId, email_addresses, first_name, last_name } = evt.data;
+  const { id: clerkId, email_addresses } = evt.data;
 
   console.log(`Webhook received: ${eventType} for user ${clerkId}`);
 
   try {
     switch (eventType) {
       case "user.created":
-        await handleUserCreated(clerkId, email_addresses, first_name, last_name);
+        await handleUserCreated(clerkId, email_addresses);
         break;
 
       case "user.updated":
-        await handleUserUpdated(clerkId, email_addresses, first_name, last_name);
+        await handleUserUpdated(clerkId, email_addresses);
         break;
 
       case "user.deleted":
@@ -112,9 +112,7 @@ export async function POST(req: NextRequest) {
  */
 async function handleUserCreated(
   clerkId: string,
-  emailAddresses: Array<{ email_address: string; id: string }>,
-  firstName?: string,
-  lastName?: string
+  emailAddresses: Array<{ email_address: string; id: string }>
 ) {
   const primaryEmail = emailAddresses[0]?.email_address;
 
@@ -163,9 +161,7 @@ async function handleUserCreated(
  */
 async function handleUserUpdated(
   clerkId: string,
-  emailAddresses: Array<{ email_address: string; id: string }>,
-  firstName?: string,
-  lastName?: string
+  emailAddresses: Array<{ email_address: string; id: string }>
 ) {
   const primaryEmail = emailAddresses[0]?.email_address;
 
@@ -188,7 +184,7 @@ async function handleUserUpdated(
   if (!user) {
     console.warn(`User ${clerkId} not found in database during update`);
     // Create them if they don't exist (shouldn't happen, but safeguard)
-    await handleUserCreated(clerkId, emailAddresses, firstName, lastName);
+    await handleUserCreated(clerkId, emailAddresses);
     return;
   }
 

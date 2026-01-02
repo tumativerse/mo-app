@@ -22,13 +22,14 @@ async function pushSchema() {
     if (stderr) console.error(stderr);
 
     console.log('\n✅ Schema pushed successfully!');
-  } catch (error: any) {
+  } catch (error: unknown) {
     // If --force doesn't work, try regular push
     console.log('⚠️  --force flag not supported, trying alternative method...\n');
     console.log('Please confirm the schema changes manually in the terminal.');
     console.log('Or, run this in your terminal:');
     console.log('\n  npm run db:push\n');
     console.log('And select "Yes, I want to execute all statements"\n');
+    console.log(`Error: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Check } from "lucide-react";
 
 interface ColorPickerProps {
@@ -21,25 +20,7 @@ const PRESET_COLORS = [
 ];
 
 export function ColorPicker({ value, onChange, className = "" }: ColorPickerProps) {
-  const [customColor, setCustomColor] = useState(value);
-  const [isValidHex, setIsValidHex] = useState(true);
-
-  const handleCustomColorChange = (input: string) => {
-    setCustomColor(input);
-
-    // Validate hex color format
-    const hexRegex = /^#[0-9A-Fa-f]{6}$/;
-    const isValid = hexRegex.test(input);
-    setIsValidHex(isValid);
-
-    if (isValid) {
-      onChange(input);
-    }
-  };
-
   const handlePresetClick = (color: string) => {
-    setCustomColor(color);
-    setIsValidHex(true);
     onChange(color);
   };
 

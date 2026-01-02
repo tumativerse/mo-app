@@ -42,7 +42,7 @@ export function ThemeProvider({
           if (savedTheme) setThemeState(savedTheme);
           if (savedAccentColor) setAccentColorState(savedAccentColor);
         }
-      } catch (error) {
+      } catch {
         // Silently fail and use defaults
         console.log("Could not load theme preference, using defaults");
       }

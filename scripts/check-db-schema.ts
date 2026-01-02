@@ -17,8 +17,8 @@ async function checkSchema() {
   `);
 
   console.log('=== USERS TABLE COLUMNS ===');
-  usersColumns.rows.forEach((r: any) => {
-    console.log(`  ${r.column_name.padEnd(25)} ${r.data_type}`);
+  usersColumns.rows.forEach((r: Record<string, unknown>) => {
+    console.log(`  ${String(r.column_name).padEnd(25)} ${r.data_type}`);
   });
 
   // Check user_preferences table
@@ -30,8 +30,8 @@ async function checkSchema() {
   `);
 
   console.log('\n=== USER_PREFERENCES TABLE COLUMNS ===');
-  prefsColumns.rows.forEach((r: any) => {
-    console.log(`  ${r.column_name.padEnd(25)} ${r.data_type}`);
+  prefsColumns.rows.forEach((r: Record<string, unknown>) => {
+    console.log(`  ${String(r.column_name).padEnd(25)} ${r.data_type}`);
   });
 
   // Count existing users

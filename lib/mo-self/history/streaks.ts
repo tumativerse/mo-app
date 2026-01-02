@@ -10,7 +10,7 @@
 
 import { db } from "@/lib/db";
 import { streaks, workoutSessions, workouts } from "@/lib/db/schema";
-import { eq, desc, and, gte } from "drizzle-orm";
+import { eq, and, gte } from "drizzle-orm";
 
 export interface StreakData {
   currentStreak: number;

@@ -9,9 +9,9 @@
  */
 
 import { db } from '@/lib/db';
-import { exercises, sessionSets, sessionExercises, workoutSessions, userExerciseDefaults } from '@/lib/db/schema';
+import { exercises, sessionExercises, workoutSessions } from '@/lib/db/schema';
 import { eq, desc, and, gte } from 'drizzle-orm';
-import { calculateFatigue, type FatigueResult } from './fatigue';
+import { calculateFatigue } from './fatigue';
 
 // ============================================
 // TYPES

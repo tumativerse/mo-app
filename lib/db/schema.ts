@@ -1077,11 +1077,11 @@ export const exerciseRelationshipsRelations = relations(exerciseRelationships, (
   }),
 }));
 
-export const musclesRelations = relations(muscles, ({ many }) => ({
+export const musclesRelations = relations(muscles, () => ({
   // Future: could link to exercises through junction table
 }));
 
-export const equipmentItemsRelations = relations(equipmentItems, ({ many }) => ({
+export const equipmentItemsRelations = relations(equipmentItems, () => ({
   // Future: could link to exercises through junction table
 }));
 

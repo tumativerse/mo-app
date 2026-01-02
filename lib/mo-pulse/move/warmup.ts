@@ -12,10 +12,7 @@ import { db } from "@/lib/db";
 import {
   warmupLogs,
   warmupTemplates,
-  warmupPhases,
-  warmupPhaseExercises,
   workoutSessions,
-  exercises,
 } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 
@@ -60,11 +57,11 @@ export interface WarmupLog {
  * Get warmup template for a day type
  */
 export async function getWarmupTemplate(
-  dayType: string
+  dayType: "push" | "pull" | "legs" | "upper" | "lower" | "full_body"
 ): Promise<WarmupTemplate | null> {
   const template = await db.query.warmupTemplates.findFirst({
     where: and(
-      eq(warmupTemplates.dayType, dayType as any),
+      eq(warmupTemplates.dayType, dayType),
       eq(warmupTemplates.isActive, true)
     ),
     with: {

@@ -159,7 +159,6 @@ export function getSuggestionAfterSet(
   targetRpe: number
 ): SetSuggestion {
   const rpeDiff = rpe - targetRpe;
-  const repsDiff = completedReps - targetReps;
 
   // Way harder than expected (RPE 2+ over target)
   if (rpeDiff >= 2) {

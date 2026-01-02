@@ -6,6 +6,9 @@
  * 2. Optional fields - Recommended for full app experience
  */
 
+import type { UserProfile } from '@/lib/mo-self/identity/profile';
+import type { UserPreferences } from '@/lib/mo-self/preferences/settings';
+
 export interface MandatoryFields {
   // Profile (5 required)
   fullName: boolean;
@@ -99,8 +102,8 @@ const FIELD_LABELS: Record<string, string> = {
 };
 
 export function checkProfileCompletion(
-  profile: any,
-  preferences: any
+  profile: UserProfile | null,
+  preferences: UserPreferences | null
 ): ProfileCompletionStatus {
   // Check mandatory fields
   const mandatory: MandatoryFields = {
@@ -159,11 +162,11 @@ export function checkProfileCompletion(
 
   // Missing fields
   const missingMandatoryFields = Object.entries(mandatory)
-    .filter(([_, complete]) => !complete)
+    .filter(([, complete]) => !complete)
     .map(([field]) => FIELD_LABELS[field]);
 
   const missingOptionalFields = Object.entries(optional)
-    .filter(([_, complete]) => !complete)
+    .filter(([, complete]) => !complete)
     .map(([field]) => FIELD_LABELS[field]);
 
   // Tab completion breakdown

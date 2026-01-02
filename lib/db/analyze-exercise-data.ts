@@ -14,7 +14,7 @@ interface FieldAnalysis {
   sampleValues: string[];
 }
 
-function parseExerciseFile(filePath: string): Record<string, any> | null {
+function parseExerciseFile(filePath: string): Record<string, unknown> | null {
   try {
     const content = fs.readFileSync(filePath, 'utf-8');
     const match = content.match(/^---\n([\s\S]*?)\n---/);
@@ -26,7 +26,7 @@ function parseExerciseFile(filePath: string): Record<string, any> | null {
 }
 
 function analyzeField(
-  exercises: Record<string, any>[],
+  exercises: Record<string, unknown>[],
   fieldPath: string,
   isArray: boolean = false
 ): FieldAnalysis {
@@ -36,9 +36,9 @@ function analyzeField(
   for (const ex of exercises) {
     // Handle nested fields like "typical_rep_ranges.strength"
     const parts = fieldPath.split('.');
-    let value: any = ex;
+    let value: unknown = ex;
     for (const part of parts) {
-      value = value?.[part];
+      value = (value as Record<string, unknown>)?.[part];
     }
 
     if (value !== undefined && value !== null) {
@@ -79,7 +79,7 @@ async function main() {
 
   console.log(`Analyzing ${files.length} exercise files...\n`);
 
-  const exercises: Record<string, any>[] = [];
+  const exercises: Record<string, unknown>[] = [];
   for (const file of files) {
     const filePath = path.join(EXERCISE_LIBRARY_PATH, file);
     const data = parseExerciseFile(filePath);

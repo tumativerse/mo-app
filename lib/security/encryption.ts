@@ -12,7 +12,6 @@ import crypto from 'crypto';
 const ALGORITHM = 'aes-256-gcm';
 const IV_LENGTH = 16; // 128 bits for GCM
 const AUTH_TAG_LENGTH = 16; // 128 bits
-const SALT_LENGTH = 32; // 256 bits
 
 /**
  * Get encryption key from environment
@@ -148,7 +147,7 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
  * @param fields - Array of field names to encrypt
  * @returns New object with specified fields encrypted
  */
-export function encryptFields<T extends Record<string, any>>(
+export function encryptFields<T extends Record<string, unknown>>(
   obj: T,
   fields: (keyof T)[]
 ): T {
@@ -156,7 +155,7 @@ export function encryptFields<T extends Record<string, any>>(
 
   for (const field of fields) {
     if (field in obj) {
-      encrypted[field] = encrypt(obj[field] as any) as any;
+      encrypted[field] = encrypt(String(obj[field])) as T[keyof T];
     }
   }
 
@@ -169,7 +168,7 @@ export function encryptFields<T extends Record<string, any>>(
  * @param fields - Array of field names to decrypt
  * @returns New object with specified fields decrypted
  */
-export function decryptFields<T extends Record<string, any>>(
+export function decryptFields<T extends Record<string, unknown>>(
   obj: T,
   fields: (keyof T)[]
 ): T {
@@ -177,7 +176,7 @@ export function decryptFields<T extends Record<string, any>>(
 
   for (const field of fields) {
     if (field in obj) {
-      decrypted[field] = decrypt(obj[field] as any) as any;
+      decrypted[field] = decrypt(String(obj[field])) as T[keyof T];
     }
   }
 
@@ -203,7 +202,7 @@ export function testEncryption(): boolean {
     const encrypted = encrypt(testData);
     const decrypted = decrypt(encrypted);
     return decrypted === testData;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

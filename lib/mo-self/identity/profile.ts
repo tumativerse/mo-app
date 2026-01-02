@@ -96,7 +96,7 @@ export async function updateProfile(
   const encryptedUpdates = encryptProfileForDb(updates);
 
   // Non-encrypted updates
-  const nonEncryptedUpdates: Record<string, any> = {};
+  const nonEncryptedUpdates: { units?: "imperial" | "metric" } = {};
   if (updates.units !== undefined) nonEncryptedUpdates.units = updates.units;
 
   // Update user
@@ -162,7 +162,7 @@ function encryptProfileForDb(profile: Partial<UpdateProfileInput>): Record<strin
 /**
  * Helper: Decrypt profile data from database
  */
-function decryptProfileFromDb(user: any): UserProfile {
+function decryptProfileFromDb(user: typeof users.$inferSelect): UserProfile {
   return {
     id: user.id,
     clerkId: user.clerkId,

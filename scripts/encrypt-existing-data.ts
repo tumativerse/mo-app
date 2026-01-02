@@ -72,7 +72,7 @@ async function main() {
       ];
 
       for (const field of fieldsToEncrypt) {
-        const value = (user as any)[field];
+        const value = (user as Record<string, unknown>)[field];
         if (value && typeof value === 'string') {
           // Check if already encrypted (encrypted data is base64 and much longer)
           const isAlreadyEncrypted = value.length > 100 && /^[A-Za-z0-9+/=]+$/.test(value);
@@ -127,7 +127,7 @@ async function main() {
       ];
 
       for (const field of fieldsToEncrypt) {
-        const value = (pref as any)[field];
+        const value = (pref as Record<string, unknown>)[field];
         if (value && typeof value === 'string') {
           const isAlreadyEncrypted = value.length > 100 && /^[A-Za-z0-9+/=]+$/.test(value);
 

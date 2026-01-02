@@ -9,7 +9,7 @@
  */
 
 import { db } from "@/lib/db";
-import { personalRecords, exercises, workoutSets, sessionSets } from "@/lib/db/schema";
+import { personalRecords, exercises } from "@/lib/db/schema";
 import { eq, and, desc } from "drizzle-orm";
 
 export interface PersonalRecord {

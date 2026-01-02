@@ -48,13 +48,14 @@ async function executeSchemaChanges() {
       try {
         await db(statement);
         console.log(`   ✅ Success\n`);
-      } catch (error: any) {
+      } catch (error: unknown) {
         // Some statements might fail if already applied (e.g., IF NOT EXISTS)
         // We'll continue anyway
-        if (error.message.includes('already exists') || error.message.includes('does not exist')) {
+        const message = error instanceof Error ? error.message : String(error);
+        if (message.includes('already exists') || message.includes('does not exist')) {
           console.log(`   ⏭️  Skipped (already exists or not needed)\n`);
         } else {
-          console.log(`   ⚠️  Warning: ${error.message}\n`);
+          console.log(`   ⚠️  Warning: ${message}\n`);
         }
       }
     }

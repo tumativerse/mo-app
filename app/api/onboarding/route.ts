@@ -40,31 +40,6 @@ const onboardingSchema = z.object({
 });
 
 /**
- * Map fitness goals from onboarding to primary fitness goal enum
- * Takes user's goal priorities and selects the primary one
- */
-function mapPrimaryFitnessGoal(goals: string[]): string {
-  // Priority order: strength > build_muscle > lose_fat > recomp > general
-  const goalMap: Record<string, string> = {
-    strength: 'strength',
-    muscle: 'build_muscle',
-    weight_loss: 'lose_fat',
-    endurance: 'general', // Endurance maps to general fitness
-    general_fitness: 'general',
-    athletic_performance: 'strength', // Athletic performance maps to strength
-  };
-
-  // Find first matching goal in priority order
-  for (const priorityGoal of ['strength', 'muscle', 'weight_loss', 'general_fitness', 'endurance', 'athletic_performance']) {
-    if (goals.includes(priorityGoal)) {
-      return goalMap[priorityGoal];
-    }
-  }
-
-  return 'general'; // Default fallback
-}
-
-/**
  * Map activity level from onboarding (includes "extremely_active") to database enum
  */
 function mapActivityLevel(level: string): 'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active' {

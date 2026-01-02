@@ -12,7 +12,7 @@
  */
 
 import { db } from "@/lib/db";
-import { userPreferences, users } from "@/lib/db/schema";
+import { userPreferences } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { encrypt, decrypt } from "@/lib/security/encryption";
 
@@ -74,10 +74,10 @@ export interface UpdatePreferencesInput {
   preferredCardio?: string;
 
   // App settings
-  warmupDuration?: string;
+  warmupDuration?: "quick" | "normal" | "extended";
   skipGeneralWarmup?: boolean;
   includeMobilityWork?: boolean;
-  weightUnit?: string;
+  weightUnit?: "lbs" | "kg";
 
   // Theme settings
   theme?: "light" | "dark";
@@ -180,7 +180,7 @@ function encryptPreferencesForDb(prefs: Partial<UserPreferences>): Record<string
 /**
  * Helper: Decrypt preferences from database
  */
-function decryptPreferencesFromDb(prefs: any): UserPreferences {
+function decryptPreferencesFromDb(prefs: typeof userPreferences.$inferSelect): UserPreferences {
   return {
     // Training (decrypted)
     fitnessGoal: prefs.fitnessGoal ? decrypt(prefs.fitnessGoal) : null,
@@ -207,11 +207,11 @@ function decryptPreferencesFromDb(prefs: any): UserPreferences {
     // App settings (NOT encrypted)
     warmupDuration: prefs.warmupDuration || "normal",
     skipGeneralWarmup: prefs.skipGeneralWarmup || false,
-    includeMobilityWork: prefs.includeMobilityWork !== undefined ? prefs.includeMobilityWork : true,
+    includeMobilityWork: prefs.includeMobilityWork ?? true,
     weightUnit: prefs.weightUnit || "lbs",
 
     // Theme settings (NOT encrypted)
-    theme: prefs.theme || "dark",
+    theme: (prefs.theme || "dark") as "light" | "dark",
     accentColor: prefs.accentColor || "#10b981",
   };
 }
@@ -227,7 +227,14 @@ export async function updatePreferences(
   // Separate encrypted and non-encrypted updates
   const encryptedUpdates = encryptPreferencesForDb(updates);
 
-  const nonEncryptedUpdates: Record<string, any> = {};
+  const nonEncryptedUpdates: {
+    warmupDuration?: "quick" | "normal" | "extended";
+    skipGeneralWarmup?: boolean;
+    includeMobilityWork?: boolean;
+    weightUnit?: "lbs" | "kg";
+    theme?: "light" | "dark";
+    accentColor?: string;
+  } = {};
   if (updates.warmupDuration !== undefined) nonEncryptedUpdates.warmupDuration = updates.warmupDuration;
   if (updates.skipGeneralWarmup !== undefined) nonEncryptedUpdates.skipGeneralWarmup = updates.skipGeneralWarmup;
   if (updates.includeMobilityWork !== undefined) nonEncryptedUpdates.includeMobilityWork = updates.includeMobilityWork;

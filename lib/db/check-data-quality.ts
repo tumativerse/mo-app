@@ -2,7 +2,6 @@ import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { neon } from '@neondatabase/serverless';
 import * as schema from './schema';
-import { sql, isNull, isNotNull, count, eq } from 'drizzle-orm';
 
 const sqlClient = neon(process.env.DATABASE_URL!);
 const db = drizzle(sqlClient, { schema });
@@ -51,7 +50,7 @@ async function checkDataQuality() {
 
   for (const ex of exercises) {
     for (const check of fieldChecks) {
-      const value = (ex as any)[check.name];
+      const value = (ex as Record<string, unknown>)[check.name];
       if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
         nullCounts[check.name] = (nullCounts[check.name] || 0) + 1;
       }

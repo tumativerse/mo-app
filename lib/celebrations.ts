@@ -10,7 +10,7 @@ export function celebrateWorkoutComplete() {
     return Math.random() * (max - min) + min;
   }
 
-  const interval: any = setInterval(function() {
+  const interval: NodeJS.Timeout = setInterval(() => {
     const timeLeft = animationEnd - Date.now();
 
     if (timeLeft <= 0) {
@@ -42,7 +42,7 @@ export function celebratePersonalRecord() {
     zIndex: 9999,
   };
 
-  function fire(particleRatio: number, opts: any) {
+  function fire(particleRatio: number, opts: confetti.Options) {
     confetti({
       ...defaults,
       ...opts,
@@ -125,7 +125,7 @@ export function celebrateFireworks() {
   const duration = 2000;
   const animationEnd = Date.now() + duration;
 
-  const interval: any = setInterval(function() {
+  const interval: NodeJS.Timeout = setInterval(() => {
     const timeLeft = animationEnd - Date.now();
 
     if (timeLeft <= 0) {
@@ -221,7 +221,7 @@ export function celebrateFirstWorkout() {
   const duration = 5000;
   const animationEnd = Date.now() + duration;
 
-  const interval: any = setInterval(function() {
+  const interval: NodeJS.Timeout = setInterval(() => {
     const timeLeft = animationEnd - Date.now();
 
     if (timeLeft <= 0) {

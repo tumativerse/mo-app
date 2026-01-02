@@ -1,12 +1,10 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool } from '@neondatabase/serverless';
-import { eq, and, ilike, or } from 'drizzle-orm';
+import { eq, ilike } from 'drizzle-orm';
 import * as schema from './schema';
 import {
   exercises,
-  warmupTemplates,
-  warmupPhases,
   warmupPhaseExercises,
 } from './schema';
 
@@ -105,7 +103,7 @@ async function seedWarmupExercises() {
     }
 
     let totalExercises = 0;
-    let notFound: string[] = [];
+    const notFound: string[] = [];
 
     for (const template of templates) {
       console.log(`Processing: ${template.name}`);

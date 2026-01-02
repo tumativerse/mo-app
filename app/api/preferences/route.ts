@@ -69,7 +69,7 @@ const updatePreferencesSchema = z.object({
   preferredCardio: z.string().optional(),
 
   // App settings
-  warmupDuration: z.string().optional(),
+  warmupDuration: z.enum(["quick", "normal", "extended"]).optional(),
   skipGeneralWarmup: z.boolean().optional(),
   includeMobilityWork: z.boolean().optional(),
   weightUnit: z.enum(["lbs", "kg"]).optional(),

@@ -27,27 +27,6 @@ config({ path: resolve(__dirname, '../.env.local') });
 const DRY_RUN = process.argv.includes('--dry-run');
 const EXECUTE = process.argv.includes('--execute');
 
-interface UserRecord {
-  id: string;
-  fullName: string | null;
-  heightCm: string | null;
-  currentWeight: string | null;
-  goalWeight: string | null;
-  injuryHistory: string | null;
-}
-
-interface UserPreferencesRecord {
-  id: string;
-  userId: string;
-  fitnessGoal: string | null;
-  experienceLevel: string | null;
-  trainingFrequency: string | null;
-  sessionDuration: string | null;
-  focusAreas: string | null;
-  defaultEquipmentLevel: string | null;
-  availableEquipment: string | null;
-  preferredCardio: string | null;
-}
 
 async function main() {
   console.log('🔐 MO:SELF Data Encryption Migration\n');

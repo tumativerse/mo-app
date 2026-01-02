@@ -578,7 +578,7 @@ async function seedMuscles(stats: SeedStats): Promise<void> {
   }
 
   await db.delete(schema.muscles);
-  await db.insert(schema.muscles).values(muscleData.muscles as any);
+  await db.insert(schema.muscles).values(muscleData.muscles as unknown as typeof schema.muscles.$inferInsert[]);
   stats.muscles = muscleData.muscles.length;
   console.log(`  ✓ Seeded ${stats.muscles} muscles`);
 }
@@ -593,7 +593,7 @@ async function seedEquipment(stats: SeedStats): Promise<void> {
   }
 
   await db.delete(schema.equipmentItems);
-  await db.insert(schema.equipmentItems).values(equipmentData.equipment as any);
+  await db.insert(schema.equipmentItems).values(equipmentData.equipment as unknown as typeof schema.equipmentItems.$inferInsert[]);
   stats.equipment = equipmentData.equipment.length;
   console.log(`  ✓ Seeded ${stats.equipment} equipment items`);
 }
@@ -656,7 +656,7 @@ async function seedExercises(stats: SeedStats): Promise<void> {
   console.log('Inserting exercises...');
   for (let i = 0; i < exercises.length; i += config.batchSize) {
     const batch = exercises.slice(i, i + config.batchSize);
-    await db.insert(schema.exercises).values(batch as any);
+    await db.insert(schema.exercises).values(batch as unknown as typeof schema.exercises.$inferInsert[]);
     if (config.verbose) {
       console.log(`  Inserted ${Math.min(i + config.batchSize, exercises.length)}/${exercises.length}`);
     }
@@ -695,7 +695,7 @@ async function seedExercises(stats: SeedStats): Promise<void> {
   // Insert in batches
   for (let i = 0; i < validRelationships.length; i += config.batchSize) {
     const batch = validRelationships.slice(i, i + config.batchSize);
-    await db.insert(schema.exerciseRelationships).values(batch as any);
+    await db.insert(schema.exerciseRelationships).values(batch as unknown as typeof schema.exerciseRelationships.$inferInsert[]);
   }
 
   stats.relationships.created = validRelationships.length;
