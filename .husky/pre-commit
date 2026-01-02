@@ -80,6 +80,11 @@ npm run prettier:write || {
   exit 1
 }
 
+# Auto-restage files that Prettier may have modified
+git add -u
+
+echo "     ✓ Code formatted and restaged"
+
 # Step 3: Check test files exist for changed source files (MANDATORY)
 echo "  → [3/6] Verifying test coverage for changed files..."
 

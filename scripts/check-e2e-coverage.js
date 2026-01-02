@@ -4,33 +4,15 @@
  * Ensures 100% of critical flows and user-facing pages have E2E tests
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 // Critical flows that MUST have E2E tests
 const REQUIRED_FLOWS = ['auth', 'dashboard', 'workout'];
 
-// Get all app pages
-const APP_DIR = path.join(__dirname, '../app/(app)');
+// E2E tests directory
 const E2E_DIR = path.join(__dirname, '../tests/e2e');
-
-function getAllPages(dir, baseDir = dir) {
-  const pages = [];
-  const items = fs.readdirSync(dir, { withFileTypes: true });
-
-  for (const item of items) {
-    const fullPath = path.join(dir, item.name);
-    if (item.isDirectory()) {
-      pages.push(...getAllPages(fullPath, baseDir));
-    } else if (item.name === 'page.tsx' || item.name === 'page.ts') {
-      const relativePath = path.relative(baseDir, dir);
-      pages.push('/' + relativePath.replace(/\\/g, '/'));
-    }
-  }
-
-  return pages;
-}
 
 function findE2ETests() {
   const tests = [];

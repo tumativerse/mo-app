@@ -4,6 +4,7 @@
  * Ensures 100% of API endpoints have contract tests
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 
