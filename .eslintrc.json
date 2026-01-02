@@ -1,23 +1,26 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   "rules": {
     // Prevent hardcoded values
-    "no-magic-numbers": ["warn", {
-      "ignore": [0, 1, -1],
-      "ignoreArrayIndexes": true,
-      "enforceConst": true,
-      "detectObjects": false
-    }],
+    "no-magic-numbers": [
+      "warn",
+      {
+        "ignore": [0, 1, -1],
+        "ignoreArrayIndexes": true,
+        "enforceConst": true,
+        "detectObjects": false
+      }
+    ],
 
     // Enforce TypeScript
     "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/explicit-function-return-type": ["warn", {
-      "allowExpressions": true,
-      "allowTypedFunctionExpressions": true
-    }],
+    "@typescript-eslint/explicit-function-return-type": [
+      "warn",
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true
+      }
+    ],
 
     // Accessibility
     "jsx-a11y/alt-text": "error",
@@ -32,29 +35,28 @@
     "react-hooks/exhaustive-deps": "warn",
 
     // Import organization
-    "import/order": ["warn", {
-      "groups": [
-        "builtin",
-        "external",
-        "internal",
-        "parent",
-        "sibling",
-        "index"
-      ],
-      "newlines-between": "always",
-      "alphabetize": {
-        "order": "asc"
+    "import/order": [
+      "warn",
+      {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc"
+        }
       }
-    }]
+    ]
   },
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": ["error", {
-          "argsIgnorePattern": "^_",
-          "varsIgnorePattern": "^_"
-        }]
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_"
+          }
+        ]
       }
     }
   ]

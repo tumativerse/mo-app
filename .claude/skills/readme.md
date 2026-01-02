@@ -3,6 +3,7 @@
 Generate or update README files.
 
 ## Usage
+
 `/readme [section]`
 
 Sections: `setup`, `api`, `architecture`, `contributing`, `all`
@@ -47,16 +48,17 @@ A PPL (Push/Pull/Legs) workout tracking application.
 6. Start dev server: `npm run dev`
 
 ## Project Structure
-
 ```
+
 app/
-  (app)/          # Authenticated pages
-  api/            # API routes
-components/       # React components
+(app)/ # Authenticated pages
+api/ # API routes
+components/ # React components
 lib/
-  db/             # Database schema and seeds
-  mo-coach/       # Training intelligence
-  mo-self/        # User management
+db/ # Database schema and seeds
+mo-coach/ # Training intelligence
+mo-self/ # User management
+
 ```
 
 ## Scripts

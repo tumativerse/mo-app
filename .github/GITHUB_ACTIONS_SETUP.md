@@ -24,16 +24,19 @@ Track your progress:
 ## 1. Codecov Setup (Test Coverage)
 
 ### Sign Up
+
 1. Go to: https://about.codecov.io
 2. Click "Sign up with GitHub"
 3. Authorize Codecov
 
 ### Configure Repository
+
 1. In Codecov dashboard, click "Add new repository"
 2. Find `mo-app` and click "Setup repo"
 3. Copy the upload token shown
 
 ### Add Secret to GitHub
+
 1. Go to: https://github.com/YOUR_USERNAME/mo-app/settings/secrets/actions
 2. Click "New repository secret"
 3. Name: `CODECOV_TOKEN`
@@ -41,6 +44,7 @@ Track your progress:
 5. Click "Add secret"
 
 ### Configure Quality Thresholds
+
 1. In Codecov dashboard, go to repo settings
 2. Set "Target coverage": **70%**
 3. Set "Patch coverage": **80%**
@@ -53,11 +57,13 @@ Track your progress:
 ## 2. Snyk Setup (Security Scanning)
 
 ### Sign Up
+
 1. Go to: https://snyk.io
 2. Click "Sign up with GitHub"
 3. Authorize Snyk
 
 ### Get API Token
+
 1. In Snyk dashboard, click account name (top right)
 2. Click "Account settings"
 3. Scroll to "API Token" section
@@ -65,6 +71,7 @@ Track your progress:
 5. Copy the token (format: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`)
 
 ### Add Secret to GitHub
+
 1. Go to: https://github.com/YOUR_USERNAME/mo-app/settings/secrets/actions
 2. Click "New repository secret"
 3. Name: `SNYK_TOKEN`
@@ -72,6 +79,7 @@ Track your progress:
 5. Click "Add secret"
 
 ### Import Project
+
 1. In Snyk dashboard, click "Add project"
 2. Select "GitHub"
 3. Find and select `mo-app`
@@ -79,6 +87,7 @@ Track your progress:
 5. Snyk will run initial scan
 
 ### Configure Severity Threshold
+
 1. In project settings, set severity threshold: **High**
 2. This blocks PRs if high/critical vulnerabilities found
 
@@ -89,11 +98,13 @@ Track your progress:
 ## 3. SonarCloud Setup (Code Quality)
 
 ### Sign Up
+
 1. Go to: https://sonarcloud.io
 2. Click "Sign up with GitHub"
 3. Authorize SonarCloud
 
 ### Create Organization
+
 1. Click "Analyze new project"
 2. Click "Create organization"
 3. Choose your GitHub username
@@ -101,29 +112,35 @@ Track your progress:
 5. Plan: **Free** (for open source)
 
 ### Import Project
+
 1. Click "Analyze new project"
 2. Select your organization
 3. Find `mo-app` repository
 4. Click "Set up"
 
 ### Get Tokens
+
 1. Click "Administration" → "Analysis Method"
 2. Select "With GitHub Actions"
 3. Copy the `SONAR_TOKEN` shown
 4. Note your organization key (e.g., `your-username`)
 
 ### Add Secrets to GitHub
+
 1. Go to: https://github.com/YOUR_USERNAME/mo-app/settings/secrets/actions
 
 **Secret 1:**
+
 - Name: `SONAR_TOKEN`
 - Value: Paste the token from SonarCloud
 
 **Secret 2:**
+
 - Name: `SONAR_ORGANIZATION`
 - Value: Your organization key (e.g., `your-username`)
 
 ### Configure Quality Gate
+
 1. In SonarCloud project, go to "Quality Gates"
 2. Set as default: **Sonar way** (recommended)
 3. Or create custom with these thresholds:
@@ -134,6 +151,7 @@ Track your progress:
    - Security Rating: **A**
 
 **Important:** Enable "Quality Gate Status" check:
+
 1. Go to project "Administration" → "General Settings"
 2. Enable "Enforce quality gate"
 3. This makes SonarCloud **BLOCK** PRs that fail
@@ -145,21 +163,25 @@ Track your progress:
 ## 4. Code Climate Setup (Maintainability)
 
 ### Sign Up
+
 1. Go to: https://codeclimate.com/quality
 2. Click "Sign up with GitHub"
 3. Authorize Code Climate
 
 ### Add Repository
+
 1. Click "Add a repository"
 2. Find `mo-app`
 3. Click "Add Repo"
 
 ### Get Test Reporter ID
+
 1. In Code Climate dashboard, click on `mo-app`
 2. Go to "Repo Settings" → "Test Coverage"
 3. Copy "TEST REPORTER ID" (format: long hex string)
 
 ### Add Secret to GitHub
+
 1. Go to: https://github.com/YOUR_USERNAME/mo-app/settings/secrets/actions
 2. Click "New repository secret"
 3. Name: `CC_TEST_REPORTER_ID`
@@ -167,6 +189,7 @@ Track your progress:
 5. Click "Add secret"
 
 ### Configure Quality Thresholds
+
 1. In Code Climate, go to "Repo Settings" → "Maintainability"
 2. Set thresholds:
    - Cognitive Complexity: **≤ 10**
@@ -241,6 +264,7 @@ You should see **4 secrets:**
 ## 7. Test All Workflows
 
 ### Step 1: Push to Feature Branch
+
 ```bash
 git checkout -b test-workflows
 echo "# Testing workflows" >> README.md
@@ -252,6 +276,7 @@ git push origin test-workflows
 **Expected:** "Quick Check" workflow runs and passes
 
 ### Step 2: Create Pull Request
+
 1. Go to GitHub repository
 2. Click "Pull requests" → "New pull request"
 3. Base: `main`, Compare: `test-workflows`
@@ -259,6 +284,7 @@ git push origin test-workflows
 5. Title: "Test: Verify all workflows"
 
 **Expected:** All 5 workflows start running:
+
 - Quick Check Status
 - PR Validation Status (tests, E2E, build, accessibility)
 - Security Status (Snyk, npm audit, secretlint)
@@ -266,18 +292,22 @@ git push origin test-workflows
 - Performance Status (Lighthouse CI)
 
 ### Step 3: Verify All Pass
+
 Wait for all checks to complete (5-15 minutes).
 
 **All should show:** ✅ Green checkmarks
 
 If any fail:
+
 1. Click "Details" to see error
 2. Fix the issue (likely configuration)
 3. Push fix to same branch
 4. Checks re-run automatically
 
 ### Step 4: Merge PR
+
 Once all checks pass:
+
 1. Review the PR yourself
 2. Click "Approve" (required by branch protection)
 3. Click "Merge pull request"
@@ -290,6 +320,7 @@ Once all checks pass:
 ## 8. Verify Branch Protection
 
 ### Attempt Direct Push (Should Fail)
+
 ```bash
 git checkout main
 git pull
@@ -300,6 +331,7 @@ git push origin main
 ```
 
 **Expected:**
+
 ```
 ❌ remote: error: GH006: Protected branch update failed
 ❌ error: failed to push some refs
@@ -312,21 +344,25 @@ git push origin main
 ## 9. Monitor Quality Dashboards
 
 ### Codecov Dashboard
+
 - URL: https://app.codecov.io/gh/YOUR_USERNAME/mo-app
 - Shows: Test coverage trends
 - Alerts: If coverage drops below threshold
 
 ### Snyk Dashboard
+
 - URL: https://app.snyk.io
 - Shows: Security vulnerabilities
 - Alerts: New vulnerabilities in dependencies
 
 ### SonarCloud Dashboard
+
 - URL: https://sonarcloud.io/dashboard?id=mo-app
 - Shows: Code quality, bugs, code smells, security hotspots
 - Alerts: Quality gate failures
 
 ### Code Climate Dashboard
+
 - URL: https://codeclimate.com/github/YOUR_USERNAME/mo-app
 - Shows: Maintainability grade (A-F)
 - Alerts: Complexity issues
@@ -338,12 +374,14 @@ git push origin main
 ### First Monday of Each Month
 
 **Review Dashboards:**
+
 1. Codecov: Is coverage trending up or down?
 2. Snyk: Any new vulnerabilities to address?
 3. SonarCloud: Any recurring code quality issues?
 4. Code Climate: Is maintainability grade stable?
 
 **Update Dependencies:**
+
 ```bash
 npm outdated
 npm update
@@ -351,6 +389,7 @@ npm audit fix
 ```
 
 **Verify Workflows:**
+
 1. Check GitHub Actions usage (should be < 50% of 2000 min limit)
 2. Review failed workflow runs in last 30 days
 3. Update workflow configurations if needed
@@ -360,25 +399,33 @@ npm audit fix
 ## 11. Troubleshooting
 
 ### "CODECOV_TOKEN secret not found"
+
 **Solution:** Go back to step 1, ensure secret is added exactly as `CODECOV_TOKEN`
 
 ### "SNYK_TOKEN authentication failed"
+
 **Solution:** Regenerate token in Snyk dashboard, update GitHub secret
 
 ### "SonarCloud quality gate failed"
+
 **Solution:**
+
 1. Check SonarCloud dashboard for specific issues
 2. Fix code quality issues
 3. Re-run workflow
 
 ### "Lighthouse CI cannot find preview URL"
+
 **Solution:**
+
 1. Ensure Vercel is connected to GitHub repo
 2. Check Vercel is deploying preview for PRs
 3. Wait longer (up to 5 minutes for Vercel deployment)
 
 ### "All workflows are skipped"
+
 **Solution:**
+
 1. Ensure `.github/workflows/` directory exists
 2. Check workflow YAML syntax is valid
 3. Ensure branch names match triggers (e.g., PR to `main`)
@@ -388,6 +435,7 @@ npm audit fix
 ## 12. Cost Summary
 
 ### Current Setup (Open Source)
+
 ```
 Codecov:      $0/month (unlimited for open source)
 Snyk:         $0/month (200 tests/month)
@@ -399,6 +447,7 @@ TOTAL:        $0/month
 ```
 
 ### If Private Repository
+
 ```
 Codecov:      $0/month (1 private repo free)
 Snyk:         $0/month (200 tests/month)

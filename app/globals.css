@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   /* Light theme colors */
@@ -28,7 +28,7 @@
   --color-info: #3b82f6;
 
   /* Fitness category colors */
-  --color-fitness-push: #0BA08B;
+  --color-fitness-push: #0ba08b;
   --color-fitness-pull: #3b82f6;
   --color-fitness-legs: #ef4444;
   --color-fitness-energy: #f59e0b;
@@ -66,7 +66,9 @@
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
-  font-feature-settings: "rlig" 1, "calt" 1;
+  font-feature-settings:
+    'rlig' 1,
+    'calt' 1;
 }
 
 /* Smooth theme transitions */
@@ -76,18 +78,22 @@ body {
   transition-duration: 150ms;
 }
 
-button, input, select, textarea {
-  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+button,
+input,
+select,
+textarea {
+  transition-property:
+    background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
 }
 
 /* Hide number input spinners/incrementers */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
 }

@@ -73,32 +73,32 @@ export interface ProfileCompletionStatus {
 
 const FIELD_LABELS: Record<string, string> = {
   // Profile
-  fullName: "Full Name",
-  dateOfBirth: "Date of Birth",
-  gender: "Gender",
-  heightCm: "Height",
-  currentWeight: "Current Weight",
-  goalWeight: "Goal Weight",
+  fullName: 'Full Name',
+  dateOfBirth: 'Date of Birth',
+  gender: 'Gender',
+  heightCm: 'Height',
+  currentWeight: 'Current Weight',
+  goalWeight: 'Goal Weight',
 
   // Training
-  fitnessGoal: "Fitness Goal",
-  experienceLevel: "Experience Level",
-  trainingFrequency: "Training Frequency",
-  sessionDuration: "Session Duration",
-  focusAreas: "Focus Areas",
-  preferredTrainingTimes: "Preferred Training Times",
-  restDaysPreference: "Rest Days",
+  fitnessGoal: 'Fitness Goal',
+  experienceLevel: 'Experience Level',
+  trainingFrequency: 'Training Frequency',
+  sessionDuration: 'Session Duration',
+  focusAreas: 'Focus Areas',
+  preferredTrainingTimes: 'Preferred Training Times',
+  restDaysPreference: 'Rest Days',
 
   // Equipment
-  defaultEquipmentLevel: "Equipment Level",
-  availableEquipment: "Available Equipment",
+  defaultEquipmentLevel: 'Equipment Level',
+  availableEquipment: 'Available Equipment',
 
   // Lifestyle
-  activityLevel: "Activity Level",
-  occupationType: "Occupation",
-  typicalBedtime: "Bedtime",
-  typicalWakeTime: "Wake Time",
-  preferredCardio: "Preferred Cardio",
+  activityLevel: 'Activity Level',
+  occupationType: 'Occupation',
+  typicalBedtime: 'Bedtime',
+  typicalWakeTime: 'Wake Time',
+  preferredCardio: 'Preferred Cardio',
 };
 
 export function checkProfileCompletion(
@@ -131,11 +131,14 @@ export function checkProfileCompletion(
 
     // Training
     focusAreas: !!preferences?.focusAreas && preferences.focusAreas.length > 0,
-    preferredTrainingTimes: !!preferences?.preferredTrainingTimes && preferences.preferredTrainingTimes.length > 0,
-    restDaysPreference: !!preferences?.restDaysPreference && preferences.restDaysPreference.length > 0,
+    preferredTrainingTimes:
+      !!preferences?.preferredTrainingTimes && preferences.preferredTrainingTimes.length > 0,
+    restDaysPreference:
+      !!preferences?.restDaysPreference && preferences.restDaysPreference.length > 0,
 
     // Equipment
-    availableEquipment: !!preferences?.availableEquipment && preferences.availableEquipment.length > 0,
+    availableEquipment:
+      !!preferences?.availableEquipment && preferences.availableEquipment.length > 0,
 
     // Lifestyle
     activityLevel: !!preferences?.activityLevel,

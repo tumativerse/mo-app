@@ -11,9 +11,7 @@ import { navigateTo, waitForPageReady } from '../../helpers/test-utils';
  * NOTE: These tests require test credentials (see dashboard.spec.ts for setup)
  */
 
-const hasTestCredentials = Boolean(
-  process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD
-);
+const hasTestCredentials = Boolean(process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD);
 
 test.describe('Workout Flow - Critical Path', () => {
   test.skip(!hasTestCredentials, 'Skipping workout tests - no test credentials configured');
@@ -26,7 +24,8 @@ test.describe('Workout Flow - Critical Path', () => {
     await navigateTo(page, '/dashboard');
 
     // Look for "Start Workout" or similar button
-    const startWorkoutButton = page.locator('button:has-text("Start")')
+    const startWorkoutButton = page
+      .locator('button:has-text("Start")')
       .or(page.locator('button:has-text("Workout")'))
       .or(page.locator('a:has-text("Start Workout")'));
 
@@ -48,9 +47,9 @@ test.describe('Workout Flow - Critical Path', () => {
     // - Day selection if no workout started
     // - "Start Workout" button if no program
 
-    const hasExercises = await page.locator('[data-testid*="exercise"]').count() > 0;
-    const hasDaySelection = await page.locator('button:has-text("Push")').count() > 0;
-    const hasStartButton = await page.locator('button:has-text("Start")').count() > 0;
+    const hasExercises = (await page.locator('[data-testid*="exercise"]').count()) > 0;
+    const hasDaySelection = (await page.locator('button:has-text("Push")').count()) > 0;
+    const hasStartButton = (await page.locator('button:has-text("Start")').count()) > 0;
 
     // At least one of these should be present
     expect(hasExercises || hasDaySelection || hasStartButton).toBeTruthy();
@@ -61,10 +60,12 @@ test.describe('Workout Flow - Critical Path', () => {
     await waitForPageReady(page);
 
     // Look for weight/reps input fields
-    const weightInput = page.locator('input[placeholder*="Weight"]')
+    const weightInput = page
+      .locator('input[placeholder*="Weight"]')
       .or(page.locator('input[type="number"]').first());
 
-    const repsInput = page.locator('input[placeholder*="Reps"]')
+    const repsInput = page
+      .locator('input[placeholder*="Reps"]')
       .or(page.locator('input[type="number"]').nth(1));
 
     // If inputs exist, try to log a set
@@ -74,9 +75,11 @@ test.describe('Workout Flow - Critical Path', () => {
       await repsInput.first().fill('10');
 
       // Look for "Log Set" or "Complete" button
-      const logButton = page.locator('button:has-text("Log")')
-        .or(page.locator('button:has-text("Complete")')
-        .or(page.locator('button:has-text("Save")')));
+      const logButton = page
+        .locator('button:has-text("Log")')
+        .or(
+          page.locator('button:has-text("Complete")').or(page.locator('button:has-text("Save")'))
+        );
 
       await logButton.first().click();
 
@@ -93,11 +96,12 @@ test.describe('Workout Flow - Critical Path', () => {
     await waitForPageReady(page);
 
     // Look for next/previous exercise buttons
-    const nextButton = page.locator('button:has-text("Next")')
+    const nextButton = page
+      .locator('button:has-text("Next")')
       .or(page.locator('[aria-label*="next"]'))
       .or(page.locator('[data-testid="next-exercise"]'));
 
-    const hasNextButton = await nextButton.count() > 0;
+    const hasNextButton = (await nextButton.count()) > 0;
 
     if (hasNextButton) {
       await nextButton.first().click();
@@ -127,12 +131,13 @@ test.describe('Workout Flow - Critical Path', () => {
     await waitForPageReady(page);
 
     // Should have a way to go back (back button or nav)
-    const backButton = page.locator('button:has-text("Back")')
+    const backButton = page
+      .locator('button:has-text("Back")')
       .or(page.locator('[aria-label*="back"]'))
       .or(page.locator('a[href="/dashboard"]'))
       .or(page.locator('nav'));
 
-    const hasNavigation = await backButton.count() > 0;
+    const hasNavigation = (await backButton.count()) > 0;
     expect(hasNavigation).toBeTruthy();
   });
 });

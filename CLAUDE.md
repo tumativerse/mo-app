@@ -1,9 +1,11 @@
 # Mo App - Claude Code Context
 
 ## Project Overview
+
 Mo is a fitness tracking application with a PPL (Push/Pull/Legs) workout system.
 
 ## Tech Stack
+
 - **Framework**: Next.js 16 (App Router)
 - **Database**: PostgreSQL (Neon) with Drizzle ORM
 - **Auth**: Clerk
@@ -12,6 +14,7 @@ Mo is a fitness tracking application with a PPL (Push/Pull/Legs) workout system.
 - **Notifications**: Sonner toasts
 
 ## Key Directories
+
 - `app/(app)/` - Authenticated app pages (dashboard, workout, progress, etc.)
 - `app/api/` - API routes
 - `lib/db/` - Database schema and seeds
@@ -20,7 +23,9 @@ Mo is a fitness tracking application with a PPL (Push/Pull/Legs) workout system.
 - `components/` - Reusable UI components
 
 ## Database Systems
+
 **Active (PPL System):**
+
 - `programTemplates` - Workout program definitions
 - `templateDays` - Days within a program (Push A, Pull A, etc.)
 - `templateSlots` - Exercise slots with movement patterns
@@ -30,6 +35,7 @@ Mo is a fitness tracking application with a PPL (Push/Pull/Legs) workout system.
 - `exercises` - Exercise library (756 exercises)
 
 **Deprecated (Old System):**
+
 - `programs`, `programDays`, `userPrograms`, `workouts`, `workoutSets`
 
 ---
@@ -37,6 +43,7 @@ Mo is a fitness tracking application with a PPL (Push/Pull/Legs) workout system.
 ## Code Patterns
 
 ### API Route Pattern
+
 ```typescript
 // app/api/[resource]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
@@ -44,7 +51,9 @@ import { z } from 'zod';
 import { getCurrentUser } from '@/lib/mo-self';
 import { db } from '@/lib/db';
 
-const schema = z.object({ /* fields */ });
+const schema = z.object({
+  /* fields */
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -56,10 +65,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const parsed = schema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({
-        error: 'Invalid data',
-        details: parsed.error.flatten()
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: 'Invalid data',
+          details: parsed.error.flatten(),
+        },
+        { status: 400 }
+      );
     }
 
     // ... business logic with db queries
@@ -74,6 +86,7 @@ export async function POST(request: NextRequest) {
 ```
 
 ### Page Component Pattern
+
 ```typescript
 // app/(app)/[page]/page.tsx
 'use client';
@@ -114,6 +127,7 @@ export default function PageName() {
 ```
 
 ### Drizzle Query Patterns
+
 ```typescript
 // Simple select with conditions
 const results = await db
@@ -146,6 +160,7 @@ const slots = await db
 ```
 
 ### Component Props Pattern
+
 ```typescript
 interface ComponentProps {
   data: DataType;
@@ -165,15 +180,27 @@ export function Component({
 ```
 
 ### Movement Pattern Enum Values
+
 ```typescript
 // Valid values for movementPattern in templateSlots
 type MovementPattern =
-  | 'horizontal_push' | 'vertical_push' | 'chest_isolation'
-  | 'tricep_isolation' | 'shoulder_isolation'
-  | 'horizontal_pull' | 'vertical_pull' | 'rear_delt'
-  | 'bicep_isolation' | 'forearm'
-  | 'hip_hinge' | 'squat' | 'lunge' | 'leg_curl'
-  | 'leg_extension' | 'calf' | 'core';
+  | 'horizontal_push'
+  | 'vertical_push'
+  | 'chest_isolation'
+  | 'tricep_isolation'
+  | 'shoulder_isolation'
+  | 'horizontal_pull'
+  | 'vertical_pull'
+  | 'rear_delt'
+  | 'bicep_isolation'
+  | 'forearm'
+  | 'hip_hinge'
+  | 'squat'
+  | 'lunge'
+  | 'leg_curl'
+  | 'leg_extension'
+  | 'calf'
+  | 'core';
 ```
 
 ---
@@ -183,6 +210,7 @@ type MovementPattern =
 **IMPORTANT:** Mo is a **fun, energetic, and motivating** app. See `.claude/DESIGN_SYSTEM.md` for complete design patterns.
 
 ### Design Requirements (Always Apply)
+
 - ✅ Use Framer Motion with stagger animations
 - ✅ Gradient text headers
 - ✅ Cards with gradient backgrounds and colored borders
@@ -192,6 +220,7 @@ type MovementPattern =
 - ✅ Semantic color tokens (never hardcoded colors)
 
 ### Theme Colors (Use Semantic Tokens)
+
 - Background: `bg-background`
 - Cards: `bg-card border-border`
 - Text: `text-foreground` (primary), `text-muted-foreground` (secondary)
@@ -200,6 +229,7 @@ type MovementPattern =
 - Inputs: `bg-secondary border-border`
 
 ### Toast Notifications
+
 ```typescript
 import { toast } from 'sonner';
 
@@ -209,6 +239,7 @@ toast.loading('Saving...');
 ```
 
 ### Icons
+
 ```typescript
 import { Dumbbell, Play, Check, X, RefreshCw } from 'lucide-react';
 ```
@@ -216,6 +247,7 @@ import { Dumbbell, Play, Check, X, RefreshCw } from 'lucide-react';
 ---
 
 ## Common Commands
+
 ```bash
 npm run dev          # Start dev server
 npm run db:seed      # Seed PPL template
@@ -225,12 +257,14 @@ npm run lint         # Run ESLint
 ```
 
 ## Seeding
+
 1. `npm run db:seed` - Seeds PPL template
 2. `MO_DOCS_PATH=/path/to/mo-docs npx tsx lib/db/seed-exercises.ts` - Seeds exercises
 
 ---
 
 ## Testing Notes
+
 - Use React Testing Library with `@testing-library/react`
 - Query by role/label/text, not test-ids
 - Mock fetch calls in tests
@@ -255,6 +289,7 @@ npm run lint         # Run ESLint
 Automatically switch models based on task complexity:
 
 ### Use Opus For:
+
 - Designing new system architecture
 - Complex database schema design
 - Difficult debugging (multi-file, unclear cause)
@@ -264,6 +299,7 @@ Automatically switch models based on task complexity:
 - When multiple approaches need evaluation
 
 ### Use Sonnet For:
+
 - Daily coding and feature implementation
 - Standard debugging
 - Code reviews
@@ -272,6 +308,7 @@ Automatically switch models based on task complexity:
 - Most agent tasks
 
 ### Use Haiku For:
+
 - Quick questions about syntax
 - Simple file lookups
 - Formatting tasks
@@ -283,19 +320,23 @@ Automatically switch models based on task complexity:
 When performing these tasks, automatically follow the patterns in the corresponding skill/command files:
 
 ### Code Generation
+
 - **Creating components**: Follow `.claude/skills/component.md` patterns
 - **Creating API routes**: Follow `.claude/skills/api.md` patterns
 - **Creating tests**: Follow `.claude/skills/test.md` patterns
 - **Modifying schema**: Follow `.claude/skills/drizzle.md` patterns
 
 ### Workflows
+
 - **After significant code changes**: Run tests and report results (`.claude/commands/test.md`)
 - **Before commits**: Review changes for issues (`.claude/commands/review.md`)
 - **When asked about the codebase**: Research thoroughly (`.claude/commands/research.md`)
 - **When asked to document**: USE the doc-writer agent via Task tool - READ `.claude/agents/doc-writer.md` first
 
 ### IMPORTANT: Use Your Agents
+
 Before doing specialized tasks, READ the corresponding agent file and USE the Task tool to spawn it:
+
 - Documentation → spawn `doc-writer` agent
 - Research → spawn `researcher` agent
 - Code review → spawn `code-reviewer` agent
@@ -305,6 +346,7 @@ Before doing specialized tasks, READ the corresponding agent file and USE the Ta
 DO NOT just do these tasks directly. Use the agents.
 
 ### Quality Checks
+
 - After creating/modifying files, verify:
   1. TypeScript compiles without errors
   2. ESLint passes (auto-fixed by hooks)
@@ -312,4 +354,5 @@ DO NOT just do these tasks directly. Use the agents.
   4. Patterns match existing codebase
 
 ## Summary Instructions
+
 When compacting, preserve: recent code changes, error messages, current task context, and any active session IDs. Also read `.claude/MEMORY.md` for persistent context.

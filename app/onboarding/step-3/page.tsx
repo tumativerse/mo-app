@@ -73,16 +73,15 @@ export default function OnboardingStep3Page() {
     }));
   };
 
-  const showEquipmentSelection = formData.equipmentLevel && formData.equipmentLevel !== 'bodyweight';
+  const showEquipmentSelection =
+    formData.equipmentLevel && formData.equipmentLevel !== 'bodyweight';
 
   return (
     <form onSubmit={handleSubmit}>
       <Card>
         <CardHeader>
           <CardTitle>Your Equipment Access</CardTitle>
-          <CardDescription>
-            Tell us what equipment you have available for training
-          </CardDescription>
+          <CardDescription>Tell us what equipment you have available for training</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Equipment Level */}
@@ -95,7 +94,9 @@ export default function OnboardingStep3Page() {
                 { value: 'home_gym', label: 'Home Gym - Personal equipment at home' },
                 { value: 'bodyweight', label: 'Bodyweight Only - Minimal to no equipment' },
               ]}
-              onChange={(value) => setFormData({ ...formData, equipmentLevel: String(value), availableEquipment: [] })}
+              onChange={(value) =>
+                setFormData({ ...formData, equipmentLevel: String(value), availableEquipment: [] })
+              }
               placeholder="Select your equipment level"
               width="100%"
             />
@@ -140,9 +141,7 @@ export default function OnboardingStep3Page() {
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground">
-                Select all that apply
-              </p>
+              <p className="text-xs text-muted-foreground">Select all that apply</p>
             </div>
           )}
 

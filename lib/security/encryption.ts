@@ -23,7 +23,7 @@ function getEncryptionKey(): Buffer {
   if (!key) {
     throw new Error(
       'ENCRYPTION_KEY environment variable is not set. ' +
-      'Generate one using: openssl rand -hex 32'
+        'Generate one using: openssl rand -hex 32'
     );
   }
 
@@ -64,15 +64,10 @@ export function encrypt(plaintext: string | number | boolean | null | undefined)
 
     // Combine IV + authTag + encrypted data
     // Format: [IV(16 bytes)][AuthTag(16 bytes)][EncryptedData]
-    const combined = Buffer.concat([
-      iv,
-      authTag,
-      Buffer.from(encrypted, 'base64')
-    ]);
+    const combined = Buffer.concat([iv, authTag, Buffer.from(encrypted, 'base64')]);
 
     // Return as base64 string for database storage
     return combined.toString('base64');
-
   } catch (error) {
     console.error('Encryption error:', error);
     throw new Error('Failed to encrypt data');
@@ -99,8 +94,8 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
     if (combined.length < IV_LENGTH + AUTH_TAG_LENGTH) {
       throw new Error(
         `Data too short to be encrypted (${combined.length} bytes). ` +
-        'Expected at least 32 bytes for AES-256-GCM. ' +
-        'Data may be corrupted or not encrypted.'
+          'Expected at least 32 bytes for AES-256-GCM. ' +
+          'Data may be corrupted or not encrypted.'
       );
     }
 
@@ -121,7 +116,6 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
     decrypted += decipher.final('utf8');
 
     return decrypted;
-
   } catch (error) {
     // Log error for monitoring
     console.error('CRITICAL: Decryption failed:', {
@@ -133,10 +127,10 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
     // Throw error with helpful message
     throw new Error(
       'Failed to decrypt data. This could indicate: ' +
-      '(1) Data corruption in database, ' +
-      '(2) Incorrect ENCRYPTION_KEY, or ' +
-      '(3) Data encrypted with different key. ' +
-      `Original error: ${error instanceof Error ? error.message : 'Unknown'}`
+        '(1) Data corruption in database, ' +
+        '(2) Incorrect ENCRYPTION_KEY, or ' +
+        '(3) Data encrypted with different key. ' +
+        `Original error: ${error instanceof Error ? error.message : 'Unknown'}`
     );
   }
 }
@@ -147,10 +141,7 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
  * @param fields - Array of field names to encrypt
  * @returns New object with specified fields encrypted
  */
-export function encryptFields<T extends Record<string, unknown>>(
-  obj: T,
-  fields: (keyof T)[]
-): T {
+export function encryptFields<T extends Record<string, unknown>>(obj: T, fields: (keyof T)[]): T {
   const encrypted = { ...obj };
 
   for (const field of fields) {
@@ -168,10 +159,7 @@ export function encryptFields<T extends Record<string, unknown>>(
  * @param fields - Array of field names to decrypt
  * @returns New object with specified fields decrypted
  */
-export function decryptFields<T extends Record<string, unknown>>(
-  obj: T,
-  fields: (keyof T)[]
-): T {
+export function decryptFields<T extends Record<string, unknown>>(obj: T, fields: (keyof T)[]): T {
   const decrypted = { ...obj };
 
   for (const field of fields) {

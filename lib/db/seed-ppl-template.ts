@@ -80,19 +80,22 @@ const TEMPLATE_DAYS = [
 ];
 
 // Slot definitions per day type and variation
-const SLOTS_BY_DAY: Record<string, Array<{
-  slotOrder: number;
-  slotType: 'primary' | 'secondary' | 'accessory' | 'optional';
-  movementPattern: string;
-  targetMuscles: string[];
-  sets: number;
-  repRangeMin: number;
-  repRangeMax: number;
-  rpeTarget: string;
-  restSeconds: number;
-  isOptional: boolean;
-  notes?: string;
-}>> = {
+const SLOTS_BY_DAY: Record<
+  string,
+  Array<{
+    slotOrder: number;
+    slotType: 'primary' | 'secondary' | 'accessory' | 'optional';
+    movementPattern: string;
+    targetMuscles: string[];
+    sets: number;
+    repRangeMin: number;
+    repRangeMax: number;
+    rpeTarget: string;
+    restSeconds: number;
+    isOptional: boolean;
+    notes?: string;
+  }>
+> = {
   'Push A': [
     {
       slotOrder: 1,
@@ -597,12 +600,15 @@ const WARMUP_TEMPLATES = [
   },
 ];
 
-const WARMUP_PHASES_BY_TYPE: Record<string, Array<{
-  phaseOrder: number;
-  name: string;
-  phaseType: 'general' | 'dynamic' | 'movement_prep';
-  durationSeconds: number;
-}>> = {
+const WARMUP_PHASES_BY_TYPE: Record<
+  string,
+  Array<{
+    phaseOrder: number;
+    name: string;
+    phaseType: 'general' | 'dynamic' | 'movement_prep';
+    durationSeconds: number;
+  }>
+> = {
   push: [
     { phaseOrder: 1, name: 'General Warmup', phaseType: 'general', durationSeconds: 180 },
     { phaseOrder: 2, name: 'Dynamic Stretching', phaseType: 'dynamic', durationSeconds: 240 },

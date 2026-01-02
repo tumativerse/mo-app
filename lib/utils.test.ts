@@ -38,7 +38,7 @@ describe('cn utility', () => {
     const result = cn({
       'bg-red-500': true,
       'text-white': true,
-      'hidden': false,
+      hidden: false,
     });
     expect(result).toBe('bg-red-500 text-white');
   });

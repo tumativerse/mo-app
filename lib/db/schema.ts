@@ -16,11 +16,7 @@ import { relations } from 'drizzle-orm';
 // ENUMS (MVP only)
 // ============================================
 
-export const experienceEnum = pgEnum('experience', [
-  'beginner',
-  'intermediate',
-  'advanced',
-]);
+export const experienceEnum = pgEnum('experience', ['beginner', 'intermediate', 'advanced']);
 
 export const fitnessGoalEnum = pgEnum('fitness_goal', [
   'lose_fat',
@@ -32,12 +28,7 @@ export const fitnessGoalEnum = pgEnum('fitness_goal', [
 
 export const unitsEnum = pgEnum('units', ['imperial', 'metric']);
 
-export const genderEnum = pgEnum('gender', [
-  'male',
-  'female',
-  'non_binary',
-  'prefer_not_to_say',
-]);
+export const genderEnum = pgEnum('gender', ['male', 'female', 'non_binary', 'prefer_not_to_say']);
 
 export const activityLevelEnum = pgEnum('activity_level', [
   'sedentary',
@@ -106,36 +97,15 @@ export const difficultyEnum = pgEnum('difficulty', [
   'elite',
 ]);
 
-export const priorityEnum = pgEnum('priority', [
-  'essential',
-  'common',
-  'specialized',
-  'niche',
-]);
+export const priorityEnum = pgEnum('priority', ['essential', 'common', 'specialized', 'niche']);
 
-export const forceTypeEnum = pgEnum('force_type', [
-  'push',
-  'pull',
-  'static',
-  'dynamic',
-]);
+export const forceTypeEnum = pgEnum('force_type', ['push', 'pull', 'static', 'dynamic']);
 
-export const planeEnum = pgEnum('plane', [
-  'sagittal',
-  'frontal',
-  'transverse',
-]);
+export const planeEnum = pgEnum('plane', ['sagittal', 'frontal', 'transverse']);
 
-export const chainEnum = pgEnum('chain', [
-  'anterior',
-  'posterior',
-  'lateral',
-]);
+export const chainEnum = pgEnum('chain', ['anterior', 'posterior', 'lateral']);
 
-export const kineticChainEnum = pgEnum('kinetic_chain', [
-  'open',
-  'closed',
-]);
+export const kineticChainEnum = pgEnum('kinetic_chain', ['open', 'closed']);
 
 export const bodyPositionEnum = pgEnum('body_position', [
   'standing',
@@ -159,11 +129,7 @@ export const gripEnum = pgEnum('grip', [
   'false',
 ]);
 
-export const gripWidthEnum = pgEnum('grip_width', [
-  'narrow',
-  'shoulder_width',
-  'wide',
-]);
+export const gripWidthEnum = pgEnum('grip_width', ['narrow', 'shoulder_width', 'wide']);
 
 export const stanceEnum = pgEnum('stance', [
   'hip_width',
@@ -206,28 +172,15 @@ export const muscleGroupEnum = pgEnum('muscle_group', [
   'full_body',
 ]);
 
-export const programStatusEnum = pgEnum('program_status', [
-  'active',
-  'paused',
-  'completed',
-]);
+export const programStatusEnum = pgEnum('program_status', ['active', 'paused', 'completed']);
 
 // ============================================
 // PPL SYSTEM ENUMS
 // ============================================
 
-export const exerciseUseEnum = pgEnum('exercise_use', [
-  'training',
-  'warmup',
-  'both',
-]);
+export const exerciseUseEnum = pgEnum('exercise_use', ['training', 'warmup', 'both']);
 
-export const slotTypeEnum = pgEnum('slot_type', [
-  'primary',
-  'secondary',
-  'accessory',
-  'optional',
-]);
+export const slotTypeEnum = pgEnum('slot_type', ['primary', 'secondary', 'accessory', 'optional']);
 
 export const dayTypeEnum = pgEnum('day_type', [
   'push',
@@ -244,11 +197,7 @@ export const warmupPhaseTypeEnum = pgEnum('warmup_phase_type', [
   'movement_prep',
 ]);
 
-export const equipmentLevelEnum = pgEnum('equipment_level', [
-  'full_gym',
-  'home_gym',
-  'bodyweight',
-]);
+export const equipmentLevelEnum = pgEnum('equipment_level', ['full_gym', 'home_gym', 'bodyweight']);
 
 export const sessionStatusEnum = pgEnum('session_status', [
   'planned',
@@ -592,9 +541,7 @@ export const userExerciseDefaults = pgTable(
     lastRpe: decimal('last_rpe', { precision: 3, scale: 1 }),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
-  (table) => [
-    uniqueIndex('user_exercise_defaults_idx').on(table.userId, table.exerciseId),
-  ]
+  (table) => [uniqueIndex('user_exercise_defaults_idx').on(table.userId, table.exerciseId)]
 );
 
 // ============================================
@@ -872,7 +819,9 @@ export const warmupPhaseExercises = pgTable(
     notes: text('notes'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
   },
-  (table) => [uniqueIndex('warmup_phase_exercises_order_idx').on(table.phaseId, table.exerciseOrder)]
+  (table) => [
+    uniqueIndex('warmup_phase_exercises_order_idx').on(table.phaseId, table.exerciseOrder),
+  ]
 );
 
 // ============================================
@@ -897,17 +846,17 @@ export const warmupLogs = pgTable('warmup_logs', {
 // ============================================
 
 export const deloadTypeEnum = pgEnum('deload_type', [
-  'volume',     // Reduce sets, keep intensity
-  'intensity',  // Reduce weight, keep volume
-  'full_rest',  // Complete rest days
+  'volume', // Reduce sets, keep intensity
+  'intensity', // Reduce weight, keep volume
+  'full_rest', // Complete rest days
 ]);
 
 export const fatigueLevelEnum = pgEnum('fatigue_level', [
-  'fresh',      // 0-2: Well recovered
-  'normal',     // 3-4: Normal training fatigue
-  'elevated',   // 5-6: Fatigue accumulating
-  'high',       // 7-8: Deload recommended
-  'critical',   // 9-10: Risk of overtraining
+  'fresh', // 0-2: Well recovered
+  'normal', // 3-4: Normal training fatigue
+  'elevated', // 5-6: Fatigue accumulating
+  'high', // 7-8: Deload recommended
+  'critical', // 9-10: Risk of overtraining
 ]);
 
 // Daily fatigue snapshots for trend tracking
@@ -925,11 +874,11 @@ export const fatigueLogs = pgTable(
     fatigueLevel: fatigueLevelEnum('fatigue_level').notNull(),
 
     // Component scores (for debugging/analysis)
-    rpeCreepScore: integer('rpe_creep_score').default(0),       // 0-2
-    performanceScore: integer('performance_score').default(0),  // 0-2
+    rpeCreepScore: integer('rpe_creep_score').default(0), // 0-2
+    performanceScore: integer('performance_score').default(0), // 0-2
     recoveryDebtScore: integer('recovery_debt_score').default(0), // 0-3
-    volumeLoadScore: integer('volume_load_score').default(0),   // 0-2
-    streakScore: integer('streak_score').default(0),            // 0-1
+    volumeLoadScore: integer('volume_load_score').default(0), // 0-2
+    streakScore: integer('streak_score').default(0), // 0-1
 
     // Recommendations generated
     recommendations: text('recommendations').array(),

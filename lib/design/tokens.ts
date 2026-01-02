@@ -14,7 +14,7 @@ export const tokens = {
       200: '#fed7aa',
       300: '#fdba74',
       400: '#fb923c',
-      500: '#f97316',  // Primary orange
+      500: '#f97316', // Primary orange
       600: '#ea580c',
       700: '#c2410c',
       800: '#9a3412',
@@ -42,12 +42,12 @@ export const tokens = {
 
     // Fitness category colors (fixed for semantic meaning)
     fitness: {
-      push: '#0BA08B',    // Teal
-      pull: '#3b82f6',    // Blue
-      legs: '#ef4444',    // Red
-      energy: '#f59e0b',  // Amber
+      push: '#0BA08B', // Teal
+      pull: '#3b82f6', // Blue
+      legs: '#ef4444', // Red
+      energy: '#f59e0b', // Amber
       mobility: '#8b5cf6', // Purple
-      cardio: '#06b6d4',  // Cyan
+      cardio: '#06b6d4', // Cyan
     },
   },
 
@@ -55,42 +55,42 @@ export const tokens = {
   spacing: {
     0: '0',
     px: '1px',
-    0.5: '0.125rem',  // 2px
-    1: '0.25rem',     // 4px
-    1.5: '0.375rem',  // 6px
-    2: '0.5rem',      // 8px
-    2.5: '0.625rem',  // 10px
-    3: '0.75rem',     // 12px
-    3.5: '0.875rem',  // 14px
-    4: '1rem',        // 16px
-    5: '1.25rem',     // 20px
-    6: '1.5rem',      // 24px
-    7: '1.75rem',     // 28px
-    8: '2rem',        // 32px
-    9: '2.25rem',     // 36px
-    10: '2.5rem',     // 40px
-    11: '2.75rem',    // 44px (minimum touch target)
-    12: '3rem',       // 48px
-    14: '3.5rem',     // 56px
-    16: '4rem',       // 64px
-    20: '5rem',       // 80px
-    24: '6rem',       // 96px
-    28: '7rem',       // 112px
-    32: '8rem',       // 128px
+    0.5: '0.125rem', // 2px
+    1: '0.25rem', // 4px
+    1.5: '0.375rem', // 6px
+    2: '0.5rem', // 8px
+    2.5: '0.625rem', // 10px
+    3: '0.75rem', // 12px
+    3.5: '0.875rem', // 14px
+    4: '1rem', // 16px
+    5: '1.25rem', // 20px
+    6: '1.5rem', // 24px
+    7: '1.75rem', // 28px
+    8: '2rem', // 32px
+    9: '2.25rem', // 36px
+    10: '2.5rem', // 40px
+    11: '2.75rem', // 44px (minimum touch target)
+    12: '3rem', // 48px
+    14: '3.5rem', // 56px
+    16: '4rem', // 64px
+    20: '5rem', // 80px
+    24: '6rem', // 96px
+    28: '7rem', // 112px
+    32: '8rem', // 128px
   },
 
   // Typography
   fontSize: {
-    xs: '0.75rem',     // 12px
-    sm: '0.875rem',    // 14px
-    base: '1rem',      // 16px (iOS zoom-safe minimum)
-    lg: '1.125rem',    // 18px
-    xl: '1.25rem',     // 20px
-    '2xl': '1.5rem',   // 24px
+    xs: '0.75rem', // 12px
+    sm: '0.875rem', // 14px
+    base: '1rem', // 16px (iOS zoom-safe minimum)
+    lg: '1.125rem', // 18px
+    xl: '1.25rem', // 20px
+    '2xl': '1.5rem', // 24px
     '3xl': '1.875rem', // 30px
-    '4xl': '2.25rem',  // 36px
-    '5xl': '3rem',     // 48px
-    '6xl': '3.75rem',  // 60px
+    '4xl': '2.25rem', // 36px
+    '5xl': '3rem', // 48px
+    '6xl': '3.75rem', // 60px
   },
 
   fontWeight: {
@@ -113,21 +113,21 @@ export const tokens = {
   // Border radius
   radius: {
     none: '0',
-    sm: '0.25rem',    // 4px
+    sm: '0.25rem', // 4px
     DEFAULT: '0.5rem', // 8px
-    md: '0.5rem',     // 8px
-    lg: '0.75rem',    // 12px
-    xl: '1rem',       // 16px
-    '2xl': '1.5rem',  // 24px
-    '3xl': '2rem',    // 32px
+    md: '0.5rem', // 8px
+    lg: '0.75rem', // 12px
+    xl: '1rem', // 16px
+    '2xl': '1.5rem', // 24px
+    '3xl': '2rem', // 32px
     full: '9999px',
   },
 
   // Touch targets (mobile)
   touchTarget: {
-    min: '44px',        // iOS minimum
+    min: '44px', // iOS minimum
     comfortable: '48px', // More comfortable
-    large: '56px',      // For primary actions
+    large: '56px', // For primary actions
   },
 
   // Animation durations
@@ -160,10 +160,10 @@ export const tokens = {
 
   // Breakpoints (mobile-first)
   breakpoints: {
-    sm: '640px',   // Large phones
-    md: '768px',   // Tablets
-    lg: '1024px',  // Desktop
-    xl: '1280px',  // Large desktop
+    sm: '640px', // Large phones
+    md: '768px', // Tablets
+    lg: '1024px', // Desktop
+    xl: '1280px', // Large desktop
     '2xl': '1536px', // Extra large
   },
 

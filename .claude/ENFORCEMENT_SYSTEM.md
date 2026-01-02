@@ -9,6 +9,7 @@ This document explains the multi-layer system that ensures all code follows our 
 ## Layer 1: Documentation (Read First)
 
 ### Files to Read Before ANY Work:
+
 1. **`.claude/PRE_BUILD_CHECKLIST.md`** - Master checklist for every page/component
 2. **`.claude/rules/design-system.md`** - Design system rules
 3. **`.claude/rules/architecture.md`** - Code organization rules
@@ -16,6 +17,7 @@ This document explains the multi-layer system that ensures all code follows our 
 5. **`CLAUDE.md`** - Project overview
 
 ### When to Read:
+
 - ✅ Before starting a new page
 - ✅ Before creating a new component
 - ✅ When you forgot the rules
@@ -26,6 +28,7 @@ This document explains the multi-layer system that ensures all code follows our 
 ## Layer 2: Design System Files (Use These)
 
 ### Source of Truth Files:
+
 ```
 lib/design/
 ├── tokens.ts          # ALL values (colors, spacing, sizes)
@@ -34,6 +37,7 @@ lib/design/
 ```
 
 ### Rule:
+
 **NEVER hardcode values in components. ALWAYS import from these files.**
 
 ```typescript
@@ -50,13 +54,15 @@ import { buttonVariants } from '@/lib/design/variants';
 ## Layer 3: ESLint (Automated Checks)
 
 ### What it Catches:
+
 - ❌ TypeScript `any` types
 - ❌ Missing function return types
 - ❌ Accessibility violations
 - ❌ React anti-patterns
-- ⚠️  Unused variables
+- ⚠️ Unused variables
 
 ### How to Use:
+
 ```bash
 # Run manually
 npm run lint
@@ -69,17 +75,14 @@ npm run lint -- --fix
 ```
 
 ### Setup in VS Code:
+
 ```json
 // .vscode/settings.json
 {
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "eslint.validate": [
-    "javascript",
-    "typescript",
-    "typescriptreact"
-  ]
+  "eslint.validate": ["javascript", "typescript", "typescriptreact"]
 }
 ```
 
@@ -88,15 +91,18 @@ npm run lint -- --fix
 ## Layer 4: Pre-Commit Hook (Last Line of Defense)
 
 ### What it Does:
+
 Runs **before every commit** and checks for:
+
 - ❌ Hardcoded Tailwind colors (`text-red-500`)
 - ❌ Hardcoded spacing (`p-4`, `m-2`)
 - ❌ Inline color styles (`style={{ color: '#ff0000' }}`)
 - ❌ TypeScript `any` types
-- ⚠️  Accessibility issues (`<div onClick>`)
-- ⚠️  Small touch targets on mobile
+- ⚠️ Accessibility issues (`<div onClick>`)
+- ⚠️ Small touch targets on mobile
 
 ### Setup:
+
 ```bash
 # Install husky (Git hooks manager)
 npm install --save-dev husky
@@ -114,6 +120,7 @@ chmod +x .claude/hooks/pre-commit-design-check.sh
 ```
 
 ### What Happens:
+
 ```bash
 git commit -m "feat: add workout card"
 
@@ -131,6 +138,7 @@ Checking for mobile touch targets...
 ```
 
 If violations found:
+
 ```bash
 ❌ Design system violations found. Please fix before committing.
 
@@ -143,11 +151,13 @@ If violations found:
 ## Layer 5: TypeScript Compiler (Type Safety)
 
 ### What it Does:
+
 - Catches type errors at build time
 - Ensures type safety across the app
 - Prevents runtime type errors
 
 ### Commands:
+
 ```bash
 # Type check only (no build)
 npm run type-check
@@ -157,6 +167,7 @@ npm run build
 ```
 
 ### Strict Mode Enabled:
+
 ```json
 // tsconfig.json
 {
@@ -173,6 +184,7 @@ npm run build
 ## Layer 6: Manual Review (You)
 
 ### Before Every Commit, Check:
+
 1. ✅ Read the checklist in `.claude/PRE_BUILD_CHECKLIST.md`
 2. ✅ Test in light AND dark theme
 3. ✅ Test at 375px width (mobile)
@@ -181,6 +193,7 @@ npm run build
 6. ✅ Run `npm run lint` - passes
 
 ### Use This Command Before Committing:
+
 ```bash
 # Run all checks
 npm run build && npm run type-check && npm run lint
@@ -191,6 +204,7 @@ npm run build && npm run type-check && npm run lint
 ## How Claude Code Uses This System
 
 ### When I Start Working:
+
 1. ✅ I read `.claude/PRE_BUILD_CHECKLIST.md`
 2. ✅ I read relevant rule files (`design-system.md`, etc.)
 3. ✅ I check if variants exist in `lib/design/variants.ts`
@@ -198,6 +212,7 @@ npm run build && npm run type-check && npm run lint
 5. ✅ I follow the component template from checklist
 
 ### While I'm Building:
+
 1. ✅ I only import from `lib/design/*`
 2. ✅ I use TypeScript interfaces for all props
 3. ✅ I use semantic HTML
@@ -205,13 +220,16 @@ npm run build && npm run type-check && npm run lint
 5. ✅ I ensure 44px touch targets
 
 ### Before I Finish:
+
 1. ✅ I search my code for hardcoded values
 2. ✅ I search my code for `any` types
 3. ✅ I verify it works in both themes
 4. ✅ I verify it works on mobile
 
 ### You Can Remind Me:
+
 If I ever forget or get carried away, just say:
+
 - "Follow the checklist"
 - "Check the design system rules"
 - "Did you read PRE_BUILD_CHECKLIST.md?"
@@ -230,6 +248,7 @@ And I'll immediately stop and review the rules.
 6. **👤 Manual Review** - Final human check (human)
 
 ### The Workflow:
+
 ```
 Read Checklist → Build Component → ESLint Validates →
 → Manual Test → Git Commit → Hook Validates →
@@ -241,6 +260,7 @@ Read Checklist → Build Component → ESLint Validates →
 ## Quick Reference Card
 
 ### Before Writing Code:
+
 ```bash
 # 1. Read the checklist
 cat .claude/PRE_BUILD_CHECKLIST.md
@@ -253,6 +273,7 @@ cat lib/design/tokens.ts | grep "spacing"
 ```
 
 ### While Writing Code:
+
 ```typescript
 // Always import these
 import { tokens } from '@/lib/design/tokens';
@@ -262,6 +283,7 @@ import type { User } from '@/lib/types';
 ```
 
 ### Before Committing:
+
 ```bash
 # Run all checks
 npm run build && npm run type-check && npm run lint
@@ -273,6 +295,7 @@ git commit -m "feat: add new component"
 ```
 
 ### If Hook Blocks You:
+
 ```bash
 # See what's wrong
 git diff --cached

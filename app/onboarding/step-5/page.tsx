@@ -88,7 +88,9 @@ export default function OnboardingStep5Page() {
       router.push('/dashboard');
     } catch (error) {
       console.error('Error completing onboarding:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to complete onboarding. Please try again.');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to complete onboarding. Please try again.'
+      );
     } finally {
       setLoading(false);
     }
@@ -103,9 +105,7 @@ export default function OnboardingStep5Page() {
       <Card>
         <CardHeader>
           <CardTitle>Final Preferences</CardTitle>
-          <CardDescription>
-            Almost done! Choose your theme preference
-          </CardDescription>
+          <CardDescription>Almost done! Choose your theme preference</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Theme Preference */}
@@ -141,9 +141,7 @@ export default function OnboardingStep5Page() {
                 🌙 Dark
               </button>
             </div>
-            <p className="text-xs text-muted-foreground">
-              You can change this later in settings
-            </p>
+            <p className="text-xs text-muted-foreground">You can change this later in settings</p>
           </div>
 
           {/* Summary Info */}

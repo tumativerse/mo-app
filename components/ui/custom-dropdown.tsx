@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+import { useState, useRef, useEffect } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 interface CustomDropdownProps {
   value: number | string;
@@ -16,9 +16,9 @@ export function CustomDropdown({
   value,
   options,
   onChange,
-  className = "",
-  width = "auto",
-  placeholder = "Select...",
+  className = '',
+  width = 'auto',
+  placeholder = 'Select...',
 }: CustomDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -36,13 +36,13 @@ export function CustomDropdown({
     };
 
     if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside);
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [isOpen]);
 
@@ -56,7 +56,7 @@ export function CustomDropdown({
       const buttonHeight = selectedButton.clientHeight;
 
       // Center the selected item in the viewport
-      menu.scrollTop = buttonTop - (menuHeight / 2) + (buttonHeight / 2);
+      menu.scrollTop = buttonTop - menuHeight / 2 + buttonHeight / 2;
     }
   }, [isOpen]);
 
@@ -74,7 +74,9 @@ export function CustomDropdown({
         className="w-full px-3 py-2 bg-secondary border border-border rounded-lg text-foreground text-sm font-medium text-center cursor-pointer hover:border-primary focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-colors flex items-center justify-between gap-2"
       >
         <span className="flex-1">{selectedOption ? selectedOption.label : placeholder}</span>
-        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`}
+        />
       </button>
 
       {/* Dropdown Menu */}
@@ -93,8 +95,8 @@ export function CustomDropdown({
                 onClick={() => handleSelect(option.value)}
                 className={`w-full px-3 py-2 text-sm text-left transition-colors ${
                   isSelected
-                    ? "bg-primary/10 text-foreground font-medium"
-                    : "text-foreground hover:bg-secondary active:bg-secondary"
+                    ? 'bg-primary/10 text-foreground font-medium'
+                    : 'text-foreground hover:bg-secondary active:bg-secondary'
                 }`}
               >
                 {option.label}

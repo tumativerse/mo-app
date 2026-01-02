@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { checkProfileCompletion } from "@/lib/utils/profile-completion";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { checkProfileCompletion } from '@/lib/utils/profile-completion';
 
 /**
  * Custom hook to guard routes that require mandatory profile fields to be completed.
@@ -19,8 +19,8 @@ export function useProfileGuard() {
     async function checkAccess() {
       try {
         const [profileRes, preferencesRes] = await Promise.all([
-          fetch("/api/user/profile"),
-          fetch("/api/preferences"),
+          fetch('/api/user/profile'),
+          fetch('/api/preferences'),
         ]);
 
         if (profileRes.ok && preferencesRes.ok) {
@@ -36,18 +36,18 @@ export function useProfileGuard() {
 
           if (!completionStatus.isMandatoryComplete) {
             // Redirect to dashboard which will show the lock screen
-            router.push("/dashboard");
+            router.push('/dashboard');
             return;
           }
 
           setIsUnlocked(true);
         } else {
           // If we can't fetch profile data, redirect to dashboard
-          router.push("/dashboard");
+          router.push('/dashboard');
         }
       } catch {
         // On error, redirect to dashboard
-        router.push("/dashboard");
+        router.push('/dashboard');
       } finally {
         setIsChecking(false);
       }

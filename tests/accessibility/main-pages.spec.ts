@@ -9,7 +9,9 @@ import AxeBuilder from '@axe-core/playwright';
  */
 
 test.describe('Accessibility', () => {
-  test('home page should not have any automatically detectable accessibility issues', async ({ page }) => {
+  test('home page should not have any automatically detectable accessibility issues', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     const accessibilityScanResults = await new AxeBuilder({ page })
@@ -19,7 +21,9 @@ test.describe('Accessibility', () => {
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  test('sign-in page should not have any automatically detectable accessibility issues', async ({ page }) => {
+  test('sign-in page should not have any automatically detectable accessibility issues', async ({
+    page,
+  }) => {
     await page.goto('/sign-in');
 
     // Wait for Clerk iframe to load
@@ -32,7 +36,9 @@ test.describe('Accessibility', () => {
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  test.skip('dashboard should not have any automatically detectable accessibility issues', async ({ page }) => {
+  test.skip('dashboard should not have any automatically detectable accessibility issues', async ({
+    page,
+  }) => {
     // TODO: Add authenticated session
     await page.goto('/dashboard');
 

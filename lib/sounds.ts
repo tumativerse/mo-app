@@ -1,7 +1,13 @@
 // Sound effects system for the fitness app
 // Uses Web Audio API to generate sounds programmatically
 
-type SoundType = 'setComplete' | 'workoutComplete' | 'personalRecord' | 'click' | 'success' | 'levelUp';
+type SoundType =
+  | 'setComplete'
+  | 'workoutComplete'
+  | 'personalRecord'
+  | 'click'
+  | 'success'
+  | 'levelUp';
 
 // Web Audio API sound generator
 class WebAudioSoundGenerator {
@@ -17,7 +23,12 @@ class WebAudioSoundGenerator {
     return this.audioContext;
   }
 
-  playTone(frequency: number, duration: number, type: OscillatorType = 'sine', volume: number = 0.3) {
+  playTone(
+    frequency: number,
+    duration: number,
+    type: OscillatorType = 'sine',
+    volume: number = 0.3
+  ) {
     const ctx = this.getContext();
     if (!ctx) return;
 
@@ -38,7 +49,7 @@ class WebAudioSoundGenerator {
   }
 
   playChord(frequencies: number[], duration: number, volume: number = 0.2) {
-    frequencies.forEach(freq => this.playTone(freq, duration, 'sine', volume));
+    frequencies.forEach((freq) => this.playTone(freq, duration, 'sine', volume));
   }
 
   playMelody(notes: Array<{ frequency: number; duration: number }>, volume: number = 0.3) {
@@ -46,7 +57,7 @@ class WebAudioSoundGenerator {
     if (!ctx) return;
 
     let currentTime = ctx.currentTime;
-    notes.forEach(note => {
+    notes.forEach((note) => {
       const oscillator = ctx.createOscillator();
       const gainNode = ctx.createGain();
 
@@ -92,20 +103,26 @@ class SoundManager {
       switch (soundName) {
         case 'setComplete':
           // Quick ascending beep
-          this.generator.playMelody([
-            { frequency: 440, duration: 0.08 },
-            { frequency: 554, duration: 0.08 },
-          ], this.volume);
+          this.generator.playMelody(
+            [
+              { frequency: 440, duration: 0.08 },
+              { frequency: 554, duration: 0.08 },
+            ],
+            this.volume
+          );
           break;
 
         case 'workoutComplete':
           // Victory fanfare
-          this.generator.playMelody([
-            { frequency: 523, duration: 0.15 },
-            { frequency: 659, duration: 0.15 },
-            { frequency: 784, duration: 0.15 },
-            { frequency: 1047, duration: 0.3 },
-          ], this.volume);
+          this.generator.playMelody(
+            [
+              { frequency: 523, duration: 0.15 },
+              { frequency: 659, duration: 0.15 },
+              { frequency: 784, duration: 0.15 },
+              { frequency: 1047, duration: 0.3 },
+            ],
+            this.volume
+          );
           break;
 
         case 'personalRecord':
@@ -122,20 +139,26 @@ class SoundManager {
 
         case 'success':
           // Pleasant confirmation
-          this.generator.playMelody([
-            { frequency: 659, duration: 0.1 },
-            { frequency: 831, duration: 0.2 },
-          ], this.volume);
+          this.generator.playMelody(
+            [
+              { frequency: 659, duration: 0.1 },
+              { frequency: 831, duration: 0.2 },
+            ],
+            this.volume
+          );
           break;
 
         case 'levelUp':
           // Ascending arpeggio
-          this.generator.playMelody([
-            { frequency: 523, duration: 0.1 },
-            { frequency: 659, duration: 0.1 },
-            { frequency: 784, duration: 0.1 },
-            { frequency: 1047, duration: 0.3 },
-          ], this.volume);
+          this.generator.playMelody(
+            [
+              { frequency: 523, duration: 0.1 },
+              { frequency: 659, duration: 0.1 },
+              { frequency: 784, duration: 0.1 },
+              { frequency: 1047, duration: 0.3 },
+            ],
+            this.volume
+          );
           break;
       }
     } catch (error) {

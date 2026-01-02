@@ -78,7 +78,9 @@ async function main() {
           const isAlreadyEncrypted = value.length > 100 && /^[A-Za-z0-9+/=]+$/.test(value);
 
           if (!isAlreadyEncrypted) {
-            console.log(`  - Encrypting ${field}: "${value.substring(0, 20)}${value.length > 20 ? '...' : ''}"`);
+            console.log(
+              `  - Encrypting ${field}: "${value.substring(0, 20)}${value.length > 20 ? '...' : ''}"`
+            );
             updates[field] = encrypt(value);
             hasUpdates = true;
           } else {
@@ -132,7 +134,9 @@ async function main() {
           const isAlreadyEncrypted = value.length > 100 && /^[A-Za-z0-9+/=]+$/.test(value);
 
           if (!isAlreadyEncrypted) {
-            console.log(`  - Encrypting ${field}: "${value.substring(0, 20)}${value.length > 20 ? '...' : ''}"`);
+            console.log(
+              `  - Encrypting ${field}: "${value.substring(0, 20)}${value.length > 20 ? '...' : ''}"`
+            );
             updates[field] = encrypt(value);
             hasUpdates = true;
           }
@@ -152,7 +156,6 @@ async function main() {
     }
 
     console.log('✅ Data encryption complete!\n');
-
   } catch (error) {
     console.error('\n❌ Migration failed:', error);
     process.exit(1);

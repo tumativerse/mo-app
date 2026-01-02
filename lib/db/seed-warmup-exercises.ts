@@ -3,68 +3,185 @@ import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool } from '@neondatabase/serverless';
 import { eq, ilike } from 'drizzle-orm';
 import * as schema from './schema';
-import {
-  exercises,
-  warmupPhaseExercises,
-} from './schema';
+import { exercises, warmupPhaseExercises } from './schema';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const db = drizzle(pool, { schema });
 
 // Exercise slugs for each warmup phase
 // These should match exercises in the database
-const WARMUP_EXERCISES: Record<string, Record<string, Array<{
-  slug: string;
-  fallbackName: string; // Used to search if slug not found
-  sets: number;
-  reps?: number;
-  durationSeconds?: number;
-  notes?: string;
-}>>> = {
+const WARMUP_EXERCISES: Record<
+  string,
+  Record<
+    string,
+    Array<{
+      slug: string;
+      fallbackName: string; // Used to search if slug not found
+      sets: number;
+      reps?: number;
+      durationSeconds?: number;
+      notes?: string;
+    }>
+  >
+> = {
   push: {
     general: [
-      { slug: 'jumping-jacks', fallbackName: 'jumping jack', sets: 1, durationSeconds: 120, notes: 'Get heart rate up' },
-      { slug: 'arm-circles', fallbackName: 'arm circle', sets: 1, reps: 20, notes: 'Both directions' },
+      {
+        slug: 'jumping-jacks',
+        fallbackName: 'jumping jack',
+        sets: 1,
+        durationSeconds: 120,
+        notes: 'Get heart rate up',
+      },
+      {
+        slug: 'arm-circles',
+        fallbackName: 'arm circle',
+        sets: 1,
+        reps: 20,
+        notes: 'Both directions',
+      },
     ],
     dynamic: [
-      { slug: 'band-pull-apart', fallbackName: 'band pull', sets: 1, reps: 15, notes: 'Focus on rear delts' },
-      { slug: 'wall-slide', fallbackName: 'wall slide', sets: 1, reps: 10, notes: 'Slow and controlled' },
+      {
+        slug: 'band-pull-apart',
+        fallbackName: 'band pull',
+        sets: 1,
+        reps: 15,
+        notes: 'Focus on rear delts',
+      },
+      {
+        slug: 'wall-slide',
+        fallbackName: 'wall slide',
+        sets: 1,
+        reps: 10,
+        notes: 'Slow and controlled',
+      },
       { slug: 'push-up', fallbackName: 'push-up', sets: 1, reps: 10, notes: 'Light warmup set' },
     ],
     movement_prep: [
       { slug: 'push-up', fallbackName: 'push-up', sets: 1, reps: 10, notes: 'Movement prep' },
-      { slug: 'dumbbell-shoulder-press', fallbackName: 'shoulder press', sets: 1, reps: 10, notes: 'Very light weight' },
+      {
+        slug: 'dumbbell-shoulder-press',
+        fallbackName: 'shoulder press',
+        sets: 1,
+        reps: 10,
+        notes: 'Very light weight',
+      },
     ],
   },
   pull: {
     general: [
-      { slug: 'jumping-jacks', fallbackName: 'jumping jack', sets: 1, durationSeconds: 120, notes: 'Get heart rate up' },
-      { slug: 'arm-circles', fallbackName: 'arm circle', sets: 1, reps: 20, notes: 'Both directions' },
+      {
+        slug: 'jumping-jacks',
+        fallbackName: 'jumping jack',
+        sets: 1,
+        durationSeconds: 120,
+        notes: 'Get heart rate up',
+      },
+      {
+        slug: 'arm-circles',
+        fallbackName: 'arm circle',
+        sets: 1,
+        reps: 20,
+        notes: 'Both directions',
+      },
     ],
     dynamic: [
       { slug: 'cat-cow', fallbackName: 'cat cow', sets: 1, reps: 10, notes: 'Spine mobility' },
-      { slug: 'band-pull-apart', fallbackName: 'band pull', sets: 1, reps: 15, notes: 'Upper back activation' },
-      { slug: 'face-pull', fallbackName: 'face pull', sets: 1, reps: 15, notes: 'Light band or cable' },
+      {
+        slug: 'band-pull-apart',
+        fallbackName: 'band pull',
+        sets: 1,
+        reps: 15,
+        notes: 'Upper back activation',
+      },
+      {
+        slug: 'face-pull',
+        fallbackName: 'face pull',
+        sets: 1,
+        reps: 15,
+        notes: 'Light band or cable',
+      },
     ],
     movement_prep: [
-      { slug: 'dead-hang', fallbackName: 'dead hang', sets: 1, durationSeconds: 30, notes: 'Decompress spine' },
-      { slug: 'scapular-pull-up', fallbackName: 'scapular pull', sets: 1, reps: 10, notes: 'Scapular activation' },
+      {
+        slug: 'dead-hang',
+        fallbackName: 'dead hang',
+        sets: 1,
+        durationSeconds: 30,
+        notes: 'Decompress spine',
+      },
+      {
+        slug: 'scapular-pull-up',
+        fallbackName: 'scapular pull',
+        sets: 1,
+        reps: 10,
+        notes: 'Scapular activation',
+      },
     ],
   },
   legs: {
     general: [
-      { slug: 'jumping-jacks', fallbackName: 'jumping jack', sets: 1, durationSeconds: 120, notes: 'Get heart rate up' },
-      { slug: 'high-knees', fallbackName: 'high knee', sets: 1, durationSeconds: 30, notes: 'Dynamic warmup' },
+      {
+        slug: 'jumping-jacks',
+        fallbackName: 'jumping jack',
+        sets: 1,
+        durationSeconds: 120,
+        notes: 'Get heart rate up',
+      },
+      {
+        slug: 'high-knees',
+        fallbackName: 'high knee',
+        sets: 1,
+        durationSeconds: 30,
+        notes: 'Dynamic warmup',
+      },
     ],
     dynamic: [
-      { slug: 'leg-swing', fallbackName: 'leg swing', sets: 1, reps: 15, notes: 'Front to back, each leg' },
-      { slug: 'walking-lunge', fallbackName: 'walking lunge', sets: 1, reps: 10, notes: 'Bodyweight only' },
-      { slug: 'glute-bridge', fallbackName: 'glute bridge', sets: 1, reps: 15, notes: 'Glute activation' },
-      { slug: 'hip-circle', fallbackName: 'hip circle', sets: 1, reps: 10, notes: 'Each direction' },
+      {
+        slug: 'leg-swing',
+        fallbackName: 'leg swing',
+        sets: 1,
+        reps: 15,
+        notes: 'Front to back, each leg',
+      },
+      {
+        slug: 'walking-lunge',
+        fallbackName: 'walking lunge',
+        sets: 1,
+        reps: 10,
+        notes: 'Bodyweight only',
+      },
+      {
+        slug: 'glute-bridge',
+        fallbackName: 'glute bridge',
+        sets: 1,
+        reps: 15,
+        notes: 'Glute activation',
+      },
+      {
+        slug: 'hip-circle',
+        fallbackName: 'hip circle',
+        sets: 1,
+        reps: 10,
+        notes: 'Each direction',
+      },
     ],
     movement_prep: [
-      { slug: 'bodyweight-squat', fallbackName: 'bodyweight squat', sets: 1, reps: 15, notes: 'Full depth' },
-      { slug: 'goblet-squat', fallbackName: 'goblet squat', sets: 1, reps: 10, notes: 'Light weight' },
+      {
+        slug: 'bodyweight-squat',
+        fallbackName: 'bodyweight squat',
+        sets: 1,
+        reps: 15,
+        notes: 'Full depth',
+      },
+      {
+        slug: 'goblet-squat',
+        fallbackName: 'goblet squat',
+        sets: 1,
+        reps: 10,
+        notes: 'Light weight',
+      },
     ],
   },
 };
@@ -128,8 +245,11 @@ async function seedWarmupExercises() {
           where: eq(warmupPhaseExercises.phaseId, phase.id),
         });
 
-        const existingExerciseIds = new Set(existingPhaseExercises.map(e => e.exerciseId));
-        const maxOrder = existingPhaseExercises.reduce((max, e) => Math.max(max, e.exerciseOrder), 0);
+        const existingExerciseIds = new Set(existingPhaseExercises.map((e) => e.exerciseId));
+        const maxOrder = existingPhaseExercises.reduce(
+          (max, e) => Math.max(max, e.exerciseOrder),
+          0
+        );
         let exerciseOrder = maxOrder + 1;
         let addedCount = 0;
 
@@ -158,7 +278,9 @@ async function seedWarmupExercises() {
           addedCount++;
           totalExercises++;
         }
-        console.log(`  ✓ ${phase.name}: ${existingPhaseExercises.length} existing, ${addedCount} added`);
+        console.log(
+          `  ✓ ${phase.name}: ${existingPhaseExercises.length} existing, ${addedCount} added`
+        );
       }
       console.log('');
     }
@@ -170,7 +292,7 @@ async function seedWarmupExercises() {
 
     if (notFound.length > 0) {
       console.log(`\n⚠️  Exercises not found (${notFound.length}):`);
-      [...new Set(notFound)].forEach(name => console.log(`    - ${name}`));
+      [...new Set(notFound)].forEach((name) => console.log(`    - ${name}`));
       console.log('\n  These exercises may need to be added to the exercise library.');
     }
   } catch (error) {

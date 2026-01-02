@@ -172,7 +172,7 @@ export function celebrateCannon() {
     if (Date.now() < end) {
       requestAnimationFrame(frame);
     }
-  }());
+  })();
 }
 
 // Vibration for mobile devices
@@ -248,9 +248,12 @@ export function celebrateFirstWorkout() {
 // New celebration: Session milestone (10, 25, 50, 100 workouts)
 export function celebrateSessionMilestone(count: number) {
   // Epic celebration for major milestones
-  const colors = count >= 100 ? ['#ffd700', '#ff6b6b', '#4ecdc4'] :
-                 count >= 50 ? ['#10b981', '#3b82f6', '#f59e0b'] :
-                 ['#3b82f6', '#10b981'];
+  const colors =
+    count >= 100
+      ? ['#ffd700', '#ff6b6b', '#4ecdc4']
+      : count >= 50
+        ? ['#10b981', '#3b82f6', '#f59e0b']
+        : ['#3b82f6', '#10b981'];
 
   celebrateCannon();
 
@@ -297,9 +300,9 @@ export function celebrateVolumePR() {
     setTimeout(() => {
       confetti({
         particleCount: 40,
-        angle: 60 + (i * 30),
+        angle: 60 + i * 30,
         spread: 55,
-        origin: { x: 0.3 + (i * 0.2), y: 0.7 },
+        origin: { x: 0.3 + i * 0.2, y: 0.7 },
         colors: ['#ef4444', '#f59e0b', '#10b981'],
       });
     }, i * 200);
@@ -330,7 +333,7 @@ export function celebratePerfectWeek() {
     if (Date.now() < end) {
       requestAnimationFrame(frame);
     }
-  }());
+  })();
 
   // Add star confetti
   setTimeout(() => {

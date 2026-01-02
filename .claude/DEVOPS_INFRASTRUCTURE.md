@@ -19,6 +19,7 @@ Complete CI/CD and monitoring infrastructure for Mo App hosted on `vault.tumati.
 **Purpose:** Automated build, test, and deployment
 
 **Jenkins Setup:**
+
 - **URL:** `https://vault.tumati.me/jenkins`
 - **Jobs:**
   - `mo-app-test` - Run tests on PR
@@ -29,6 +30,7 @@ Complete CI/CD and monitoring infrastructure for Mo App hosted on `vault.tumati.
   - `mo-arch-build` - Build architecture docs
 
 **Pipeline Stages:**
+
 ```
 1. Checkout
 2. Install Dependencies
@@ -43,6 +45,7 @@ Complete CI/CD and monitoring infrastructure for Mo App hosted on `vault.tumati.
 ```
 
 **Jenkinsfile Example:**
+
 ```groovy
 pipeline {
   agent any
@@ -159,9 +162,10 @@ pipeline {
   - Source maps for stack traces
 
 **Integration:**
+
 ```typescript
 // app/layout.tsx
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs';
 
 Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
@@ -175,12 +179,14 @@ Sentry.init({
 **Purpose:** System metrics and custom analytics
 
 **Stack:**
+
 - **Prometheus:** Time-series database for metrics
 - **Grafana:** Visualization dashboards
 - **Node Exporter:** System metrics
 - **Custom exporters:** Application metrics
 
 **Dashboards:**
+
 1. **Application Health**
    - Request rate
    - Error rate
@@ -206,6 +212,7 @@ Sentry.init({
    - Feature adoption
 
 **Custom Metrics Example:**
+
 ```typescript
 // lib/metrics.ts
 import { Counter, Histogram } from 'prom-client';
@@ -229,16 +236,19 @@ export const apiDuration = new Histogram({
 **Purpose:** Centralized log aggregation and search
 
 **Option A: ELK Stack**
+
 - **Elasticsearch:** Store logs
 - **Logstash:** Process logs
 - **Kibana:** Search and visualize
 
 **Option B: Grafana Loki** (Lighter, recommended)
+
 - **Loki:** Log aggregation
 - **Promtail:** Log collector
 - **Grafana:** Query and visualize
 
 **Log Structure:**
+
 ```json
 {
   "timestamp": "2024-01-01T12:00:00Z",
@@ -270,6 +280,7 @@ export const apiDuration = new Histogram({
 - **Seeding:** Populate with test data
 
 **Setup:**
+
 ```bash
 # .env.test
 DATABASE_URL="postgresql://test:test@localhost:5432/mo_test"
@@ -280,6 +291,7 @@ DATABASE_URL="postgresql://test:test@localhost:5432/mo_test"
 **Purpose:** Full user flow testing
 
 **Setup:**
+
 ```typescript
 // playwright.config.ts
 export default {
@@ -297,6 +309,7 @@ export default {
 ```
 
 **Example E2E Test:**
+
 ```typescript
 // e2e/workout.spec.ts
 test('complete workout flow', async ({ page }) => {
@@ -351,15 +364,16 @@ test('complete workout flow', async ({ page }) => {
 
 #### 5.1 Environments
 
-| Environment | URL | Branch | Purpose |
-|-------------|-----|--------|---------|
-| Development | localhost:3000 | feature/* | Local dev |
-| Staging | staging.mo.app | main | Pre-production |
-| Production | mo.app | main (manual) | Live users |
+| Environment | URL            | Branch        | Purpose        |
+| ----------- | -------------- | ------------- | -------------- |
+| Development | localhost:3000 | feature/\*    | Local dev      |
+| Staging     | staging.mo.app | main          | Pre-production |
+| Production  | mo.app         | main (manual) | Live users     |
 
 #### 5.2 Deployment Strategy
 
 **Blue-Green Deployment:**
+
 ```
 1. Deploy to "green" (new version)
 2. Run health checks
@@ -368,6 +382,7 @@ test('complete workout flow', async ({ page }) => {
 ```
 
 **Canary Deployment:**
+
 ```
 1. Deploy to 10% of users
 2. Monitor metrics
@@ -388,12 +403,14 @@ test('complete workout flow', async ({ page }) => {
 #### 6.2 Alert Rules
 
 **Critical:**
+
 - Error rate > 5%
 - API response time > 2s (p95)
 - Database connection failures
 - Deployment failures
 
 **Warning:**
+
 - Error rate > 1%
 - API response time > 1s (p95)
 - Disk usage > 80%
@@ -412,7 +429,7 @@ services:
   jenkins:
     image: jenkins/jenkins:lts
     ports:
-      - "8080:8080"
+      - '8080:8080'
     volumes:
       - jenkins_home:/var/jenkins_home
     environment:
@@ -421,7 +438,7 @@ services:
   prometheus:
     image: prom/prometheus
     ports:
-      - "9090:9090"
+      - '9090:9090'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -429,7 +446,7 @@ services:
   grafana:
     image: grafana/grafana
     ports:
-      - "3001:3000"
+      - '3001:3000'
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
@@ -438,7 +455,7 @@ services:
   loki:
     image: grafana/loki
     ports:
-      - "3100:3100"
+      - '3100:3100'
     volumes:
       - loki_data:/loki
 
@@ -455,12 +472,12 @@ services:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
     ports:
-      - "5433:5432"
+      - '5433:5432'
 
   sonarqube:
     image: sonarqube:community
     ports:
-      - "9000:9000"
+      - '9000:9000'
     environment:
       - SONAR_JDBC_URL=jdbc:postgresql://postgres-test:5432/sonarqube
     volumes:
@@ -494,37 +511,41 @@ volumes:
 
 ## Cost Estimation
 
-| Service | Hosting | Monthly Cost |
-|---------|---------|--------------|
-| vault.tumati.me server | DigitalOcean 4GB | $24 |
-| Sentry | Sentry.io (free tier) | $0 |
-| Database backups | S3 compatible | $5 |
-| Domain | Existing | $0 |
-| **Total** | | **~$30/mo** |
+| Service                | Hosting               | Monthly Cost |
+| ---------------------- | --------------------- | ------------ |
+| vault.tumati.me server | DigitalOcean 4GB      | $24          |
+| Sentry                 | Sentry.io (free tier) | $0           |
+| Database backups       | S3 compatible         | $5           |
+| Domain                 | Existing              | $0           |
+| **Total**              |                       | **~$30/mo**  |
 
 ---
 
 ## Implementation Plan
 
 ### Phase 1: Core CI/CD (Week 1)
+
 - [ ] Set up Jenkins on vault.tumati.me
 - [ ] Create Jenkinsfile for mo-app
 - [ ] Set up GitHub webhooks
 - [ ] Configure staging deployment
 
 ### Phase 2: Testing (Week 2)
+
 - [ ] Set up test database
 - [ ] Add E2E tests with Playwright
 - [ ] Configure coverage reporting
 - [ ] Add visual regression tests
 
 ### Phase 3: Monitoring (Week 3)
+
 - [ ] Set up Prometheus + Grafana
 - [ ] Configure application metrics
 - [ ] Set up Loki for logs
 - [ ] Create dashboards
 
 ### Phase 4: Alerting (Week 4)
+
 - [ ] Configure Slack notifications
 - [ ] Set up alert rules
 - [ ] Test incident response
@@ -535,6 +556,7 @@ volumes:
 ## Monitoring Dashboards
 
 ### Dashboard 1: Application Health
+
 ```
 ┌─────────────────────────────────────┐
 │ Request Rate        Error Rate      │
@@ -550,6 +572,7 @@ Graph: Response Time p50/p95/p99
 ```
 
 ### Dashboard 2: Database
+
 ```
 ┌─────────────────────────────────────┐
 │ Connection Pool     Slow Queries    │
@@ -564,6 +587,7 @@ Table: Top 10 slow queries
 ```
 
 ### Dashboard 3: Business Metrics
+
 ```
 ┌─────────────────────────────────────┐
 │ Daily Active Users  Workouts Today  │
@@ -586,6 +610,7 @@ Graph: Feature adoption
 **Alert:** Error rate > 5% for 5 minutes
 
 **Steps:**
+
 1. Check Sentry for recent errors
 2. Check recent deployments (rollback if needed)
 3. Check database status
@@ -598,6 +623,7 @@ Graph: Feature adoption
 **Alert:** DB connection errors detected
 
 **Steps:**
+
 1. Check database server status
 2. Check connection pool exhaustion
 3. Check for slow queries blocking connections

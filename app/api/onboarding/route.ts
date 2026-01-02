@@ -31,7 +31,13 @@ const onboardingSchema = z.object({
   availableEquipment: z.array(z.string()), // Can be empty for bodyweight
 
   // Step 4: Lifestyle
-  activityLevel: z.enum(['sedentary', 'lightly_active', 'moderately_active', 'very_active', 'extremely_active']),
+  activityLevel: z.enum([
+    'sedentary',
+    'lightly_active',
+    'moderately_active',
+    'very_active',
+    'extremely_active',
+  ]),
   sleepHours: z.number().min(3).max(12),
   stressLevel: z.enum(['low', 'moderate', 'high']),
 
@@ -42,7 +48,9 @@ const onboardingSchema = z.object({
 /**
  * Map activity level from onboarding (includes "extremely_active") to database enum
  */
-function mapActivityLevel(level: string): 'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active' {
+function mapActivityLevel(
+  level: string
+): 'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active' {
   if (level === 'extremely_active') {
     return 'very_active'; // Map "extremely_active" to "very_active" for database
   }

@@ -5,14 +5,17 @@ MCP (Model Context Protocol) servers extend Claude Code with additional capabili
 ## Recommended MCP Servers
 
 ### 1. GitHub MCP Server
+
 Enables Claude to interact with GitHub PRs, issues, and repositories.
 
 **Installation**:
+
 ```bash
 npm install -g @anthropic/mcp-server-github
 ```
 
 **Configuration** (add to `~/.claude/settings.json`):
+
 ```json
 {
   "mcpServers": {
@@ -27,19 +30,23 @@ npm install -g @anthropic/mcp-server-github
 ```
 
 **Get GitHub Token**:
+
 1. Go to https://github.com/settings/tokens
 2. Generate new token (classic)
 3. Select scopes: `repo`, `read:org`, `read:user`
 
 ### 2. PostgreSQL MCP Server
+
 Enables Claude to query the database directly.
 
 **Installation**:
+
 ```bash
 npm install -g @anthropic/mcp-server-postgres
 ```
 
 **Configuration** (add to `~/.claude/settings.json`):
+
 ```json
 {
   "mcpServers": {
@@ -54,16 +61,19 @@ npm install -g @anthropic/mcp-server-postgres
 ```
 
 **Note**: Use a read-only database URL for safety:
+
 ```
 postgresql://username:password@host/database?sslmode=require&options=default_transaction_read_only%3Don
 ```
 
 ### 3. Filesystem MCP Server
+
 Enhanced file operations (already available via built-in tools).
 
 ## Configuration Location
 
 MCP servers are configured globally in:
+
 - macOS/Linux: `~/.claude/settings.json`
 - Windows: `%USERPROFILE%\.claude\settings.json`
 
@@ -91,6 +101,7 @@ MCP servers are configured globally in:
 ## Verifying Setup
 
 After configuration, restart Claude Code and run:
+
 ```
 /mcp
 ```

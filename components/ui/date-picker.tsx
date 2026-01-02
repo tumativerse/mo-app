@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { InlineScrollPicker } from "./inline-scroll-picker";
+import { InlineScrollPicker } from './inline-scroll-picker';
 
 interface DatePickerProps {
   value: string; // YYYY-MM-DD format
@@ -8,7 +8,7 @@ interface DatePickerProps {
   className?: string;
 }
 
-export function DatePicker({ value, onChange, className = "" }: DatePickerProps) {
+export function DatePicker({ value, onChange, className = '' }: DatePickerProps) {
   // Parse the date string
   const parseDate = (dateStr: string) => {
     if (!dateStr) {
@@ -19,7 +19,7 @@ export function DatePicker({ value, onChange, className = "" }: DatePickerProps)
         day: 15,
       };
     }
-    const [year, month, day] = dateStr.split("-").map(Number);
+    const [year, month, day] = dateStr.split('-').map(Number);
     return { year, month, day };
   };
 
@@ -27,19 +27,19 @@ export function DatePicker({ value, onChange, className = "" }: DatePickerProps)
 
   const handleYearChange = (newYear: number | string) => {
     const yearNum = typeof newYear === 'string' ? parseInt(newYear) : newYear;
-    const newDate = `${yearNum}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const newDate = `${yearNum}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     onChange(newDate);
   };
 
   const handleMonthChange = (newMonth: number | string) => {
     const monthNum = typeof newMonth === 'string' ? parseInt(newMonth) : newMonth;
-    const newDate = `${year}-${String(monthNum).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const newDate = `${year}-${String(monthNum).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     onChange(newDate);
   };
 
   const handleDayChange = (newDay: number | string) => {
     const dayNum = typeof newDay === 'string' ? parseInt(newDay) : newDay;
-    const newDate = `${year}-${String(month).padStart(2, "0")}-${String(dayNum).padStart(2, "0")}`;
+    const newDate = `${year}-${String(month).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
     onChange(newDate);
   };
 
@@ -49,8 +49,18 @@ export function DatePicker({ value, onChange, className = "" }: DatePickerProps)
   };
 
   const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const currentYear = new Date().getFullYear();

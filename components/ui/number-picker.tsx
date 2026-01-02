@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { CustomDropdown } from "./custom-dropdown";
+import { CustomDropdown } from './custom-dropdown';
 
 interface NumberPickerProps {
   value: number;
@@ -18,8 +18,8 @@ export function NumberPicker({
   min,
   max,
   step = 1,
-  unit = "",
-  className = "",
+  unit = '',
+  className = '',
 }: NumberPickerProps) {
   // Generate options based on min, max, and step
   const options: Array<{ value: number; label: string }> = [];

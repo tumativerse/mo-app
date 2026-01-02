@@ -57,8 +57,7 @@ function analyzeField(
   }
 
   // Sort by frequency
-  const sorted = Array.from(uniqueValues.entries())
-    .sort((a, b) => b[1] - a[1]);
+  const sorted = Array.from(uniqueValues.entries()).sort((a, b) => b[1] - a[1]);
 
   return {
     field: fieldPath,
@@ -74,8 +73,9 @@ async function main() {
   console.log('═'.repeat(70) + '\n');
 
   // Read all files
-  const files = fs.readdirSync(EXERCISE_LIBRARY_PATH)
-    .filter(f => f.endsWith('.md') && !f.startsWith('_'));
+  const files = fs
+    .readdirSync(EXERCISE_LIBRARY_PATH)
+    .filter((f) => f.endsWith('.md') && !f.startsWith('_'));
 
   console.log(`Analyzing ${files.length} exercise files...\n`);
 
@@ -141,7 +141,9 @@ async function main() {
 
     console.log('─'.repeat(70));
     console.log(`\n📌 ${field.toUpperCase()}`);
-    console.log(`   Files with value: ${analysis.filesWithValue}/${analysis.totalFiles} (${((analysis.filesWithValue/analysis.totalFiles)*100).toFixed(1)}%)`);
+    console.log(
+      `   Files with value: ${analysis.filesWithValue}/${analysis.totalFiles} (${((analysis.filesWithValue / analysis.totalFiles) * 100).toFixed(1)}%)`
+    );
     console.log(`   Unique values: ${analysis.uniqueValues.size}`);
     console.log('\n   Top values:');
 
@@ -185,8 +187,8 @@ async function main() {
   console.log('\n⚠️  FILES WITHOUT PATTERNS\n');
 
   const filesWithoutPatterns = exercises
-    .filter(ex => !ex.patterns || ex.patterns.length === 0)
-    .map(ex => ex._filename);
+    .filter((ex) => !ex.patterns || ex.patterns.length === 0)
+    .map((ex) => ex._filename);
 
   console.log(`   ${filesWithoutPatterns.length} files without patterns:`);
   for (const file of filesWithoutPatterns.slice(0, 20)) {

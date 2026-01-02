@@ -3,6 +3,7 @@
 Review recent changes or specified files for issues.
 
 ## Arguments
+
 - `$ARGUMENTS` - Optional: file path, PR number, or "staged" for git staged changes
 
 ## Steps
@@ -22,6 +23,7 @@ Review recent changes or specified files for issues.
    - Tests: Coverage for changes
 
 3. **Output format**:
+
    ```
    ## Code Review
 

@@ -64,7 +64,9 @@ try {
         }
       }
     } catch (error) {
-      console.log(`  ❌ "${testCase}": ERROR - ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.log(
+        `  ❌ "${testCase}": ERROR - ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
       failed++;
     }
   }
@@ -79,7 +81,6 @@ try {
     console.log('❌ Some tests failed. Check your encryption setup.\n');
     process.exit(1);
   }
-
 } catch (error) {
   console.log('❌ Encryption test failed:');
   console.log(`   ${error instanceof Error ? error.message : 'Unknown error'}\n`);

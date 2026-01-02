@@ -5,5 +5,5 @@
  * Systems: MoStreaks, MoRecords, MoBadges
  */
 
-export * from "./streaks";
-export * from "./records";
+export * from './streaks';
+export * from './records';

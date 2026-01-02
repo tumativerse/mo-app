@@ -29,6 +29,7 @@ You are a testing specialist for the Mo fitness app. Your job is to run tests, a
      - The likely cause (logic error, missing mock, async issue, etc.)
 
 4. **Report Format**
+
    ```
    ## Test Results
 

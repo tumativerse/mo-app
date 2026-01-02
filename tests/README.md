@@ -53,6 +53,7 @@ npm run test:fast
 ### Coverage Thresholds
 
 The project enforces strict coverage requirements:
+
 - **Statements**: 100%
 - **Functions**: 100%
 - **Lines**: 100%
@@ -61,6 +62,7 @@ The project enforces strict coverage requirements:
 ### Writing Unit Tests
 
 **Location**: Place tests next to the code they test
+
 ```
 lib/
 ├── utils.ts
@@ -68,6 +70,7 @@ lib/
 ```
 
 **Pattern**:
+
 ```typescript
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { functionToTest } from './module';
@@ -98,6 +101,7 @@ describe('Module Name', () => {
 ```
 
 **Test Data**: Use shared fixtures in `tests/fixtures/test-data.ts` to avoid duplication:
+
 ```typescript
 import { mockUser, mockPreferences } from '@/tests/fixtures/test-data';
 
@@ -136,6 +140,7 @@ TEST_USER_PASSWORD=YourSecurePassword123!
 ```
 
 Or export in your shell:
+
 ```bash
 export TEST_USER_EMAIL=test+mo@yourdomain.com
 export TEST_USER_PASSWORD=YourSecurePassword123!
@@ -199,9 +204,7 @@ import { test, expect } from '@playwright/test';
 import { signIn, TEST_USER } from '../../helpers/auth';
 import { navigateTo, waitForPageReady } from '../../helpers/test-utils';
 
-const hasTestCredentials = Boolean(
-  process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD
-);
+const hasTestCredentials = Boolean(process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD);
 
 test.describe('Feature Name', () => {
   // Skip tests if credentials not configured
@@ -230,6 +233,7 @@ test.describe('Feature Name', () => {
 #### Authentication Helpers
 
 **Sign In**:
+
 ```typescript
 import { signIn, TEST_USER } from '../../helpers/auth';
 
@@ -237,6 +241,7 @@ await signIn(page, TEST_USER.email, TEST_USER.password);
 ```
 
 **Sign Out**:
+
 ```typescript
 import { signOut } from '../../helpers/auth';
 
@@ -244,6 +249,7 @@ await signOut(page);
 ```
 
 **Check if Signed In**:
+
 ```typescript
 import { isSignedIn } from '../../helpers/auth';
 
@@ -251,6 +257,7 @@ const signedIn = await isSignedIn(page);
 ```
 
 **Skip Auth (for public page tests)**:
+
 ```typescript
 import { skipAuth } from '../../helpers/auth';
 
@@ -264,6 +271,7 @@ test('can access landing page', async ({ page }) => {
 #### Test Utilities
 
 **Navigation**:
+
 ```typescript
 import { navigateTo, waitForPageReady } from '../../helpers/test-utils';
 
@@ -276,6 +284,7 @@ await waitForPageReady(page);
 ```
 
 **Form Filling**:
+
 ```typescript
 import { fillFieldByLabel } from '../../helpers/test-utils';
 
@@ -284,6 +293,7 @@ await fillFieldByLabel(page, 'Reps', '10');
 ```
 
 **Toast Notifications**:
+
 ```typescript
 import { waitForToast } from '../../helpers/test-utils';
 
@@ -292,6 +302,7 @@ await waitForToast(page, 'Workout saved!');
 ```
 
 **API Calls**:
+
 ```typescript
 import { waitForApiCall } from '../../helpers/test-utils';
 
@@ -300,6 +311,7 @@ await waitForApiCall(page, '/api/workout', 'GET');
 ```
 
 **Debugging**:
+
 ```typescript
 import { takeDebugScreenshot } from '../../helpers/test-utils';
 
@@ -310,6 +322,7 @@ await takeDebugScreenshot(page, 'workout-page-error');
 ### Locator Patterns
 
 **Best Practices**:
+
 ```typescript
 // ✅ GOOD: Use semantic selectors
 const button = page.locator('button:has-text("Start")');
@@ -320,7 +333,8 @@ const link = page.getByRole('link', { name: 'Settings' });
 const exerciseCard = page.locator('[data-testid="exercise-card"]');
 
 // ⚠️  OK: Use .or() for flexible matching
-const startButton = page.locator('button:has-text("Start")')
+const startButton = page
+  .locator('button:has-text("Start")')
   .or(page.locator('a:has-text("Start Workout")'));
 
 // ❌ BAD: Fragile selectors that break easily
@@ -331,6 +345,7 @@ const text = page.locator('xpath=/html/body/div[2]/p'); // Brittle structure
 ### Mobile Testing
 
 Test on mobile viewports:
+
 ```typescript
 test('is responsive on mobile', async ({ page }) => {
   // Set mobile viewport
@@ -350,6 +365,7 @@ Playwright automatically tests Mobile Chrome and Mobile Safari (configured in `p
 ### Cross-Browser Testing
 
 Tests run on all configured browsers:
+
 - Desktop Chrome (Chromium)
 - Desktop Firefox
 - Desktop Safari (WebKit)
@@ -357,6 +373,7 @@ Tests run on all configured browsers:
 - Mobile Safari (iPhone 12)
 
 To run on specific browser:
+
 ```bash
 npx playwright test --project=chromium
 npx playwright test --project=webkit
@@ -371,6 +388,7 @@ npx playwright test --project=webkit
 **1. Identify the User Flow**
 
 What is the user trying to accomplish?
+
 - Examples: "Create a new workout", "View progress chart", "Update settings"
 
 **2. Determine Criticality**
@@ -398,9 +416,7 @@ import { test, expect } from '@playwright/test';
 import { signIn, TEST_USER } from '../../helpers/auth';
 import { navigateTo, waitForPageReady } from '../../helpers/test-utils';
 
-const hasTestCredentials = Boolean(
-  process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD
-);
+const hasTestCredentials = Boolean(process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD);
 
 test.describe('My Feature - Critical Path', () => {
   test.skip(!hasTestCredentials, 'Skipping - no test credentials');
@@ -524,6 +540,7 @@ export const mockExercise = {
 ### Pre-Push Hook
 
 The pre-push hook runs:
+
 1. Full unit test suite with coverage (`npm run test:coverage`)
 2. Production build verification (`npm run build`)
 3. Critical E2E tests (`npm run test:e2e:critical`)
@@ -541,6 +558,7 @@ Tests gracefully skip when `TEST_USER_EMAIL` and `TEST_USER_PASSWORD` are not se
 ```
 
 This allows:
+
 - Local development without test credentials
 - CI/CD environments with credentials to run full suite
 
@@ -564,6 +582,7 @@ npx playwright test --debug tests/e2e/critical/workout-flow.spec.ts
 ### Screenshots and Videos
 
 Playwright automatically captures:
+
 - **Screenshots**: On test failure
 - **Videos**: On test failure (retained)
 - **Traces**: On first retry
@@ -573,6 +592,7 @@ Find them in `test-results/` directory.
 ### Console Logs
 
 Add `console.log` to tests:
+
 ```typescript
 test('debugging test', async ({ page }) => {
   console.log('Current URL:', page.url());
@@ -629,6 +649,7 @@ View with `--headed` or in UI mode.
 ### Tests Timing Out
 
 **Causes**:
+
 - Slow network (increase timeout in config)
 - Page not loading (check dev server running)
 - Wrong selector (page waiting for element that doesn't exist)
@@ -638,6 +659,7 @@ View with `--headed` or in UI mode.
 ### Clerk Authentication Not Working
 
 **Causes**:
+
 - Test user doesn't exist in Clerk dashboard
 - Incorrect credentials in environment variables
 - Clerk handshake redirect changed

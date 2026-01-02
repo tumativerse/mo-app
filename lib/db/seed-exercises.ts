@@ -171,53 +171,93 @@ function inferPatternFromName(name: string): string | null {
   // Isolation - Legs (check FIRST - these are often mislabeled in YAML)
   if (lower.includes('leg curl') || lower.includes('hamstring curl')) return 'isolation_legs';
   if (lower.includes('leg extension')) return 'isolation_legs';
-  if (lower.includes('calf raise') || lower.includes('calf press') || lower.includes('donkey calf')) return 'isolation_legs';
+  if (lower.includes('calf raise') || lower.includes('calf press') || lower.includes('donkey calf'))
+    return 'isolation_legs';
   if (lower.includes('adduction') || lower.includes('adductor')) return 'isolation_legs';
   if (lower.includes('abduction') || lower.includes('abductor')) return 'isolation_legs';
 
   // Isolation - Pull (biceps) - exclude leg curl, nordic curl, jefferson curl
-  if (lower.includes('curl') && !lower.includes('leg') && !lower.includes('nordic') && !lower.includes('jefferson') && !lower.includes('hamstring')) {
+  if (
+    lower.includes('curl') &&
+    !lower.includes('leg') &&
+    !lower.includes('nordic') &&
+    !lower.includes('jefferson') &&
+    !lower.includes('hamstring')
+  ) {
     return 'isolation_pull';
   }
 
   // Isolation - Push (triceps, chest fly, lateral raise)
   if (lower.includes('fly') || lower.includes('flye')) return 'isolation_push';
-  if (lower.includes('tricep') || lower.includes('pushdown') || lower.includes('skull')) return 'isolation_push';
+  if (lower.includes('tricep') || lower.includes('pushdown') || lower.includes('skull'))
+    return 'isolation_push';
   if (lower.includes('lateral raise') || lower.includes('front raise')) return 'isolation_push';
 
   // Olympic lifts
-  if (lower.includes('clean') || lower.includes('snatch') || lower.includes('jerk')) return 'olympic';
+  if (lower.includes('clean') || lower.includes('snatch') || lower.includes('jerk'))
+    return 'olympic';
 
   // Squat variations
   if (lower.includes('squat') || lower.includes('pistol')) return 'squat';
 
   // Hinge variations
-  if (lower.includes('deadlift') || lower.includes('rdl') || lower.includes('hip thrust')) return 'hinge';
+  if (lower.includes('deadlift') || lower.includes('rdl') || lower.includes('hip thrust'))
+    return 'hinge';
   if (lower.includes('good morning') || lower.includes('back extension')) return 'hinge';
   if (lower.includes('rack pull')) return 'hinge';
 
   // Lunge variations
-  if (lower.includes('lunge') || lower.includes('split squat') || lower.includes('step up') || lower.includes('step-up')) return 'lunge';
+  if (
+    lower.includes('lunge') ||
+    lower.includes('split squat') ||
+    lower.includes('step up') ||
+    lower.includes('step-up')
+  )
+    return 'lunge';
 
   // Push variations
-  if (lower.includes('bench') || lower.includes('push-up') || lower.includes('pushup')) return 'horizontal_push';
-  if (lower.includes('press') && (lower.includes('overhead') || lower.includes('shoulder') || lower.includes('military'))) return 'vertical_push';
+  if (lower.includes('bench') || lower.includes('push-up') || lower.includes('pushup'))
+    return 'horizontal_push';
+  if (
+    lower.includes('press') &&
+    (lower.includes('overhead') || lower.includes('shoulder') || lower.includes('military'))
+  )
+    return 'vertical_push';
   if (lower.includes('dip')) return 'horizontal_push';
 
   // Pull variations
   if (lower.includes('row')) return 'horizontal_pull';
-  if (lower.includes('pull-up') || lower.includes('pullup') || lower.includes('chin-up') || lower.includes('chinup')) return 'vertical_pull';
+  if (
+    lower.includes('pull-up') ||
+    lower.includes('pullup') ||
+    lower.includes('chin-up') ||
+    lower.includes('chinup')
+  )
+    return 'vertical_pull';
   if (lower.includes('pulldown') || lower.includes('pull down')) return 'vertical_pull';
 
   // Core
-  if (lower.includes('plank') || lower.includes('crunch') || lower.includes('sit-up') || lower.includes('ab ')) return 'core';
-  if (lower.includes('mountain climber') || lower.includes('bear crawl') || lower.includes('spiderman')) return 'core';
+  if (
+    lower.includes('plank') ||
+    lower.includes('crunch') ||
+    lower.includes('sit-up') ||
+    lower.includes('ab ')
+  )
+    return 'core';
+  if (
+    lower.includes('mountain climber') ||
+    lower.includes('bear crawl') ||
+    lower.includes('spiderman')
+  )
+    return 'core';
 
   // Carry
-  if (lower.includes('carry') || (lower.includes('walk') && lower.includes('farmer'))) return 'carry';
+  if (lower.includes('carry') || (lower.includes('walk') && lower.includes('farmer')))
+    return 'carry';
 
   // Plyometric
-  if (lower.includes('jump') || lower.includes('box jump') || lower.includes('explosive')) return 'plyometric';
+  if (lower.includes('jump') || lower.includes('box jump') || lower.includes('explosive'))
+    return 'plyometric';
 
   return null;
 }
@@ -237,7 +277,8 @@ function mapMovementPattern(
   // SECOND: Try to map from patterns array
   if (patterns && patterns.length > 0) {
     for (const p of patterns) {
-      const mapped = mappings.movementPatterns[p.toLowerCase() as keyof typeof mappings.movementPatterns];
+      const mapped =
+        mappings.movementPatterns[p.toLowerCase() as keyof typeof mappings.movementPatterns];
       if (mapped) return mapped;
     }
 
@@ -256,13 +297,15 @@ function mapCategory(
   patterns: string[] | undefined
 ): 'compound' | 'isolation' | 'cardio' | 'mobility' {
   if (movementType) {
-    const mapped = mappings.categories[movementType.toLowerCase() as keyof typeof mappings.categories];
+    const mapped =
+      mappings.categories[movementType.toLowerCase() as keyof typeof mappings.categories];
     if (mapped) return mapped as 'compound' | 'isolation' | 'cardio' | 'mobility';
   }
 
   if (patterns) {
-    if (patterns.some(p => p.toLowerCase() === 'cardio')) return 'cardio';
-    if (patterns.some(p => ['mobility', 'flexibility', 'stretch'].includes(p.toLowerCase()))) return 'mobility';
+    if (patterns.some((p) => p.toLowerCase() === 'cardio')) return 'cardio';
+    if (patterns.some((p) => ['mobility', 'flexibility', 'stretch'].includes(p.toLowerCase())))
+      return 'mobility';
   }
 
   return 'compound';
@@ -289,9 +332,7 @@ function parseRestPeriod(restPeriod: string | undefined): number | null {
 
 function cleanArray(arr: string[] | undefined): string[] | null {
   if (!arr || arr.length === 0) return null;
-  return arr
-    .map(s => s.toLowerCase().replace(/-/g, ' ').trim())
-    .filter(Boolean);
+  return arr.map((s) => s.toLowerCase().replace(/-/g, ' ').trim()).filter(Boolean);
 }
 
 /**
@@ -304,18 +345,20 @@ function normalizeArray(
 ): string[] | null {
   if (!arr || arr.length === 0) return null;
 
-  return arr
-    .map(s => {
-      const normalized = s.toLowerCase().trim();
-      // Check if there's a normalization mapping
-      const mapped = normalizationMap[normalized];
-      if (mapped) return mapped;
-      // Otherwise clean up the value
-      return normalized.replace(/-/g, ' ');
-    })
-    .filter(Boolean)
-    // Remove duplicates that might result from normalization
-    .filter((value, index, self) => self.indexOf(value) === index);
+  return (
+    arr
+      .map((s) => {
+        const normalized = s.toLowerCase().trim();
+        // Check if there's a normalization mapping
+        const mapped = normalizationMap[normalized];
+        if (mapped) return mapped;
+        // Otherwise clean up the value
+        return normalized.replace(/-/g, ' ');
+      })
+      .filter(Boolean)
+      // Remove duplicates that might result from normalization
+      .filter((value, index, self) => self.indexOf(value) === index)
+  );
 }
 
 // ============================================
@@ -330,19 +373,29 @@ function inferPriority(
   category: string,
   movementType: string | undefined
 ): 'essential' | 'common' | 'specialized' | 'niche' {
-  const patternsLower = patterns?.map(p => p.toLowerCase()) || [];
+  const patternsLower = patterns?.map((p) => p.toLowerCase()) || [];
 
   // Essential: Major compound movement patterns
   const essentialPatterns = [
-    'hinge', 'hip-hinge', 'deadlift',
+    'hinge',
+    'hip-hinge',
+    'deadlift',
     'squat',
-    'horizontal-push', 'push', 'bench', 'press',
-    'vertical-pull', 'pull-up', 'chin-up',
-    'vertical-push', 'overhead', 'overhead-press',
-    'horizontal-pull', 'row',
+    'horizontal-push',
+    'push',
+    'bench',
+    'press',
+    'vertical-pull',
+    'pull-up',
+    'chin-up',
+    'vertical-push',
+    'overhead',
+    'overhead-press',
+    'horizontal-pull',
+    'row',
   ];
 
-  if (patternsLower.some(p => essentialPatterns.includes(p))) {
+  if (patternsLower.some((p) => essentialPatterns.includes(p))) {
     const isMainLift = patternsLower.length <= 2;
     if (isMainLift && category === 'compound') {
       return 'essential';
@@ -352,13 +405,20 @@ function inferPriority(
 
   // Common: Compound exercises, carries, core work
   const commonPatterns = [
-    'lunge', 'split-squat', 'step-up',
-    'carry', 'loaded-carry',
-    'core', 'anti-extension', 'anti-rotation',
-    'plyometric', 'plyo', 'jump',
+    'lunge',
+    'split-squat',
+    'step-up',
+    'carry',
+    'loaded-carry',
+    'core',
+    'anti-extension',
+    'anti-rotation',
+    'plyometric',
+    'plyo',
+    'jump',
   ];
 
-  if (patternsLower.some(p => commonPatterns.includes(p))) {
+  if (patternsLower.some((p) => commonPatterns.includes(p))) {
     return 'common';
   }
 
@@ -372,7 +432,7 @@ function inferPriority(
 
   // Olympic lifts are specialized (technical)
   const olympicPatterns = ['olympic', 'clean', 'snatch', 'jerk', 'power'];
-  if (patternsLower.some(p => olympicPatterns.includes(p))) {
+  if (patternsLower.some((p) => olympicPatterns.includes(p))) {
     return 'specialized';
   }
 
@@ -395,23 +455,28 @@ function inferDifficulty(
   category: string,
   equipment: string[] | undefined
 ): 'beginner' | 'intermediate' | 'advanced' | null {
-  const patternsLower = patterns?.map(p => p.toLowerCase()) || [];
-  const equipmentLower = equipment?.map(e => e.toLowerCase()) || [];
+  const patternsLower = patterns?.map((p) => p.toLowerCase()) || [];
+  const equipmentLower = equipment?.map((e) => e.toLowerCase()) || [];
 
   // Advanced: Olympic lifts, plyometrics, single-leg work
   const advancedPatterns = ['olympic', 'clean', 'snatch', 'jerk', 'muscle-up'];
-  if (patternsLower.some(p => advancedPatterns.includes(p))) {
+  if (patternsLower.some((p) => advancedPatterns.includes(p))) {
     return 'advanced';
   }
 
   // Intermediate: Most compound movements
   const intermediatePatterns = [
-    'hinge', 'squat', 'deadlift',
-    'horizontal-push', 'vertical-push',
-    'horizontal-pull', 'vertical-pull',
-    'plyometric', 'plyo',
+    'hinge',
+    'squat',
+    'deadlift',
+    'horizontal-push',
+    'vertical-push',
+    'horizontal-pull',
+    'vertical-pull',
+    'plyometric',
+    'plyo',
   ];
-  if (patternsLower.some(p => intermediatePatterns.includes(p))) {
+  if (patternsLower.some((p) => intermediatePatterns.includes(p))) {
     return 'intermediate';
   }
 
@@ -458,10 +523,7 @@ function parseExerciseFile(filePath: string): ParsedExercise | null {
   }
 }
 
-function buildExerciseRecord(
-  parsed: ParsedExercise,
-  stats: SeedStats
-): ExerciseRecord | null {
+function buildExerciseRecord(parsed: ParsedExercise, stats: SeedStats): ExerciseRecord | null {
   const { frontmatter, slug } = parsed;
 
   if (!frontmatter.title) return null;
@@ -469,16 +531,14 @@ function buildExerciseRecord(
   const category = mapCategory(frontmatter.movement_type, frontmatter.patterns);
 
   // Map or infer priority
-  const explicitPriority = mapWithFallback(
-    frontmatter.priority,
-    mappings.priorities,
-    ['essential', 'common', 'specialized', 'niche'] as const
-  );
-  const priority = explicitPriority || inferPriority(
-    frontmatter.patterns,
-    category,
-    frontmatter.movement_type
-  );
+  const explicitPriority = mapWithFallback(frontmatter.priority, mappings.priorities, [
+    'essential',
+    'common',
+    'specialized',
+    'niche',
+  ] as const);
+  const priority =
+    explicitPriority || inferPriority(frontmatter.patterns, category, frontmatter.movement_type);
 
   // Map or infer difficulty
   const explicitDifficulty = mapWithFallback(
@@ -487,18 +547,19 @@ function buildExerciseRecord(
     ['beginner', 'intermediate', 'advanced', 'elite'] as const,
     stats.unmappedDifficulties
   );
-  const difficulty = explicitDifficulty || inferDifficulty(
-    frontmatter.patterns,
-    category,
-    frontmatter.equipment
-  );
+  const difficulty =
+    explicitDifficulty || inferDifficulty(frontmatter.patterns, category, frontmatter.equipment);
 
   return {
     name: frontmatter.title,
     slug,
     description: frontmatter.description || null,
     category,
-    movementPattern: mapMovementPattern(frontmatter.patterns, frontmatter.title || '', stats.unmappedPatterns),
+    movementPattern: mapMovementPattern(
+      frontmatter.patterns,
+      frontmatter.title || '',
+      stats.unmappedPatterns
+    ),
     patterns: cleanArray(frontmatter.patterns),
     primaryMuscles: normalizeArray(frontmatter.primary_muscles, mappings.muscleNormalization),
     secondaryMuscles: normalizeArray(frontmatter.secondary_muscles, mappings.muscleNormalization),
@@ -509,22 +570,22 @@ function buildExerciseRecord(
     grips: cleanArray(frontmatter.grip),
     gripWidths: cleanArray(frontmatter.grip_width),
     stances: cleanArray(frontmatter.stance),
-    forceType: mapWithFallback(
-      frontmatter.force_type,
-      mappings.forceTypes,
-      ['push', 'pull', 'static', 'dynamic'] as const
-    ),
+    forceType: mapWithFallback(frontmatter.force_type, mappings.forceTypes, [
+      'push',
+      'pull',
+      'static',
+      'dynamic',
+    ] as const),
     plane: cleanArray(frontmatter.plane),
-    chain: mapWithFallback(
-      frontmatter.chain,
-      mappings.chains,
-      ['anterior', 'posterior', 'lateral'] as const
-    ),
-    kineticChain: mapWithFallback(
-      frontmatter.kinetic_chain,
-      mappings.kineticChains,
-      ['open', 'closed'] as const
-    ),
+    chain: mapWithFallback(frontmatter.chain, mappings.chains, [
+      'anterior',
+      'posterior',
+      'lateral',
+    ] as const),
+    kineticChain: mapWithFallback(frontmatter.kinetic_chain, mappings.kineticChains, [
+      'open',
+      'closed',
+    ] as const),
     isBilateral: frontmatter.bilateral !== false,
     exerciseTypes: cleanArray(frontmatter.exercise_type),
     difficulty,
@@ -546,10 +607,7 @@ function collectRelationships(
 ): RelationshipRecord[] {
   const relationships: RelationshipRecord[] = [];
 
-  const addRelationships = (
-    items: string[] | undefined,
-    type: RelationshipRecord['type']
-  ) => {
+  const addRelationships = (items: string[] | undefined, type: RelationshipRecord['type']) => {
     if (!items) return;
     for (const item of items) {
       relationships.push({ exerciseSlug: slug, relatedSlug: item, type });
@@ -578,7 +636,9 @@ async function seedMuscles(stats: SeedStats): Promise<void> {
   }
 
   await db.delete(schema.muscles);
-  await db.insert(schema.muscles).values(muscleData.muscles as unknown as typeof schema.muscles.$inferInsert[]);
+  await db
+    .insert(schema.muscles)
+    .values(muscleData.muscles as unknown as (typeof schema.muscles.$inferInsert)[]);
   stats.muscles = muscleData.muscles.length;
   console.log(`  ✓ Seeded ${stats.muscles} muscles`);
 }
@@ -593,7 +653,9 @@ async function seedEquipment(stats: SeedStats): Promise<void> {
   }
 
   await db.delete(schema.equipmentItems);
-  await db.insert(schema.equipmentItems).values(equipmentData.equipment as unknown as typeof schema.equipmentItems.$inferInsert[]);
+  await db
+    .insert(schema.equipmentItems)
+    .values(equipmentData.equipment as unknown as (typeof schema.equipmentItems.$inferInsert)[]);
   stats.equipment = equipmentData.equipment.length;
   console.log(`  ✓ Seeded ${stats.equipment} equipment items`);
 }
@@ -607,8 +669,9 @@ async function seedExercises(stats: SeedStats): Promise<void> {
     throw new Error(`Exercise library path not found: ${config.exerciseLibraryPath}`);
   }
 
-  const files = fs.readdirSync(config.exerciseLibraryPath)
-    .filter(f => f.endsWith('.md') && !f.startsWith('_'));
+  const files = fs
+    .readdirSync(config.exerciseLibraryPath)
+    .filter((f) => f.endsWith('.md') && !f.startsWith('_'));
 
   console.log(`  Found ${files.length} exercise files\n`);
 
@@ -656,9 +719,13 @@ async function seedExercises(stats: SeedStats): Promise<void> {
   console.log('Inserting exercises...');
   for (let i = 0; i < exercises.length; i += config.batchSize) {
     const batch = exercises.slice(i, i + config.batchSize);
-    await db.insert(schema.exercises).values(batch as unknown as typeof schema.exercises.$inferInsert[]);
+    await db
+      .insert(schema.exercises)
+      .values(batch as unknown as (typeof schema.exercises.$inferInsert)[]);
     if (config.verbose) {
-      console.log(`  Inserted ${Math.min(i + config.batchSize, exercises.length)}/${exercises.length}`);
+      console.log(
+        `  Inserted ${Math.min(i + config.batchSize, exercises.length)}/${exercises.length}`
+      );
     }
   }
   stats.exercises = exercises.length;
@@ -666,11 +733,15 @@ async function seedExercises(stats: SeedStats): Promise<void> {
 
   // Create slug -> id map
   const allExercises = await db.query.exercises.findMany();
-  const slugToId = new Map(allExercises.map(e => [e.slug, e.id]));
+  const slugToId = new Map(allExercises.map((e) => [e.slug, e.id]));
 
   // Insert relationships
   console.log('Creating exercise relationships...');
-  const validRelationships: { exerciseId: string; relatedExerciseId: string; relationshipType: string }[] = [];
+  const validRelationships: {
+    exerciseId: string;
+    relatedExerciseId: string;
+    relationshipType: string;
+  }[] = [];
 
   for (const rel of relationships) {
     const exerciseId = slugToId.get(rel.exerciseSlug);
@@ -695,7 +766,9 @@ async function seedExercises(stats: SeedStats): Promise<void> {
   // Insert in batches
   for (let i = 0; i < validRelationships.length; i += config.batchSize) {
     const batch = validRelationships.slice(i, i + config.batchSize);
-    await db.insert(schema.exerciseRelationships).values(batch as unknown as typeof schema.exerciseRelationships.$inferInsert[]);
+    await db
+      .insert(schema.exerciseRelationships)
+      .values(batch as unknown as (typeof schema.exerciseRelationships.$inferInsert)[]);
   }
 
   stats.relationships.created = validRelationships.length;
@@ -739,7 +812,9 @@ async function main(): Promise<void> {
     console.log(`  Muscles:       ${stats.muscles}`);
     console.log(`  Equipment:     ${stats.equipment}`);
     console.log(`  Exercises:     ${stats.exercises}`);
-    console.log(`  Relationships: ${stats.relationships.created} created, ${stats.relationships.failed} failed`);
+    console.log(
+      `  Relationships: ${stats.relationships.created} created, ${stats.relationships.failed} failed`
+    );
 
     // Show warnings
     if (stats.unmappedPatterns.size > 0) {

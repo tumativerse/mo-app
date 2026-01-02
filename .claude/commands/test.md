@@ -3,15 +3,19 @@
 Run the test suite and report results.
 
 ## Arguments
+
 - `$ARGUMENTS` - Optional: specific test file or pattern
 
 ## Steps
 
 1. If `$ARGUMENTS` is provided, run:
+
    ```bash
    npm test -- $ARGUMENTS
    ```
+
    Otherwise run all tests:
+
    ```bash
    npm test
    ```
@@ -22,6 +26,7 @@ Run the test suite and report results.
    - Check if failures are due to missing mocks, async issues, or logic errors
 
 3. Report results in this format:
+
    ```
    ## Test Results
 

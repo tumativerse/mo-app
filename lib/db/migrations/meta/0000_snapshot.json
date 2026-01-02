@@ -86,9 +86,7 @@
         "exercises_slug_unique": {
           "name": "exercises_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -155,12 +153,8 @@
           "name": "personal_records_user_id_users_id_fk",
           "tableFrom": "personal_records",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -168,12 +162,8 @@
           "name": "personal_records_exercise_id_exercises_id_fk",
           "tableFrom": "personal_records",
           "tableTo": "exercises",
-          "columnsFrom": [
-            "exercise_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["exercise_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -181,12 +171,8 @@
           "name": "personal_records_workout_set_id_workout_sets_id_fk",
           "tableFrom": "personal_records",
           "tableTo": "workout_sets",
-          "columnsFrom": [
-            "workout_set_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["workout_set_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -247,12 +233,8 @@
           "name": "program_days_program_id_programs_id_fk",
           "tableFrom": "program_days",
           "tableTo": "programs",
-          "columnsFrom": [
-            "program_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["program_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -329,12 +311,8 @@
           "name": "program_exercises_program_day_id_program_days_id_fk",
           "tableFrom": "program_exercises",
           "tableTo": "program_days",
-          "columnsFrom": [
-            "program_day_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["program_day_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -342,12 +320,8 @@
           "name": "program_exercises_exercise_id_exercises_id_fk",
           "tableFrom": "program_exercises",
           "tableTo": "exercises",
-          "columnsFrom": [
-            "exercise_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["exercise_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -428,9 +402,7 @@
         "programs_slug_unique": {
           "name": "programs_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -488,12 +460,8 @@
           "name": "streaks_user_id_users_id_fk",
           "tableFrom": "streaks",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -503,9 +471,7 @@
         "streaks_user_id_unique": {
           "name": "streaks_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -589,12 +555,8 @@
           "name": "user_exercise_defaults_user_id_users_id_fk",
           "tableFrom": "user_exercise_defaults",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -602,12 +564,8 @@
           "name": "user_exercise_defaults_exercise_id_exercises_id_fk",
           "tableFrom": "user_exercise_defaults",
           "tableTo": "exercises",
-          "columnsFrom": [
-            "exercise_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["exercise_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -683,12 +641,8 @@
           "name": "user_programs_user_id_users_id_fk",
           "tableFrom": "user_programs",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -696,12 +650,8 @@
           "name": "user_programs_program_id_programs_id_fk",
           "tableFrom": "user_programs",
           "tableTo": "programs",
-          "columnsFrom": [
-            "program_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["program_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -809,16 +759,12 @@
         "users_clerk_id_unique": {
           "name": "users_clerk_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "clerk_id"
-          ]
+          "columns": ["clerk_id"]
         },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -896,12 +842,8 @@
           "name": "weight_entries_user_id_users_id_fk",
           "tableFrom": "weight_entries",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -979,12 +921,8 @@
           "name": "workout_sets_workout_id_workouts_id_fk",
           "tableFrom": "workout_sets",
           "tableTo": "workouts",
-          "columnsFrom": [
-            "workout_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["workout_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -992,12 +930,8 @@
           "name": "workout_sets_exercise_id_exercises_id_fk",
           "tableFrom": "workout_sets",
           "tableTo": "exercises",
-          "columnsFrom": [
-            "exercise_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["exercise_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1083,12 +1017,8 @@
           "name": "workouts_user_id_users_id_fk",
           "tableFrom": "workouts",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1096,12 +1026,8 @@
           "name": "workouts_program_day_id_program_days_id_fk",
           "tableFrom": "workouts",
           "tableTo": "program_days",
-          "columnsFrom": [
-            "program_day_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["program_day_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1117,32 +1043,17 @@
     "public.exercise_category": {
       "name": "exercise_category",
       "schema": "public",
-      "values": [
-        "compound",
-        "isolation",
-        "cardio",
-        "mobility"
-      ]
+      "values": ["compound", "isolation", "cardio", "mobility"]
     },
     "public.experience": {
       "name": "experience",
       "schema": "public",
-      "values": [
-        "beginner",
-        "intermediate",
-        "advanced"
-      ]
+      "values": ["beginner", "intermediate", "advanced"]
     },
     "public.fitness_goal": {
       "name": "fitness_goal",
       "schema": "public",
-      "values": [
-        "lose_fat",
-        "build_muscle",
-        "recomp",
-        "strength",
-        "general"
-      ]
+      "values": ["lose_fat", "build_muscle", "recomp", "strength", "general"]
     },
     "public.movement_pattern": {
       "name": "movement_pattern",
@@ -1165,42 +1076,22 @@
     "public.program_status": {
       "name": "program_status",
       "schema": "public",
-      "values": [
-        "active",
-        "paused",
-        "completed"
-      ]
+      "values": ["active", "paused", "completed"]
     },
     "public.units": {
       "name": "units",
       "schema": "public",
-      "values": [
-        "imperial",
-        "metric"
-      ]
+      "values": ["imperial", "metric"]
     },
     "public.workout_status": {
       "name": "workout_status",
       "schema": "public",
-      "values": [
-        "planned",
-        "in_progress",
-        "completed",
-        "skipped"
-      ]
+      "values": ["planned", "in_progress", "completed", "skipped"]
     },
     "public.workout_type": {
       "name": "workout_type",
       "schema": "public",
-      "values": [
-        "push",
-        "pull",
-        "legs",
-        "upper",
-        "lower",
-        "full",
-        "rest"
-      ]
+      "values": ["push", "pull", "legs", "upper", "lower", "full", "rest"]
     }
   },
   "schemas": {},

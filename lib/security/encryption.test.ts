@@ -165,7 +165,7 @@ describe('Encryption utilities', () => {
 
       // Tamper with ciphertext (should fail authentication)
       const buffer = Buffer.from(encrypted!, 'base64');
-      buffer[buffer.length - 1] ^= 0xFF; // Flip last byte
+      buffer[buffer.length - 1] ^= 0xff; // Flip last byte
       const tampered = buffer.toString('base64');
 
       expect(() => decrypt(tampered)).toThrow(/Failed to decrypt/);
@@ -224,7 +224,10 @@ describe('Encryption utilities', () => {
       const encrypted = encryptFields(obj, ['name']);
 
       // Try to decrypt a field that doesn't exist
-      const decrypted = decryptFields(encrypted, ['name', 'nonexistent'] as (keyof typeof encrypted)[]);
+      const decrypted = decryptFields(encrypted, [
+        'name',
+        'nonexistent',
+      ] as (keyof typeof encrypted)[]);
 
       expect(decrypted.name).toBe(obj.name);
       // nonexistent field shouldn't cause issues

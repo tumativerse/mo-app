@@ -88,18 +88,28 @@ export default function OnboardingStep4Page() {
               value={formData.activityLevel}
               options={[
                 { value: 'sedentary', label: 'Sedentary - Desk job, minimal activity' },
-                { value: 'lightly_active', label: 'Lightly Active - Light walking/standing throughout day' },
-                { value: 'moderately_active', label: 'Moderately Active - Active job or regular daily movement' },
-                { value: 'very_active', label: 'Very Active - Physical job or high daily movement' },
-                { value: 'extremely_active', label: 'Extremely Active - Very physical job or athlete' },
+                {
+                  value: 'lightly_active',
+                  label: 'Lightly Active - Light walking/standing throughout day',
+                },
+                {
+                  value: 'moderately_active',
+                  label: 'Moderately Active - Active job or regular daily movement',
+                },
+                {
+                  value: 'very_active',
+                  label: 'Very Active - Physical job or high daily movement',
+                },
+                {
+                  value: 'extremely_active',
+                  label: 'Extremely Active - Very physical job or athlete',
+                },
               ]}
               onChange={(value) => setFormData({ ...formData, activityLevel: String(value) })}
               placeholder="Select your activity level"
               width="100%"
             />
-            <p className="text-xs text-muted-foreground">
-              Activity outside of your workouts
-            </p>
+            <p className="text-xs text-muted-foreground">Activity outside of your workouts</p>
           </div>
 
           {/* Sleep Hours */}

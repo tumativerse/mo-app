@@ -17,16 +17,19 @@ This document configures **MANDATORY** branch protection for the `main` branch. 
 ## Step 2: Configure Required Settings
 
 ### ✅ Require a pull request before merging
+
 - [x] **Enable this setting**
 - [x] Require approvals: **1** (you must review your own PRs)
 - [x] Dismiss stale pull request approvals when new commits are pushed
 - [x] Require review from Code Owners (if you add CODEOWNERS file later)
 
 ### ✅ Require status checks to pass before merging
+
 - [x] **Enable this setting**
 - [x] Require branches to be up to date before merging
 
 **Required status checks (add ALL of these):**
+
 ```
 Quick Check Status
 PR Validation Status
@@ -36,36 +39,44 @@ Performance Status
 ```
 
 **How to add status checks:**
+
 1. After first PR/push, GitHub will show available checks
 2. Search for each check name above
 3. Click to add it to required list
 4. All 5 must be present
 
 ### ✅ Require conversation resolution before merging
+
 - [x] **Enable this setting**
 - All PR comments must be resolved
 
 ### ✅ Require signed commits
+
 - [ ] Optional (recommended for production)
 
 ### ✅ Require linear history
+
 - [x] **Enable this setting**
 - No merge commits allowed, only squash or rebase
 
 ### ✅ Do not allow bypassing the above settings
+
 - [x] **Enable this setting**
 - Not even admins can bypass (you can't bypass your own rules)
 
 ### ✅ Restrict who can push to matching branches
+
 - [x] **Enable this setting**
 - Add yourself to allowed list
 - Prevents accidental direct pushes to main
 
 ### ✅ Allow force pushes
+
 - [ ] **DO NOT enable**
 - Force pushes are dangerous
 
 ### ✅ Allow deletions
+
 - [ ] **DO NOT enable**
 - Prevent accidental branch deletion
 
@@ -96,6 +107,7 @@ After saving, your branch protection should show:
 ## Step 4: Test the Protection
 
 ### Test 1: Try to push directly to main
+
 ```bash
 git checkout main
 echo "test" >> README.md
@@ -107,6 +119,7 @@ git push origin main
 **Expected result:** `❌ BLOCKED - remote: error: GH006: Protected branch update failed`
 
 ### Test 2: Create PR with failing tests
+
 ```bash
 git checkout -b test-branch
 # Make a change that breaks tests
@@ -117,6 +130,7 @@ git push origin test-branch
 **Expected result:** `❌ PR shows failing checks, merge button disabled`
 
 ### Test 3: Create PR with all checks passing
+
 ```bash
 git checkout -b feature-branch
 # Make a valid change
@@ -131,6 +145,7 @@ git push origin feature-branch
 ## What This Prevents
 
 ### ❌ BLOCKED Actions:
+
 1. **Direct pushes to main** - must use PR workflow
 2. **Merging PRs with failing tests** - all tests must pass
 3. **Merging PRs with security issues** - security scan must pass
@@ -142,6 +157,7 @@ git push origin feature-branch
 9. **Branch deletion** - can't accidentally delete main
 
 ### ✅ REQUIRED Actions:
+
 1. **Create feature branch** for all changes
 2. **Push to feature branch** triggers quick checks
 3. **Create PR** to main
@@ -179,6 +195,7 @@ With these rules, **it is IMPOSSIBLE to:**
 ### "I accidentally pushed to main before setting this up"
 
 **Solution:**
+
 1. Set up branch protection now
 2. Going forward, all changes must go through PR workflow
 3. Previous direct pushes are okay, but future ones are blocked
@@ -186,6 +203,7 @@ With these rules, **it is IMPOSSIBLE to:**
 ### "I need to make an emergency hotfix"
 
 **Solution:**
+
 1. **DO NOT bypass protection rules**
 2. Create hotfix branch
 3. Make fix
@@ -198,6 +216,7 @@ Emergency doesn't mean "skip quality checks" - it means "work fast but safely".
 ### "A required check is failing but I think it's wrong"
 
 **Solution:**
+
 1. **DO NOT disable the check**
 2. Review the failure carefully
 3. Fix the underlying issue

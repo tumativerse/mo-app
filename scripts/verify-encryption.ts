@@ -36,12 +36,16 @@ async function verifyEncryption() {
         try {
           const decrypted = decrypt(value);
           if (decrypted && decrypted !== value) {
-            console.log(`  ✅ ${field}: ENCRYPTED (decrypts to "${decrypted.substring(0, 30)}...")`);
+            console.log(
+              `  ✅ ${field}: ENCRYPTED (decrypts to "${decrypted.substring(0, 30)}...")`
+            );
           } else {
             console.log(`  ⚠️  ${field}: PLAIN TEXT - "${value}"`);
           }
         } catch {
-          console.log(`  ⚠️  ${field}: Failed to decrypt (corrupted?) - "${value.substring(0, 30)}..."`);
+          console.log(
+            `  ⚠️  ${field}: Failed to decrypt (corrupted?) - "${value.substring(0, 30)}..."`
+          );
         }
       } else {
         console.log(`  -  ${field}: null`);

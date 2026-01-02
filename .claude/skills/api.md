@@ -3,6 +3,7 @@
 Generate a new API route following Mo app patterns.
 
 ## Usage
+
 `/api <route-name> [GET|POST|PUT|PATCH|DELETE]`
 
 ## Behavior
@@ -10,6 +11,7 @@ Generate a new API route following Mo app patterns.
 Create `app/api/<route-name>/route.ts` with the specified HTTP methods.
 
 ### Template
+
 ```typescript
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -55,17 +57,23 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const parsed = createSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({
-        error: 'Invalid data',
-        details: parsed.error.flatten()
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: 'Invalid data',
+          details: parsed.error.flatten(),
+        },
+        { status: 400 }
+      );
     }
 
     // Insert into database
-    const [result] = await db.insert(/* table */).values({
-      userId: user.id,
-      ...parsed.data,
-    }).returning();
+    const [result] = await db
+      .insert(/* table */)
+      .values({
+        userId: user.id,
+        ...parsed.data,
+      })
+      .returning();
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
@@ -77,18 +85,18 @@ export async function POST(request: NextRequest) {
 ```
 
 ### For Dynamic Routes
+
 Create `app/api/<route-name>/[id]/route.ts`:
+
 ```typescript
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   // ...
 }
 ```
 
 ## Guidelines
+
 - Always validate with Zod
 - Always check authentication with `getCurrentUser()`
 - Return consistent error format: `{ error, details? }`

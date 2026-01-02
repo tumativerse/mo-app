@@ -3,6 +3,7 @@
 Generate a new React component following Mo app patterns.
 
 ## Usage
+
 `/component <ComponentName> [--page] [--with-api]`
 
 ## Behavior
@@ -10,7 +11,9 @@ Generate a new React component following Mo app patterns.
 When invoked, create a component with:
 
 ### Standard Component (default)
+
 Create in `components/<ComponentName>.tsx`:
+
 ```typescript
 'use client';
 
@@ -30,7 +33,9 @@ export function <ComponentName>({ ...props }: <ComponentName>Props) {
 ```
 
 ### Page Component (--page)
+
 Create in `app/(app)/<name>/page.tsx`:
+
 ```typescript
 'use client';
 
@@ -77,7 +82,9 @@ export default function <ComponentName>Page() {
 ```
 
 ### With API (--with-api)
+
 Also create `app/api/<name>/route.ts`:
+
 ```typescript
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -104,6 +111,7 @@ export async function GET(request: NextRequest) {
 ```
 
 ## Guidelines
+
 - Use PascalCase for component names
 - Follow existing patterns in the codebase
 - Include proper TypeScript types

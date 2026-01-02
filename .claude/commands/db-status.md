@@ -5,9 +5,11 @@ Check database schema and data status.
 ## Steps
 
 1. **Check schema sync**:
+
    ```bash
    npx drizzle-kit push --dry-run 2>&1 | head -50
    ```
+
    Report if schema is in sync with database.
 
 2. **Check table counts**:
@@ -20,6 +22,7 @@ Check database schema and data status.
    - users
 
 3. **Report format**:
+
    ```
    ## Database Status
 

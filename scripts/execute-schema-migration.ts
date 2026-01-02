@@ -36,8 +36,8 @@ async function executeSchemaChanges() {
     // Split SQL into individual statements and execute
     const statements = sql
       .split(';')
-      .map(s => s.trim())
-      .filter(s => s.length > 0 && !s.startsWith('--'));
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0 && !s.startsWith('--'));
 
     console.log(`Executing ${statements.length} statements...\n`);
 
@@ -66,7 +66,6 @@ async function executeSchemaChanges() {
     console.log('Next step: Encrypt existing data');
     console.log('  Run: npm run db:migrate:encrypt -- --dry-run');
     console.log('');
-
   } catch (error) {
     console.error('\n❌ Migration failed:');
     console.error(error);

@@ -8,13 +8,9 @@
  * Integrates with warmup templates and logs completion.
  */
 
-import { db } from "@/lib/db";
-import {
-  warmupLogs,
-  warmupTemplates,
-  workoutSessions,
-} from "@/lib/db/schema";
-import { eq, and } from "drizzle-orm";
+import { db } from '@/lib/db';
+import { warmupLogs, warmupTemplates, workoutSessions } from '@/lib/db/schema';
+import { eq, and } from 'drizzle-orm';
 
 export interface WarmupTemplate {
   id: string;
@@ -27,7 +23,7 @@ export interface WarmupTemplate {
 export interface WarmupPhase {
   id: string;
   name: string;
-  phaseType: "general" | "dynamic" | "movement_prep";
+  phaseType: 'general' | 'dynamic' | 'movement_prep';
   durationSeconds: number | null;
   exercises: WarmupExercise[];
 }
@@ -57,13 +53,10 @@ export interface WarmupLog {
  * Get warmup template for a day type
  */
 export async function getWarmupTemplate(
-  dayType: "push" | "pull" | "legs" | "upper" | "lower" | "full_body"
+  dayType: 'push' | 'pull' | 'legs' | 'upper' | 'lower' | 'full_body'
 ): Promise<WarmupTemplate | null> {
   const template = await db.query.warmupTemplates.findFirst({
-    where: and(
-      eq(warmupTemplates.dayType, dayType),
-      eq(warmupTemplates.isActive, true)
-    ),
+    where: and(eq(warmupTemplates.dayType, dayType), eq(warmupTemplates.isActive, true)),
     with: {
       phases: {
         orderBy: (p, { asc }) => [asc(p.phaseOrder)],
@@ -79,15 +72,14 @@ export async function getWarmupTemplate(
   if (!template) return null;
 
   // Get exercise names
-  const exerciseIds = template.phases.flatMap((p) =>
-    p.exercises.map((e) => e.exerciseId)
-  );
+  const exerciseIds = template.phases.flatMap((p) => p.exercises.map((e) => e.exerciseId));
 
-  const exerciseList = exerciseIds.length > 0
-    ? await db.query.exercises.findMany({
-        where: (ex, { inArray }) => inArray(ex.id, exerciseIds),
-      })
-    : [];
+  const exerciseList =
+    exerciseIds.length > 0
+      ? await db.query.exercises.findMany({
+          where: (ex, { inArray }) => inArray(ex.id, exerciseIds),
+        })
+      : [];
 
   const exerciseMap = new Map(exerciseList.map((e) => [e.id, e.name]));
 
@@ -99,12 +91,12 @@ export async function getWarmupTemplate(
     phases: template.phases.map((phase) => ({
       id: phase.id,
       name: phase.name,
-      phaseType: phase.phaseType as WarmupPhase["phaseType"],
+      phaseType: phase.phaseType as WarmupPhase['phaseType'],
       durationSeconds: phase.durationSeconds,
       exercises: phase.exercises.map((ex) => ({
         id: ex.id,
         exerciseId: ex.exerciseId,
-        exerciseName: exerciseMap.get(ex.exerciseId) || "",
+        exerciseName: exerciseMap.get(ex.exerciseId) || '',
         sets: ex.sets!,
         reps: ex.reps,
         durationSeconds: ex.durationSeconds,
@@ -117,10 +109,7 @@ export async function getWarmupTemplate(
 /**
  * Start warmup for a session
  */
-export async function startWarmup(
-  sessionId: string,
-  templateId?: string
-): Promise<WarmupLog> {
+export async function startWarmup(sessionId: string, templateId?: string): Promise<WarmupLog> {
   // Check if warmup log already exists
   const existing = await db.query.warmupLogs.findFirst({
     where: eq(warmupLogs.sessionId, sessionId),
@@ -166,7 +155,7 @@ export async function updateWarmupProgress(
   });
 
   if (!existing) {
-    throw new Error("Warmup log not found");
+    throw new Error('Warmup log not found');
   }
 
   const [updated] = await db
@@ -181,16 +170,13 @@ export async function updateWarmupProgress(
 /**
  * Complete warmup
  */
-export async function completeWarmup(
-  sessionId: string,
-  notes?: string
-): Promise<WarmupLog> {
+export async function completeWarmup(sessionId: string, notes?: string): Promise<WarmupLog> {
   const existing = await db.query.warmupLogs.findFirst({
     where: eq(warmupLogs.sessionId, sessionId),
   });
 
   if (!existing) {
-    throw new Error("Warmup log not found");
+    throw new Error('Warmup log not found');
   }
 
   const [updated] = await db
@@ -205,13 +191,8 @@ export async function completeWarmup(
   // Update session status to in_progress if it was in warmup
   await db
     .update(workoutSessions)
-    .set({ status: "in_progress" })
-    .where(
-      and(
-        eq(workoutSessions.id, sessionId),
-        eq(workoutSessions.status, "warmup")
-      )
-    );
+    .set({ status: 'in_progress' })
+    .where(and(eq(workoutSessions.id, sessionId), eq(workoutSessions.status, 'warmup')));
 
   return formatWarmupLog(updated);
 }
@@ -247,7 +228,7 @@ export async function skipWarmup(sessionId: string): Promise<WarmupLog> {
   // Update session status
   await db
     .update(workoutSessions)
-    .set({ status: "in_progress" })
+    .set({ status: 'in_progress' })
     .where(eq(workoutSessions.id, sessionId));
 
   return formatWarmupLog(log);

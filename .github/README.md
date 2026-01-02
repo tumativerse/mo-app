@@ -5,6 +5,7 @@
 **Zero defects reach production. Every check is mandatory. No exceptions.**
 
 This quality system ensures that **it is literally impossible** to ship:
+
 - Failing tests
 - Security vulnerabilities
 - TypeScript errors
@@ -17,6 +18,7 @@ This quality system ensures that **it is literally impossible** to ship:
 ## 🏗️ System Architecture
 
 ### Layer 1: Pre-Commit Hook (Local, < 60 seconds)
+
 **Runs on EVERY commit (25-48x per day)**
 
 ```bash
@@ -33,6 +35,7 @@ This quality system ensures that **it is literally impossible** to ship:
 ---
 
 ### Layer 2: Pre-Push Hook (Local, < 5 minutes)
+
 **Runs before EVERY push to GitHub (~5x per day)**
 
 ```bash
@@ -50,6 +53,7 @@ This quality system ensures that **it is literally impossible** to ship:
 ### Layer 3: GitHub Actions (Cloud)
 
 #### Workflow 1: Quick Check
+
 **Trigger:** Every push to any branch
 **Duration:** ~2 minutes
 **Purpose:** Fast verification that pre-commit didn't lie
@@ -66,6 +70,7 @@ This quality system ensures that **it is literally impossible** to ship:
 ---
 
 #### Workflow 2: PR Validation
+
 **Trigger:** Pull request to main
 **Duration:** ~10 minutes
 **Purpose:** Comprehensive validation before merge
@@ -94,6 +99,7 @@ Job 4: Accessibility
 ---
 
 #### Workflow 3: Security Scan
+
 **Trigger:** PR to main + push to main + weekly schedule
 **Duration:** ~5 minutes
 **Purpose:** Detect security vulnerabilities
@@ -113,6 +119,7 @@ Job 2: Secret Detection
 ---
 
 #### Workflow 4: Code Quality
+
 **Trigger:** PR to main + push to main
 **Duration:** ~8 minutes
 **Purpose:** Enforce code quality standards
@@ -136,13 +143,13 @@ Job 2: Code Climate
 ---
 
 #### Workflow 5: Performance
+
 **Trigger:** Pull request to main
 **Duration:** ~10 minutes
 **Purpose:** Enforce performance budgets
 
 ```yaml
-Lighthouse CI:
-  ✅ First Contentful Paint < 2000ms
+Lighthouse CI: ✅ First Contentful Paint < 2000ms
   ✅ Largest Contentful Paint < 2500ms
   ✅ Cumulative Layout Shift < 0.1
   ✅ Total Blocking Time < 300ms
@@ -180,12 +187,14 @@ Lighthouse CI:
 ## 📊 What Gets Checked
 
 ### Security 🔒
+
 - ✅ AWS keys, API tokens, private keys (secretlint)
 - ✅ Dependency vulnerabilities (Snyk + npm audit)
 - ✅ SQL injection patterns (ESLint security rules)
 - ✅ XSS vulnerabilities (ESLint security rules)
 
 ### Code Quality 📝
+
 - ✅ TypeScript errors (tsc --noEmit)
 - ✅ Linting violations (ESLint, zero warnings)
 - ✅ Code formatting (Prettier)
@@ -194,12 +203,14 @@ Lighthouse CI:
 - ✅ Code duplication (SonarCloud)
 
 ### Testing 🧪
+
 - ✅ Unit tests (Vitest)
 - ✅ E2E tests (Playwright)
 - ✅ Code coverage 100% (statements/functions/lines), 90% (branches)
 - ✅ Accessibility tests (axe-core)
 
 ### Performance ⚡
+
 - ✅ Bundle size budgets
 - ✅ Core Web Vitals (LCP, FCP, CLS, TBT)
 - ✅ Resource size limits
@@ -212,6 +223,7 @@ Lighthouse CI:
 ### One-Time Setup (Do Once)
 
 1. **External Services** (30 minutes)
+
    ```bash
    # Follow the guide to sign up for all services
    # and configure GitHub secrets
@@ -220,6 +232,7 @@ Lighthouse CI:
    ```
 
 2. **Branch Protection** (10 minutes)
+
    ```bash
    # Configure main branch protection rules
 
@@ -227,6 +240,7 @@ Lighthouse CI:
    ```
 
 3. **Test System** (15 minutes)
+
    ```bash
    # Create test PR to verify all checks work
 
@@ -307,6 +321,7 @@ git push origin feature/new-feature
 ## 📈 Quality Metrics
 
 ### Coverage Requirements
+
 ```
 Statements: 100%
 Functions:  100%
@@ -315,6 +330,7 @@ Branches:    90%
 ```
 
 ### Performance Budgets
+
 ```
 First Contentful Paint:  < 2000ms
 Largest Contentful Paint: < 2500ms
@@ -325,6 +341,7 @@ Total Page Size:          < 800KB
 ```
 
 ### Security Standards
+
 ```
 Snyk Severity Threshold: HIGH
 npm Audit Level: HIGH
@@ -332,6 +349,7 @@ Secret Detection: BLOCKING
 ```
 
 ### Code Quality Standards
+
 ```
 SonarCloud Quality Gate: MUST PASS
 Code Climate Grade: A-B acceptable
@@ -344,6 +362,7 @@ Duplications: ≤ 3%
 ## 🔧 Files
 
 ### Workflows
+
 - `quick-check.yml` - Fast checks on every push
 - `pr-validation.yml` - Comprehensive PR checks
 - `security.yml` - Security scanning
@@ -351,6 +370,7 @@ Duplications: ≤ 3%
 - `performance.yml` - Performance budgets
 
 ### Configuration
+
 - `lighthouse-budget.json` - Performance budgets
 - `.secretlintrc.json` - Secret detection rules
 - `sonar-project.properties` - SonarCloud config
@@ -358,6 +378,7 @@ Duplications: ≤ 3%
 - `codecov.yml` - Coverage config
 
 ### Documentation
+
 - `README.md` - This file
 - `GITHUB_ACTIONS_SETUP.md` - External services setup
 - `BRANCH_PROTECTION_SETUP.md` - Branch rules setup
@@ -367,6 +388,7 @@ Duplications: ≤ 3%
 ## 💰 Cost
 
 ### Open Source (Recommended)
+
 ```
 GitHub Actions:  FREE (810/2000 min = 40.5%)
 Codecov:         FREE (unlimited)
@@ -378,6 +400,7 @@ TOTAL:           $0/month
 ```
 
 ### Private Repository
+
 ```
 GitHub Actions:  FREE (810/2000 min = 40.5%)
 Codecov:         FREE (1 private repo)
@@ -410,16 +433,19 @@ After setup, you should have:
 ## 📞 Support
 
 ### Documentation
+
 - Setup: `GITHUB_ACTIONS_SETUP.md`
 - Branch Protection: `BRANCH_PROTECTION_SETUP.md`
 - Testing: `../tests/README.md`
 - Quality Plan: `../.claude/QUALITY_SYSTEM_PLAN.md`
 
 ### Troubleshooting
+
 Check workflow logs in GitHub Actions tab:
 https://github.com/YOUR_USERNAME/mo-app/actions
 
 ### Maintenance
+
 - Review dashboards monthly
 - Update dependencies monthly
 - Verify checks are passing regularly

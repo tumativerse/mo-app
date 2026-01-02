@@ -309,8 +309,8 @@ export async function getRestTimerFromSlot(slotId: string): Promise<number> {
 function getStartingWeight(category: string): number {
   // Default starting weights by exercise category
   const defaults: Record<string, number> = {
-    compound: 95,   // Bar + 25s each side
-    isolation: 20,  // Light dumbbells
+    compound: 95, // Bar + 25s each side
+    isolation: 20, // Light dumbbells
     cardio: 0,
     mobility: 0,
   };

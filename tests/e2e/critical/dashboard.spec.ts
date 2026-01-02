@@ -19,9 +19,7 @@ import { navigateTo, waitForPageReady } from '../../helpers/test-utils';
  * 3. Run: npm run test:e2e:critical
  */
 
-const hasTestCredentials = Boolean(
-  process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD
-);
+const hasTestCredentials = Boolean(process.env.TEST_USER_EMAIL && process.env.TEST_USER_PASSWORD);
 
 test.describe('Dashboard - Authenticated Users', () => {
   // Skip all tests in this suite if credentials are not configured
@@ -47,7 +45,8 @@ test.describe('Dashboard - Authenticated Users', () => {
     await navigateTo(page, '/dashboard');
 
     // Look for workout navigation (link, button, or nav item)
-    const workoutLink = page.locator('a[href*="workout"]')
+    const workoutLink = page
+      .locator('a[href*="workout"]')
       .or(page.locator('button:has-text("Workout")'))
       .or(page.locator('nav >> text=/workout/i'));
 
@@ -62,7 +61,8 @@ test.describe('Dashboard - Authenticated Users', () => {
     await navigateTo(page, '/dashboard');
 
     // Look for progress navigation
-    const progressLink = page.locator('a[href*="progress"]')
+    const progressLink = page
+      .locator('a[href*="progress"]')
       .or(page.locator('button:has-text("Progress")'))
       .or(page.locator('nav >> text=/progress/i'));
 
@@ -77,7 +77,8 @@ test.describe('Dashboard - Authenticated Users', () => {
     await navigateTo(page, '/dashboard');
 
     // Look for settings navigation
-    const settingsLink = page.locator('a[href*="settings"]')
+    const settingsLink = page
+      .locator('a[href*="settings"]')
       .or(page.locator('button:has-text("Settings")'))
       .or(page.locator('nav >> text=/settings/i'));
 

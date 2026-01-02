@@ -17,20 +17,15 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary:
-          'bg-primary text-primary-foreground shadow hover:opacity-90 active:scale-95',
-        secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:scale-95',
+        primary: 'bg-primary text-primary-foreground shadow hover:opacity-90 active:scale-95',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 active:scale-95',
         outline:
           'border-2 border-border bg-background hover:bg-accent hover:text-accent-foreground active:scale-95',
-        ghost:
-          'hover:bg-accent hover:text-accent-foreground active:scale-95',
+        ghost: 'hover:bg-accent hover:text-accent-foreground active:scale-95',
         danger:
           'bg-destructive text-destructive-foreground shadow hover:opacity-90 active:scale-95',
-        success:
-          'shadow active:scale-95',
-        link:
-          'text-primary underline-offset-4 hover:underline',
+        success: 'shadow active:scale-95',
+        link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
         sm: 'h-9 px-3 text-sm',
@@ -59,16 +54,11 @@ export const cardVariants = cva(
     variants: {
       variant: {
         default: 'border-border',
-        primary:
-          'border-primary/30 bg-gradient-to-br from-primary/10 to-primary/5',
-        success:
-          'bg-gradient-to-br',
-        warning:
-          'bg-gradient-to-br',
-        danger:
-          'bg-gradient-to-br',
-        info:
-          'bg-gradient-to-br',
+        primary: 'border-primary/30 bg-gradient-to-br from-primary/10 to-primary/5',
+        success: 'bg-gradient-to-br',
+        warning: 'bg-gradient-to-br',
+        danger: 'bg-gradient-to-br',
+        info: 'bg-gradient-to-br',
       },
       padding: {
         none: 'p-0',
@@ -101,16 +91,11 @@ export const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          'border border-primary/30',
-        success:
-          'border',
-        warning:
-          'border',
-        danger:
-          'border',
-        info:
-          'border',
+        default: 'border border-primary/30',
+        success: 'border',
+        warning: 'border',
+        danger: 'border',
+        info: 'border',
         outline: 'border border-border bg-background',
         secondary: 'bg-secondary text-secondary-foreground',
       },
@@ -156,21 +141,18 @@ export type InputVariants = VariantProps<typeof inputVariants>;
  * Skeleton Variants (for loading states)
  * Usage: <div className={skeletonVariants()} />
  */
-export const skeletonVariants = cva(
-  'animate-pulse rounded-md bg-muted',
-  {
-    variants: {
-      variant: {
-        default: '',
-        text: 'h-4 w-full',
-        circle: 'rounded-full',
-      },
+export const skeletonVariants = cva('animate-pulse rounded-md bg-muted', {
+  variants: {
+    variant: {
+      default: '',
+      text: 'h-4 w-full',
+      circle: 'rounded-full',
     },
-    defaultVariants: {
-      variant: 'default',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+});
 
 export type SkeletonVariants = VariantProps<typeof skeletonVariants>;
 
@@ -178,30 +160,27 @@ export type SkeletonVariants = VariantProps<typeof skeletonVariants>;
  * Container Variants (for page layouts)
  * Usage: <div className={containerVariants({ size: 'md' })}>
  */
-export const containerVariants = cva(
-  'mx-auto w-full',
-  {
-    variants: {
-      size: {
-        sm: 'max-w-screen-sm',
-        md: 'max-w-screen-md',
-        lg: 'max-w-screen-lg',
-        xl: 'max-w-screen-xl',
-        '2xl': 'max-w-screen-2xl',
-        full: 'max-w-full',
-      },
-      padding: {
-        none: 'px-0',
-        sm: 'px-4',
-        md: 'px-6',
-        lg: 'px-8',
-      },
+export const containerVariants = cva('mx-auto w-full', {
+  variants: {
+    size: {
+      sm: 'max-w-screen-sm',
+      md: 'max-w-screen-md',
+      lg: 'max-w-screen-lg',
+      xl: 'max-w-screen-xl',
+      '2xl': 'max-w-screen-2xl',
+      full: 'max-w-full',
     },
-    defaultVariants: {
-      size: 'lg',
-      padding: 'md',
+    padding: {
+      none: 'px-0',
+      sm: 'px-4',
+      md: 'px-6',
+      lg: 'px-8',
     },
-  }
-);
+  },
+  defaultVariants: {
+    size: 'lg',
+    padding: 'md',
+  },
+});
 
 export type ContainerVariants = VariantProps<typeof containerVariants>;

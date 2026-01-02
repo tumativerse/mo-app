@@ -1,10 +1,11 @@
 ---
-paths: "app/api/**/*.ts"
+paths: 'app/api/**/*.ts'
 ---
 
 # API Route Rules
 
 ## Structure
+
 ```typescript
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -40,16 +41,19 @@ export async function POST(request: NextRequest) {
 ```
 
 ## Validation
+
 - Always validate with Zod
 - Return `details` with validation errors
 - Use proper HTTP status codes
 
 ## Auth
+
 - Always call `getCurrentUser()` first
 - Return 401 for unauthenticated
 - Return 403 for unauthorized
 
 ## Responses
+
 - Consistent shape: `{ data }` or `{ error, details? }`
 - Include helpful error messages
 - Log errors server-side

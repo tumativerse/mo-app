@@ -36,10 +36,7 @@ export async function navigateTo(page: Page, path: string): Promise<void> {
  * @param buttonText - Text content of the button
  */
 export async function clickAndWaitForNavigation(page: Page, buttonText: string): Promise<void> {
-  await Promise.all([
-    page.waitForNavigation(),
-    page.click(`button:has-text("${buttonText}")`),
-  ]);
+  await Promise.all([page.waitForNavigation(), page.click(`button:has-text("${buttonText}")`)]);
 }
 
 /**
@@ -50,7 +47,9 @@ export async function clickAndWaitForNavigation(page: Page, buttonText: string):
  * @param value - Value to fill
  */
 export async function fillFieldByLabel(page: Page, label: string, value: string): Promise<void> {
-  const input = page.locator(`label:has-text("${label}") + input, label:has-text("${label}") input`);
+  const input = page.locator(
+    `label:has-text("${label}") + input, label:has-text("${label}") input`
+  );
   await input.fill(value);
 }
 
@@ -77,11 +76,15 @@ export async function isVisible(page: Page, selector: string): Promise<boolean> 
  * @param text - Expected toast text
  * @param timeout - Maximum wait time in ms (default: 5000)
  */
-export async function waitForToast(page: Page, text: string, timeout: number = 5000): Promise<void> {
+export async function waitForToast(
+  page: Page,
+  text: string,
+  timeout: number = 5000
+): Promise<void> {
   // Sonner toasts typically appear in a toast container
-  const toast = page.locator(`[data-sonner-toast]:has-text("${text}")`).or(
-    page.locator(`.toast:has-text("${text}")`)
-  );
+  const toast = page
+    .locator(`[data-sonner-toast]:has-text("${text}")`)
+    .or(page.locator(`.toast:has-text("${text}")`));
   await toast.waitFor({ state: 'visible', timeout });
 }
 

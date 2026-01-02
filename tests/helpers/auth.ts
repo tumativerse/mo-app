@@ -50,28 +50,38 @@ export async function signIn(
   // Clerk loads in an iframe or embedded component
   try {
     // Try to find email input (Clerk may use different selectors)
-    const emailInput = page.locator('input[name="identifier"]').or(page.locator('input[type="email"]'));
+    const emailInput = page
+      .locator('input[name="identifier"]')
+      .or(page.locator('input[type="email"]'));
     await emailInput.waitFor({ timeout: 10000 });
     await emailInput.fill(email);
 
     // Click continue/next button
-    const continueButton = page.locator('button:has-text("Continue")').or(page.locator('button[type="submit"]'));
+    const continueButton = page
+      .locator('button:has-text("Continue")')
+      .or(page.locator('button[type="submit"]'));
     await continueButton.click();
 
     // Wait for password field
-    const passwordInput = page.locator('input[name="password"]').or(page.locator('input[type="password"]'));
+    const passwordInput = page
+      .locator('input[name="password"]')
+      .or(page.locator('input[type="password"]'));
     await passwordInput.waitFor({ timeout: 5000 });
     await passwordInput.fill(password);
 
     // Submit the form
-    const submitButton = page.locator('button:has-text("Continue")').or(page.locator('button[type="submit"]'));
+    const submitButton = page
+      .locator('button:has-text("Continue")')
+      .or(page.locator('button[type="submit"]'));
     await submitButton.click();
 
     // Wait for redirect to dashboard
     await page.waitForURL(/\/(dashboard|app)/, { timeout: 15000 });
   } catch (error) {
     console.error('Sign-in failed:', error);
-    throw new Error(`Failed to sign in: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to sign in: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
@@ -82,7 +92,9 @@ export async function signIn(
  */
 export async function signOut(page: Page): Promise<void> {
   // Look for user button/menu
-  const userButton = page.locator('[data-testid="user-button"]').or(page.locator('button:has-text("Sign out")'));
+  const userButton = page
+    .locator('[data-testid="user-button"]')
+    .or(page.locator('button:has-text("Sign out")'));
 
   try {
     await userButton.click({ timeout: 5000 });

@@ -1,13 +1,13 @@
-import Link from "next/link";
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { Dumbbell } from "lucide-react";
+import Link from 'next/link';
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
+import { Dumbbell } from 'lucide-react';
 
 export default async function HomePage() {
   const { userId } = await auth();
 
   if (userId) {
-    redirect("/onboarding");
+    redirect('/onboarding');
   }
 
   return (

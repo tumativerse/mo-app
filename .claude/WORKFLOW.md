@@ -16,6 +16,7 @@ Standard workflow for building features in the Mo app.
 - [ ] Get user approval on scope
 
 **Tools:**
+
 - AskUserQuestion for clarifications
 - Review related issues/tickets
 
@@ -26,6 +27,7 @@ Standard workflow for building features in the Mo app.
 **Goal:** Gather context before designing.
 
 **Tasks:**
+
 - [ ] Explore existing codebase for similar patterns
 - [ ] Identify files that need changes
 - [ ] Research dependencies or libraries needed
@@ -33,6 +35,7 @@ Standard workflow for building features in the Mo app.
 - [ ] Read CLAUDE.md and MEMORY.md for context
 
 **Tools:**
+
 - Explore agent (thorough codebase search)
 - researcher agent (web/docs research)
 - Glob/Grep for finding files
@@ -47,6 +50,7 @@ Standard workflow for building features in the Mo app.
 **Goal:** Design the solution before coding.
 
 **Tasks:**
+
 - [ ] Design component/module structure
 - [ ] Identify all files to create/modify
 - [ ] Plan data flow and API contracts
@@ -54,6 +58,7 @@ Standard workflow for building features in the Mo app.
 - [ ] Choose appropriate patterns from codebase
 
 **Tools:**
+
 - Plan agent for complex features
 - EnterPlanMode for user approval
 - Use Opus for complex architectural decisions
@@ -69,6 +74,7 @@ Standard workflow for building features in the Mo app.
 **Goal:** Define expected behavior before building.
 
 **Tasks:**
+
 - [ ] Write acceptance tests for user workflows
 - [ ] Define positive scenarios (happy paths)
 - [ ] Define negative scenarios (error handling)
@@ -76,11 +82,13 @@ Standard workflow for building features in the Mo app.
 - [ ] Document expected outcomes
 
 **Test Types:**
+
 - User workflow tests (E2E scenarios)
 - API contract tests (request/response format)
 - Component behavior tests (user interactions)
 
 **Example:**
+
 ```typescript
 // Before implementing login
 describe('User Login', () => {
@@ -102,6 +110,7 @@ describe('User Login', () => {
 ```
 
 **Tools:**
+
 - Use `skills/test.md` patterns
 - These tests will **fail initially** - that's expected
 
@@ -114,6 +123,7 @@ describe('User Login', () => {
 **Goal:** Implement the feature to pass Phase 1 tests.
 
 **Tasks:**
+
 - [ ] Follow existing patterns (check rules/ and skills/)
 - [ ] Create/modify files as planned
 - [ ] Write clean, type-safe code
@@ -123,12 +133,14 @@ describe('User Login', () => {
 - [ ] Implementation is done when Phase 1 tests pass
 
 **Patterns to follow:**
+
 - Components: `skills/component.md`
 - API routes: `skills/api.md`
 - TypeScript: `rules/typescript.md`
 - React: `rules/react.md`
 
 **Auto-applied:**
+
 - ESLint fixes (via hooks)
 - Prettier formatting (via hooks)
 - Type checking (TypeScript)
@@ -136,6 +148,7 @@ describe('User Login', () => {
 **Model:** Use Sonnet for standard implementation.
 
 **TDD Loop:**
+
 ```
 1. Run Phase 1 test → Fails
 2. Write code to make it pass
@@ -151,6 +164,7 @@ describe('User Login', () => {
 **Goal:** Verify implementation details and coverage.
 
 **Tasks:**
+
 - [ ] Write unit tests for individual functions
 - [ ] Write integration tests for API + DB
 - [ ] Write component tests for UI rendering
@@ -158,12 +172,14 @@ describe('User Login', () => {
 - [ ] Achieve 80%+ code coverage
 
 **Test Types:**
+
 - **Unit tests**: Pure functions, utilities, helpers
 - **Integration tests**: API routes with database
 - **Component tests**: React components with RTL
 - **E2E tests**: Full user flows (optional, expensive)
 
 **Example:**
+
 ```typescript
 // After implementing login
 describe('AuthService', () => {
@@ -181,12 +197,14 @@ describe('AuthService', () => {
 ```
 
 **Patterns:**
+
 - Follow `rules/testing.md`
 - Use `skills/test.md` for generation
 - React Testing Library for components
 - Mock external dependencies
 
 **Tools:**
+
 - `/test` command to run tests
 - test-runner agent for analysis
 
@@ -199,6 +217,7 @@ describe('AuthService', () => {
 **Goal:** Ensure code quality before finalizing.
 
 **Tasks:**
+
 - [ ] Self-review for obvious issues
 - [ ] Check TypeScript errors
 - [ ] Verify no security issues
@@ -206,12 +225,14 @@ describe('AuthService', () => {
 - [ ] Check accessibility (for UI)
 
 **Tools:**
+
 - code-reviewer agent
 - `/review` command
 - ui-improver agent (for UI features)
 - performance-analyzer agent (if performance-critical)
 
 **Checklist:**
+
 - [ ] No `any` types
 - [ ] Proper error handling
 - [ ] Auth checks in API routes
@@ -225,6 +246,7 @@ describe('AuthService', () => {
 **Goal:** Confirm everything builds and works.
 
 **Tasks:**
+
 - [ ] Run full build pipeline
 - [ ] Fix any lint/type/test errors
 - [ ] Manual testing in browser
@@ -232,6 +254,7 @@ describe('AuthService', () => {
 - [ ] Check console for errors
 
 **Tools:**
+
 - `/build` command (lint → typecheck → test → build)
 - Browser DevTools
 
@@ -244,6 +267,7 @@ describe('AuthService', () => {
 **Goal:** Capture knowledge for the future.
 
 **Tasks:**
+
 - [ ] Update MEMORY.md with decisions/gotchas
 - [ ] Add JSDoc for public APIs/components
 - [ ] Update mo-arch docs if needed
@@ -252,15 +276,16 @@ describe('AuthService', () => {
 
 **Documentation types:**
 
-| Type | When | Where |
-|------|------|-------|
-| Inline comments | Complex logic | Code files |
-| JSDoc | Public APIs/components | Code files |
-| Architecture decisions | Major design choices | MEMORY.md |
-| User-facing docs | New features | mo-arch/docs/ |
-| API docs | New endpoints | mo-arch/docs/api/ |
+| Type                   | When                   | Where             |
+| ---------------------- | ---------------------- | ----------------- |
+| Inline comments        | Complex logic          | Code files        |
+| JSDoc                  | Public APIs/components | Code files        |
+| Architecture decisions | Major design choices   | MEMORY.md         |
+| User-facing docs       | New features           | mo-arch/docs/     |
+| API docs               | New endpoints          | mo-arch/docs/api/ |
 
 **Tools:**
+
 - doc-writer agent for extensive docs
 - `/docs` command
 
@@ -271,6 +296,7 @@ describe('AuthService', () => {
 **Goal:** Version control and create PR.
 
 **Tasks:**
+
 - [ ] Stage relevant files only
 - [ ] Review staged changes (`git diff --staged`)
 - [ ] Write clear commit message
@@ -278,6 +304,7 @@ describe('AuthService', () => {
 - [ ] Link related issues
 
 **Commit Message Format:**
+
 ```
 <type>: <short description>
 
@@ -290,6 +317,7 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 **Types:** feat, fix, refactor, docs, test, chore
 
 **Tools:**
+
 - `/review staged` before committing
 - `gh pr create` for PRs
 
@@ -300,6 +328,7 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 **Goal:** Ship to users and verify.
 
 **Tasks:**
+
 - [ ] Deploy to staging
 - [ ] Smoke test on staging
 - [ ] Deploy to production
@@ -311,6 +340,7 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 ## Quick Reference
 
 ### For Simple Features (< 30 min)
+
 ```
 1. Research (5 min)
 2. Build (15 min)
@@ -319,6 +349,7 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 ```
 
 ### For Medium Features (1-3 hrs)
+
 ```
 1. Research (15 min)
 2. Plan Architecture (15 min)
@@ -330,6 +361,7 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 ```
 
 ### For Complex Features (> 3 hrs)
+
 ```
 1. Define Requirements (30 min)
 2. Research (30 min)
@@ -359,6 +391,7 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 ## Workflow Variations
 
 ### Test-Driven Development (TDD)
+
 ```
 1. Research
 2. Plan Architecture
@@ -370,6 +403,7 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 ```
 
 ### Spike/Prototype
+
 ```
 1. Research
 2. Quick prototype (no tests)
@@ -382,17 +416,18 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 
 ## Model Selection During Workflow
 
-| Step | Recommended Model |
-|------|-------------------|
-| Research | Sonnet (fast exploration) |
-| Plan Architecture (simple) | Sonnet |
+| Step                        | Recommended Model         |
+| --------------------------- | ------------------------- |
+| Research                    | Sonnet (fast exploration) |
+| Plan Architecture (simple)  | Sonnet                    |
 | Plan Architecture (complex) | **Opus** (deep reasoning) |
-| Build | Sonnet |
-| Write Tests | Sonnet |
-| Review | Sonnet |
-| Document | Sonnet |
+| Build                       | Sonnet                    |
+| Write Tests                 | Sonnet                    |
+| Review                      | Sonnet                    |
+| Document                    | Sonnet                    |
 
 Use Opus when:
+
 - Designing new system architecture
 - Making critical database schema decisions
 - Debugging complex multi-file issues

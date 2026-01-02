@@ -19,9 +19,7 @@ test.describe('Authentication - Unauthenticated Users', () => {
     // Should redirect to Clerk (either /sign-in or Clerk's handshake URL)
     const url = page.url();
     expect(
-      url.includes('sign-in') ||
-      url.includes('clerk.accounts.dev') ||
-      url.includes('clerk')
+      url.includes('sign-in') || url.includes('clerk.accounts.dev') || url.includes('clerk')
     ).toBeTruthy();
   });
 
@@ -35,9 +33,7 @@ test.describe('Authentication - Unauthenticated Users', () => {
     // Should redirect to Clerk authentication
     const url = page.url();
     expect(
-      url.includes('sign-in') ||
-      url.includes('clerk.accounts.dev') ||
-      url.includes('clerk')
+      url.includes('sign-in') || url.includes('clerk.accounts.dev') || url.includes('clerk')
     ).toBeTruthy();
   });
 
@@ -51,10 +47,7 @@ test.describe('Authentication - Unauthenticated Users', () => {
 
     // Should be on a Clerk-related page (may redirect through handshake)
     const url = page.url();
-    expect(
-      url.includes('sign-in') ||
-      url.includes('clerk')
-    ).toBeTruthy();
+    expect(url.includes('sign-in') || url.includes('clerk')).toBeTruthy();
   });
 
   test('can access sign-up page', async ({ page }) => {
@@ -67,9 +60,6 @@ test.describe('Authentication - Unauthenticated Users', () => {
 
     // Should be on a Clerk-related page (may redirect through handshake)
     const url = page.url();
-    expect(
-      url.includes('sign-up') ||
-      url.includes('clerk')
-    ).toBeTruthy();
+    expect(url.includes('sign-up') || url.includes('clerk')).toBeTruthy();
   });
 });

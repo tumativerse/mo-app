@@ -3,6 +3,7 @@
 ## CRITICAL: Read Before ANY UI Work
 
 ### 🚫 NEVER DO THESE:
+
 1. ❌ Hardcode colors: `className="text-red-500"`
 2. ❌ Hardcode spacing: `className="p-4"`
 3. ❌ Hardcode sizes: `className="w-[127px]"`
@@ -11,6 +12,7 @@
 6. ❌ Duplicate component variants
 
 ### ✅ ALWAYS DO THESE:
+
 1. ✅ Import from `lib/design/tokens.ts` for values
 2. ✅ Use variants from `lib/design/variants.ts`
 3. ✅ Use CSS variables for theme colors
@@ -19,6 +21,7 @@
 6. ✅ Semantic HTML (button not div with onClick)
 
 ### Required Imports
+
 ```typescript
 import { tokens } from '@/lib/design/tokens';
 import { buttonVariants, cardVariants } from '@/lib/design/variants';
@@ -26,6 +29,7 @@ import { cn } from '@/lib/utils';
 ```
 
 ### Component Pattern
+
 ```tsx
 // ✅ CORRECT
 <Button variant="primary" size="lg">Start</Button>
@@ -35,12 +39,14 @@ import { cn } from '@/lib/utils';
 ```
 
 ### Before You Write ANY Component:
+
 1. Check if variant exists in `lib/design/variants.ts`
 2. If not, CREATE the variant first
 3. Then use the variant in the component
 4. NEVER hardcode values in the component itself
 
 ### Mobile Checklist (Every Component):
+
 - [ ] Touch targets ≥ 44px height
 - [ ] Text inputs use text-base (16px+)
 - [ ] Responsive spacing (sm: md: lg:)
@@ -48,6 +54,7 @@ import { cn } from '@/lib/utils';
 - [ ] No horizontal scroll
 
 ### Browser & Device Compatibility Checklist:
+
 - [ ] **Cross-Browser Testing**: Works on Chrome, Safari, Firefox, Edge
 - [ ] **Responsive Design**: Mobile (375px), Tablet (768px), Desktop (1024px+)
 - [ ] **Touch & Mouse**: Hover states have active/focus alternatives for touch devices
@@ -60,6 +67,7 @@ import { cn } from '@/lib/utils';
 - [ ] **Orientation**: Works in both portrait and landscape on mobile/tablet
 
 ### Device-Specific Optimizations:
+
 - **iOS**:
   - [ ] No text-sm or smaller on inputs (prevents zoom)
   - [ ] Touch targets minimum 44px height
@@ -73,9 +81,10 @@ import { cn } from '@/lib/utils';
   - [ ] Focus indicators always visible
 
 ### Layout & Positioning Checklist:
-- [ ] **Flexbox Alignment**: All flex containers have items-*, justify-*, or gap-* properties
+
+- [ ] **Flexbox Alignment**: All flex containers have items-_, justify-_, or gap-\* properties
 - [ ] **Grid Layouts**: Use CSS Grid for complex 2D layouts, Flexbox for 1D
-- [ ] **Container Centering**: max-w-* containers use mx-auto for centering
+- [ ] **Container Centering**: max-w-\* containers use mx-auto for centering
 - [ ] **Container Width Consistency**: Use same max-width across header, content, footer for alignment
   - Example: If content is max-w-2xl, header/footer should also be max-w-2xl
   - Different widths create visible misalignment on desktop browsers
@@ -88,7 +97,7 @@ import { cn } from '@/lib/utils';
   - [ ] Horizontal scroll only for intentional cases (carousels, tables)
   - [ ] Scrollable areas have visible indicators
 - [ ] **Safe Areas**: Fixed headers/footers account for notches and home indicators
-- [ ] **Spacing Consistency**: Use gap-* for flex/grid spacing instead of margins
+- [ ] **Spacing Consistency**: Use gap-\* for flex/grid spacing instead of margins
 - [ ] **Viewport Units**: Avoid vh on mobile (virtual keyboard issues), use dvh or min-h-screen
 - [ ] **Sticky Elements**: Test behavior during scroll on all devices
 - [ ] **Content Width**: Main content containers max at 1280px-1440px for readability
@@ -98,11 +107,13 @@ import { cn } from '@/lib/utils';
 **CORE PRINCIPLE: Same Strategy + Responsive Sizing = Consistent UX**
 
 ALWAYS use the same strategy across all breakpoints. Only change:
+
 - ✅ Sizes (h-6 sm:h-10, w-6 sm:w-10)
 - ✅ Spacing (gap-2 sm:gap-4, p-2 sm:p-4)
 - ✅ Margins/Padding values (mx-2 sm:mx-4)
 
 NEVER change:
+
 - ❌ Alignment strategy (justify-between sm:justify-center)
 - ❌ Display type (block sm:flex, grid sm:flex)
 - ❌ Positioning type (relative sm:absolute)
@@ -112,6 +123,7 @@ NEVER change:
 ### Examples by Category:
 
 **Flexbox Alignment:**
+
 ```tsx
 // ✅ CORRECT: Same justify, different spacing
 <div className="flex justify-center gap-2 sm:gap-4">
@@ -125,6 +137,7 @@ NEVER change:
 ```
 
 **Items Alignment:**
+
 ```tsx
 // ✅ CORRECT: Same alignment, different sizes
 <div className="flex items-center gap-2 sm:gap-4">
@@ -138,6 +151,7 @@ NEVER change:
 ```
 
 **Display Type:**
+
 ```tsx
 // ✅ CORRECT: Always flex, change direction
 <div className="flex flex-col sm:flex-row gap-4">
@@ -151,6 +165,7 @@ NEVER change:
 ```
 
 **Text Alignment:**
+
 ```tsx
 // ✅ CORRECT: Same alignment always
 <p className="text-center text-sm sm:text-base">
@@ -164,6 +179,7 @@ NEVER change:
 ```
 
 **Positioning:**
+
 ```tsx
 // ✅ CORRECT: Same position type, different offsets
 <div className="absolute top-2 sm:top-4 right-2 sm:right-4">
@@ -177,6 +193,7 @@ NEVER change:
 ```
 
 **Why This Matters:**
+
 - Consistent visual center point across all devices
 - Predictable user experience - no surprises
 - Easier to maintain (one strategy rule, not multiple)
@@ -218,6 +235,7 @@ NEVER change:
 ```
 
 **Breakpoint Guidelines:**
+
 - `sm:` (640px) - **Primary split** - Mobile vs Desktop
 - `md:` (768px) - Tablet landscape, small desktop refinements
 - `lg:` (1024px) - Desktop refinements, multi-column layouts
@@ -272,6 +290,7 @@ NEVER change:
 ```
 
 **When to hide vs resize:**
+
 - Hide: Different UI patterns (hamburger vs nav bar, drawer vs sidebar)
 - Resize: Same content, different sizes (images, text, buttons)
 
@@ -315,10 +334,12 @@ NEVER change:
 ```
 
 **Quick calculation guide:**
+
 - Available width: 375px - 32px padding = **343px**
 - Always test on real mobile device or Chrome DevTools (375×667)
 
 ### Component Positioning Patterns:
+
 ```tsx
 // ✅ CORRECT: Centered container
 <div className="mx-auto max-w-4xl px-4">
@@ -349,6 +370,7 @@ NEVER change:
 ```
 
 ### Theme Checklist:
+
 - [ ] Uses CSS variables (hsl(var(--primary)))
 - [ ] Works in both light AND dark mode
 - [ ] No hardcoded colors that break in one theme

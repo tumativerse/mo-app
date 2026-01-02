@@ -5,4 +5,4 @@
  * Systems: MoSettings, MoGear, MoAlerts
  */
 
-export * from "./settings";
+export * from './settings';

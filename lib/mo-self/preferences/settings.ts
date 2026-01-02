@@ -11,10 +11,10 @@
  * using AES-256-GCM encryption from @/lib/security/encryption
  */
 
-import { db } from "@/lib/db";
-import { userPreferences } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
-import { encrypt, decrypt } from "@/lib/security/encryption";
+import { db } from '@/lib/db';
+import { userPreferences } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import { encrypt, decrypt } from '@/lib/security/encryption';
 
 export interface UserPreferences {
   // Training preferences (encrypted)
@@ -27,12 +27,20 @@ export interface UserPreferences {
   restDaysPreference: string[] | null; // NEW: ["sunday", "wednesday", etc.]
 
   // Equipment (encrypted)
-  defaultEquipmentLevel: "full_gym" | "home_gym" | "bodyweight";
+  defaultEquipmentLevel: 'full_gym' | 'home_gym' | 'bodyweight';
   availableEquipment: string[] | null;
 
   // Lifestyle (encrypted)
-  activityLevel: "sedentary" | "lightly_active" | "moderately_active" | "very_active" | null; // NEW
-  occupationType: "desk_job" | "standing_job" | "physical_labor" | "mixed" | "student" | "retired" | "other" | null; // NEW
+  activityLevel: 'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active' | null; // NEW
+  occupationType:
+    | 'desk_job'
+    | 'standing_job'
+    | 'physical_labor'
+    | 'mixed'
+    | 'student'
+    | 'retired'
+    | 'other'
+    | null; // NEW
   typicalBedtime: string | null; // NEW: "22:30"
   typicalWakeTime: string | null; // NEW: "06:30"
 
@@ -46,7 +54,7 @@ export interface UserPreferences {
   weightUnit: string;
 
   // Theme settings (NOT encrypted)
-  theme: "light" | "dark";
+  theme: 'light' | 'dark';
   accentColor: string;
 }
 
@@ -61,12 +69,19 @@ export interface UpdatePreferencesInput {
   restDaysPreference?: string[];
 
   // Equipment
-  defaultEquipmentLevel?: "full_gym" | "home_gym" | "bodyweight";
+  defaultEquipmentLevel?: 'full_gym' | 'home_gym' | 'bodyweight';
   availableEquipment?: string[];
 
   // Lifestyle
-  activityLevel?: "sedentary" | "lightly_active" | "moderately_active" | "very_active";
-  occupationType?: "desk_job" | "standing_job" | "physical_labor" | "mixed" | "student" | "retired" | "other";
+  activityLevel?: 'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active';
+  occupationType?:
+    | 'desk_job'
+    | 'standing_job'
+    | 'physical_labor'
+    | 'mixed'
+    | 'student'
+    | 'retired'
+    | 'other';
   typicalBedtime?: string;
   typicalWakeTime?: string;
 
@@ -74,13 +89,13 @@ export interface UpdatePreferencesInput {
   preferredCardio?: string;
 
   // App settings
-  warmupDuration?: "quick" | "normal" | "extended";
+  warmupDuration?: 'quick' | 'normal' | 'extended';
   skipGeneralWarmup?: boolean;
   includeMobilityWork?: boolean;
-  weightUnit?: "lbs" | "kg";
+  weightUnit?: 'lbs' | 'kg';
 
   // Theme settings
-  theme?: "light" | "dark";
+  theme?: 'light' | 'dark';
   accentColor?: string;
 }
 
@@ -95,7 +110,7 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   restDaysPreference: null,
 
   // Equipment
-  defaultEquipmentLevel: "full_gym",
+  defaultEquipmentLevel: 'full_gym',
   availableEquipment: null,
 
   // Lifestyle
@@ -108,14 +123,14 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   preferredCardio: null,
 
   // App settings
-  warmupDuration: "normal",
+  warmupDuration: 'normal',
   skipGeneralWarmup: false,
   includeMobilityWork: true,
-  weightUnit: "lbs",
+  weightUnit: 'lbs',
 
   // Theme settings
-  theme: "dark",
-  accentColor: "#10b981",
+  theme: 'dark',
+  accentColor: '#10b981',
 };
 
 /**
@@ -156,15 +171,25 @@ function encryptPreferencesForDb(prefs: Partial<UserPreferences>): Record<string
     // Training (encrypted)
     fitnessGoal: prefs.fitnessGoal ? encrypt(prefs.fitnessGoal) : null,
     experienceLevel: prefs.experienceLevel ? encrypt(prefs.experienceLevel) : null,
-    trainingFrequency: prefs.trainingFrequency !== undefined ? encrypt(String(prefs.trainingFrequency)) : null,
-    sessionDuration: prefs.sessionDuration !== undefined ? encrypt(String(prefs.sessionDuration)) : null,
+    trainingFrequency:
+      prefs.trainingFrequency !== undefined ? encrypt(String(prefs.trainingFrequency)) : null,
+    sessionDuration:
+      prefs.sessionDuration !== undefined ? encrypt(String(prefs.sessionDuration)) : null,
     focusAreas: prefs.focusAreas ? encrypt(JSON.stringify(prefs.focusAreas)) : null,
-    preferredTrainingTimes: prefs.preferredTrainingTimes ? encrypt(JSON.stringify(prefs.preferredTrainingTimes)) : null,
-    restDaysPreference: prefs.restDaysPreference ? encrypt(JSON.stringify(prefs.restDaysPreference)) : null,
+    preferredTrainingTimes: prefs.preferredTrainingTimes
+      ? encrypt(JSON.stringify(prefs.preferredTrainingTimes))
+      : null,
+    restDaysPreference: prefs.restDaysPreference
+      ? encrypt(JSON.stringify(prefs.restDaysPreference))
+      : null,
 
     // Equipment (encrypted)
-    defaultEquipmentLevel: prefs.defaultEquipmentLevel ? encrypt(prefs.defaultEquipmentLevel) : null,
-    availableEquipment: prefs.availableEquipment ? encrypt(JSON.stringify(prefs.availableEquipment)) : null,
+    defaultEquipmentLevel: prefs.defaultEquipmentLevel
+      ? encrypt(prefs.defaultEquipmentLevel)
+      : null,
+    availableEquipment: prefs.availableEquipment
+      ? encrypt(JSON.stringify(prefs.availableEquipment))
+      : null,
 
     // Lifestyle (encrypted)
     activityLevel: prefs.activityLevel ? encrypt(prefs.activityLevel) : null,
@@ -188,16 +213,28 @@ function decryptPreferencesFromDb(prefs: typeof userPreferences.$inferSelect): U
     trainingFrequency: prefs.trainingFrequency ? Number(decrypt(prefs.trainingFrequency)) : 6,
     sessionDuration: prefs.sessionDuration ? Number(decrypt(prefs.sessionDuration)) : 75,
     focusAreas: prefs.focusAreas ? JSON.parse(decrypt(prefs.focusAreas)!) : null,
-    preferredTrainingTimes: prefs.preferredTrainingTimes ? JSON.parse(decrypt(prefs.preferredTrainingTimes)!) : null,
-    restDaysPreference: prefs.restDaysPreference ? JSON.parse(decrypt(prefs.restDaysPreference)!) : null,
+    preferredTrainingTimes: prefs.preferredTrainingTimes
+      ? JSON.parse(decrypt(prefs.preferredTrainingTimes)!)
+      : null,
+    restDaysPreference: prefs.restDaysPreference
+      ? JSON.parse(decrypt(prefs.restDaysPreference)!)
+      : null,
 
     // Equipment (decrypted)
-    defaultEquipmentLevel: prefs.defaultEquipmentLevel ? (decrypt(prefs.defaultEquipmentLevel) as UserPreferences["defaultEquipmentLevel"]) : "full_gym",
-    availableEquipment: prefs.availableEquipment ? JSON.parse(decrypt(prefs.availableEquipment)!) : null,
+    defaultEquipmentLevel: prefs.defaultEquipmentLevel
+      ? (decrypt(prefs.defaultEquipmentLevel) as UserPreferences['defaultEquipmentLevel'])
+      : 'full_gym',
+    availableEquipment: prefs.availableEquipment
+      ? JSON.parse(decrypt(prefs.availableEquipment)!)
+      : null,
 
     // Lifestyle (decrypted)
-    activityLevel: prefs.activityLevel ? (decrypt(prefs.activityLevel) as UserPreferences["activityLevel"]) : null,
-    occupationType: prefs.occupationType ? (decrypt(prefs.occupationType) as UserPreferences["occupationType"]) : null,
+    activityLevel: prefs.activityLevel
+      ? (decrypt(prefs.activityLevel) as UserPreferences['activityLevel'])
+      : null,
+    occupationType: prefs.occupationType
+      ? (decrypt(prefs.occupationType) as UserPreferences['occupationType'])
+      : null,
     typicalBedtime: prefs.typicalBedtime ? decrypt(prefs.typicalBedtime) : null,
     typicalWakeTime: prefs.typicalWakeTime ? decrypt(prefs.typicalWakeTime) : null,
 
@@ -205,14 +242,14 @@ function decryptPreferencesFromDb(prefs: typeof userPreferences.$inferSelect): U
     preferredCardio: prefs.preferredCardio ? decrypt(prefs.preferredCardio) : null,
 
     // App settings (NOT encrypted)
-    warmupDuration: prefs.warmupDuration || "normal",
+    warmupDuration: prefs.warmupDuration || 'normal',
     skipGeneralWarmup: prefs.skipGeneralWarmup || false,
     includeMobilityWork: prefs.includeMobilityWork ?? true,
-    weightUnit: prefs.weightUnit || "lbs",
+    weightUnit: prefs.weightUnit || 'lbs',
 
     // Theme settings (NOT encrypted)
-    theme: (prefs.theme || "dark") as "light" | "dark",
-    accentColor: prefs.accentColor || "#10b981",
+    theme: (prefs.theme || 'dark') as 'light' | 'dark',
+    accentColor: prefs.accentColor || '#10b981',
   };
 }
 
@@ -228,16 +265,19 @@ export async function updatePreferences(
   const encryptedUpdates = encryptPreferencesForDb(updates);
 
   const nonEncryptedUpdates: {
-    warmupDuration?: "quick" | "normal" | "extended";
+    warmupDuration?: 'quick' | 'normal' | 'extended';
     skipGeneralWarmup?: boolean;
     includeMobilityWork?: boolean;
-    weightUnit?: "lbs" | "kg";
-    theme?: "light" | "dark";
+    weightUnit?: 'lbs' | 'kg';
+    theme?: 'light' | 'dark';
     accentColor?: string;
   } = {};
-  if (updates.warmupDuration !== undefined) nonEncryptedUpdates.warmupDuration = updates.warmupDuration;
-  if (updates.skipGeneralWarmup !== undefined) nonEncryptedUpdates.skipGeneralWarmup = updates.skipGeneralWarmup;
-  if (updates.includeMobilityWork !== undefined) nonEncryptedUpdates.includeMobilityWork = updates.includeMobilityWork;
+  if (updates.warmupDuration !== undefined)
+    nonEncryptedUpdates.warmupDuration = updates.warmupDuration;
+  if (updates.skipGeneralWarmup !== undefined)
+    nonEncryptedUpdates.skipGeneralWarmup = updates.skipGeneralWarmup;
+  if (updates.includeMobilityWork !== undefined)
+    nonEncryptedUpdates.includeMobilityWork = updates.includeMobilityWork;
   if (updates.weightUnit !== undefined) nonEncryptedUpdates.weightUnit = updates.weightUnit;
   if (updates.theme !== undefined) nonEncryptedUpdates.theme = updates.theme;
   if (updates.accentColor !== undefined) nonEncryptedUpdates.accentColor = updates.accentColor;
@@ -256,8 +296,10 @@ export async function updatePreferences(
       ...encryptedUpdates,
       ...nonEncryptedUpdates,
       warmupDuration: nonEncryptedUpdates.warmupDuration || DEFAULT_PREFERENCES.warmupDuration,
-      skipGeneralWarmup: nonEncryptedUpdates.skipGeneralWarmup ?? DEFAULT_PREFERENCES.skipGeneralWarmup,
-      includeMobilityWork: nonEncryptedUpdates.includeMobilityWork ?? DEFAULT_PREFERENCES.includeMobilityWork,
+      skipGeneralWarmup:
+        nonEncryptedUpdates.skipGeneralWarmup ?? DEFAULT_PREFERENCES.skipGeneralWarmup,
+      includeMobilityWork:
+        nonEncryptedUpdates.includeMobilityWork ?? DEFAULT_PREFERENCES.includeMobilityWork,
       weightUnit: nonEncryptedUpdates.weightUnit || DEFAULT_PREFERENCES.weightUnit,
       theme: nonEncryptedUpdates.theme || DEFAULT_PREFERENCES.theme,
       accentColor: nonEncryptedUpdates.accentColor || DEFAULT_PREFERENCES.accentColor,
@@ -283,7 +325,7 @@ export async function updatePreferences(
  */
 export async function getEquipmentLevel(
   userId: string
-): Promise<"full_gym" | "home_gym" | "bodyweight"> {
+): Promise<'full_gym' | 'home_gym' | 'bodyweight'> {
   const prefs = await getPreferences(userId);
   return prefs.defaultEquipmentLevel;
 }
@@ -307,9 +349,7 @@ export async function shouldSkipWarmup(userId: string): Promise<boolean> {
 /**
  * Get user's available equipment list
  */
-export async function getAvailableEquipment(
-  userId: string
-): Promise<string[] | null> {
+export async function getAvailableEquipment(userId: string): Promise<string[] | null> {
   const prefs = await getPreferences(userId);
   return prefs.availableEquipment;
 }
@@ -317,9 +357,7 @@ export async function getAvailableEquipment(
 /**
  * Get training goals for weight suggestions
  */
-export async function getTrainingGoals(
-  userId: string
-): Promise<{
+export async function getTrainingGoals(userId: string): Promise<{
   goal: string | null;
   experience: string | null;
   focusAreas: string[] | null;

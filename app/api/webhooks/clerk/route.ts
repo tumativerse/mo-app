@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Webhook } from "svix";
-import { headers } from "next/headers";
-import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { NextRequest, NextResponse } from 'next/server';
+import { Webhook } from 'svix';
+import { headers } from 'next/headers';
+import { db } from '@/lib/db';
+import { users } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
 
 // Clerk webhook event types
 type ClerkWebhookEvent = {
-  type: "user.created" | "user.updated" | "user.deleted";
+  type: 'user.created' | 'user.updated' | 'user.deleted';
   data: {
     id: string;
     email_addresses: Array<{
@@ -29,25 +29,19 @@ export async function POST(req: NextRequest) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
-    console.error("CLERK_WEBHOOK_SECRET is not set");
-    return NextResponse.json(
-      { error: "Webhook secret not configured" },
-      { status: 500 }
-    );
+    console.error('CLERK_WEBHOOK_SECRET is not set');
+    return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 500 });
   }
 
   // Get headers
   const headerPayload = await headers();
-  const svix_id = headerPayload.get("svix-id");
-  const svix_timestamp = headerPayload.get("svix-timestamp");
-  const svix_signature = headerPayload.get("svix-signature");
+  const svix_id = headerPayload.get('svix-id');
+  const svix_timestamp = headerPayload.get('svix-timestamp');
+  const svix_signature = headerPayload.get('svix-signature');
 
   // Verify headers exist
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return NextResponse.json(
-      { error: "Missing svix headers" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: 'Missing svix headers' }, { status: 400 });
   }
 
   // Get body
@@ -60,16 +54,13 @@ export async function POST(req: NextRequest) {
 
   try {
     evt = wh.verify(body, {
-      "svix-id": svix_id,
-      "svix-timestamp": svix_timestamp,
-      "svix-signature": svix_signature,
+      'svix-id': svix_id,
+      'svix-timestamp': svix_timestamp,
+      'svix-signature': svix_signature,
     }) as ClerkWebhookEvent;
   } catch (err) {
-    console.error("Webhook verification failed:", err);
-    return NextResponse.json(
-      { error: "Invalid signature" },
-      { status: 400 }
-    );
+    console.error('Webhook verification failed:', err);
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
   // Handle the event
@@ -80,15 +71,15 @@ export async function POST(req: NextRequest) {
 
   try {
     switch (eventType) {
-      case "user.created":
+      case 'user.created':
         await handleUserCreated(clerkId, email_addresses);
         break;
 
-      case "user.updated":
+      case 'user.updated':
         await handleUserUpdated(clerkId, email_addresses);
         break;
 
-      case "user.deleted":
+      case 'user.deleted':
         await handleUserDeleted(clerkId);
         break;
 
@@ -99,10 +90,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error(`Error handling ${eventType}:`, error);
-    return NextResponse.json(
-      { error: "Webhook handler failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 });
   }
 }
 
@@ -122,7 +110,7 @@ async function handleUserCreated(
       console.log(`Test event received for user ${clerkId} - skipping (no email)`);
       return;
     }
-    throw new Error("No email address found for user");
+    throw new Error('No email address found for user');
   }
 
   console.log(`Creating user: ${clerkId} (${primaryEmail})`);
@@ -143,7 +131,7 @@ async function handleUserCreated(
     .values({
       clerkId,
       email: primaryEmail,
-      units: "imperial", // Default to imperial
+      units: 'imperial', // Default to imperial
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -171,7 +159,7 @@ async function handleUserUpdated(
       console.log(`Test event received for user ${clerkId} - skipping (no email)`);
       return;
     }
-    throw new Error("No email address found for user");
+    throw new Error('No email address found for user');
   }
 
   console.log(`Updating user: ${clerkId} (${primaryEmail})`);

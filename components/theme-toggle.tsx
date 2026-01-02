@@ -27,11 +27,7 @@ export function ThemeToggle() {
       aria-label={`Switch to ${currentTheme === 'dark' ? 'light' : 'dark'} theme`}
       suppressHydrationWarning
     >
-      {currentTheme === 'dark' ? (
-        <Sun className="h-5 w-5" />
-      ) : (
-        <Moon className="h-5 w-5" />
-      )}
+      {currentTheme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
     </Button>
   );
 }

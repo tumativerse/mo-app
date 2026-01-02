@@ -3,6 +3,7 @@
 ## 📋 BEFORE WRITING ANY CODE - READ THIS ENTIRE FILE
 
 ### Step 1: Read the Rules (MANDATORY)
+
 - [ ] Read `.claude/rules/design-system.md`
 - [ ] Read `.claude/rules/architecture.md`
 - [ ] Read `.claude/rules/typescript.md`
@@ -11,6 +12,7 @@
 ### Step 2: Plan the Page/Component
 
 **Answer these questions:**
+
 1. What is this page/component for? (write 1 sentence)
 2. What data does it need? (list data requirements)
 3. Is it a Server or Client Component? (default: Server)
@@ -21,11 +23,13 @@
 ### Step 3: Check Design System
 
 **Variants Exist?**
+
 - [ ] Check `lib/design/variants.ts` - does the variant exist?
 - [ ] If NO → Create the variant FIRST
 - [ ] If YES → Use existing variant
 
 **Tokens Exist?**
+
 - [ ] Check `lib/design/tokens.ts` - do values exist?
 - [ ] If NO → Add to tokens FIRST
 - [ ] If YES → Use existing tokens
@@ -33,23 +37,27 @@
 ### Step 4: Architecture Check
 
 **File Structure:**
+
 - [ ] Putting component in correct location (feature-based)?
 - [ ] Creating hook in right place (colocation)?
 - [ ] Types going in `lib/types/` if shared?
 
 **Server vs Client:**
+
 - [ ] Marked `'use client'` ONLY if needed
 - [ ] Using Server Component if possible
 
 ### Step 5: Build the Component
 
 **TypeScript:**
+
 - [ ] All props have interface
 - [ ] No `any` types
 - [ ] Shared types imported from `lib/types`
 - [ ] API responses typed
 
 **Design System:**
+
 - [ ] NO hardcoded colors
 - [ ] NO hardcoded spacing
 - [ ] NO hardcoded sizes
@@ -58,6 +66,7 @@
 - [ ] Using CSS variables for theme colors
 
 **Mobile:**
+
 - [ ] Touch targets ≥ 44px
 - [ ] Text inputs ≥ 16px (text-base)
 - [ ] Responsive breakpoints (sm: md: lg:)
@@ -65,6 +74,7 @@
 - [ ] Tested at 375px width
 
 **Accessibility:**
+
 - [ ] Semantic HTML (button not div)
 - [ ] ARIA labels for icon buttons
 - [ ] Keyboard navigation works
@@ -73,11 +83,13 @@
 ### Step 6: Test Before Committing
 
 **Build Test:**
+
 - [ ] `npm run build` - no errors
 - [ ] `npm run type-check` - passes
 - [ ] No ESLint errors
 
 **Manual Test:**
+
 - [ ] Works in Light theme
 - [ ] Works in Dark theme
 - [ ] Works on mobile (375px)
@@ -89,17 +101,20 @@
 ### Step 7: Code Review (Self)
 
 **Design System Compliance:**
+
 - [ ] Searched for hardcoded colors (text-red-500, etc.) → NONE
 - [ ] Searched for hardcoded spacing (p-4, m-2, etc.) → NONE
 - [ ] Searched for inline styles → NONE (unless absolutely required)
 - [ ] All values come from tokens or variants
 
 **TypeScript Compliance:**
+
 - [ ] Searched for `any` → NONE
 - [ ] All functions have types
 - [ ] All props have interfaces
 
 **Architecture Compliance:**
+
 - [ ] Component < 200 lines (if bigger, extracted)
 - [ ] No prop drilling > 2 levels
 - [ ] Hooks extracted to separate files
@@ -108,6 +123,7 @@
 ### Step 8: Git Commit
 
 **Conventional Commit:**
+
 ```bash
 feat: add workout card to dashboard
 fix: correct theme toggle in settings
@@ -115,6 +131,7 @@ refactor: extract button variants
 ```
 
 **Before Push:**
+
 - [ ] All tests above passed
 - [ ] Committed with conventional commit message
 - [ ] Ready for production
@@ -139,6 +156,7 @@ If you see ANY of these, STOP and fix:
 ## 💡 Quick Reference
 
 **Import Always:**
+
 ```typescript
 import { tokens } from '@/lib/design/tokens';
 import { buttonVariants, cardVariants } from '@/lib/design/variants';
@@ -147,6 +165,7 @@ import type { User, WorkoutSession } from '@/lib/types';
 ```
 
 **Component Template:**
+
 ```tsx
 'use client'; // Only if needed
 
@@ -168,16 +187,9 @@ interface ComponentProps {
  * @param variant - Visual style variant
  * @param onAction - Callback when action is triggered
  */
-export function ComponentName({
-  title,
-  variant = 'primary',
-  onAction
-}: ComponentProps) {
+export function ComponentName({ title, variant = 'primary', onAction }: ComponentProps) {
   return (
-    <button
-      className={cn(buttonVariants({ variant }))}
-      onClick={onAction}
-    >
+    <button className={cn(buttonVariants({ variant }))} onClick={onAction}>
       {title}
     </button>
   );

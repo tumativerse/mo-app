@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { InlineScrollPicker } from "./inline-scroll-picker";
+import { InlineScrollPicker } from './inline-scroll-picker';
 
 interface Option {
   value: string;
@@ -14,12 +14,7 @@ interface OptionSelectorProps {
   className?: string;
 }
 
-export function OptionSelector({
-  value,
-  options,
-  onChange,
-  className = "",
-}: OptionSelectorProps) {
+export function OptionSelector({ value, options, onChange, className = '' }: OptionSelectorProps) {
   return (
     <InlineScrollPicker
       value={value}

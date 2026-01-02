@@ -3,6 +3,7 @@
 ## File Organization
 
 ### Feature-Based Structure (NOT by type)
+
 ```
 app/(app)/dashboard/
 ├── page.tsx                    # Main page
@@ -16,11 +17,13 @@ app/(app)/dashboard/
 ```
 
 ### ✅ Colocation Rule:
+
 - Keep files close to where they're used
 - Only move to `lib/` when used in 3+ places
 - Delete feature = delete folder (easy cleanup)
 
 ### ❌ NEVER Create These Structures:
+
 ```
 components/
 ├── buttons/           # ❌ Don't organize by type
@@ -36,6 +39,7 @@ utils/
 ### Server vs Client Components
 
 **Default: Server Component**
+
 ```tsx
 // app/dashboard/page.tsx
 export default async function DashboardPage() {
@@ -45,6 +49,7 @@ export default async function DashboardPage() {
 ```
 
 **Client: Only when needed**
+
 ```tsx
 'use client'; // ONLY add when you need:
 // - useState, useEffect, hooks
@@ -54,11 +59,13 @@ export default async function DashboardPage() {
 ```
 
 ### Component Size Rule:
+
 - Max 200 lines per component
 - If bigger, extract sub-components
 - Extract hooks to separate files
 
 ### Component Checklist:
+
 - [ ] Uses TypeScript interface for props
 - [ ] Has JSDoc comment explaining purpose
 - [ ] Uses semantic HTML
@@ -69,6 +76,7 @@ export default async function DashboardPage() {
 ## Data Fetching
 
 ### Pattern to Follow:
+
 ```tsx
 export function useWorkoutSession(id: string) {
   const [data, setData] = useState<WorkoutSession | null>(null);
@@ -97,6 +105,7 @@ export function useWorkoutSession(id: string) {
 ```
 
 ### ALWAYS Return:
+
 - `data` - The fetched data
 - `loading` - Loading state
 - `error` - Error message or null
@@ -104,14 +113,18 @@ export function useWorkoutSession(id: string) {
 ## State Management
 
 ### Local State (useState)
+
 Use for component-specific state that doesn't need sharing
 
 ### Context (React.createContext)
+
 Use for state shared across 3+ components in a tree
 
 ### Zustand (optional)
+
 Use for truly global state (auth, theme, etc.)
 
 ### ❌ NEVER:
+
 - Prop drilling more than 2 levels
 - Storing server data in global state (use React Query instead)
