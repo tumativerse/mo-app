@@ -30,24 +30,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: dark,
-        variables: {
-          colorPrimary: '#3b82f6',
-        },
-      }}
-    >
-      <html lang="en" suppressHydrationWarning>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased transition-colors duration-200`}
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <title>Mo - Fitness Tracker</title>
+      </head>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased transition-colors duration-200`}
+      >
+        <ClerkProvider
+          appearance={{
+            baseTheme: dark,
+            variables: {
+              colorPrimary: '#3b82f6',
+            },
+          }}
         >
           <ThemeProvider>
             {children}
             <ThemedToaster />
           </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }

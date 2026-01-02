@@ -2,6 +2,12 @@ import Link from 'next/link';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Dumbbell } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Mo - Fitness Tracker',
+  description: 'Track your workouts, log your weight, and see your progress over time.',
+};
 
 export default async function HomePage() {
   const { userId } = await auth();
