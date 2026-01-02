@@ -1,6 +1,5 @@
-import { describe, it, expect, beforeAll, vi } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { encrypt, decrypt } from './encryption';
-import crypto from 'crypto';
 
 describe('Encryption utilities', () => {
   // Ensure encryption key is set for tests

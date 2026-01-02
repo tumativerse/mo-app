@@ -93,7 +93,7 @@ export async function signOut(page: Page): Promise<void> {
 
     // Wait for redirect to home or sign-in
     await page.waitForURL(/\/(sign-in|$)/, { timeout: 10000 });
-  } catch (error) {
+  } catch {
     console.log('Sign-out button not found, user may already be signed out');
   }
 }

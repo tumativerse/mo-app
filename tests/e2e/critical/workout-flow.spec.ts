@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { signIn, TEST_USER } from '../../helpers/auth';
-import { navigateTo, waitForPageReady, waitForApiCall } from '../../helpers/test-utils';
+import { navigateTo, waitForPageReady } from '../../helpers/test-utils';
 
 /**
  * Critical Path: Workout Flow
@@ -117,10 +117,6 @@ test.describe('Workout Flow - Critical Path', () => {
     await waitForPageReady(page);
 
     // Progress page should show workout history or stats
-    const historySection = page.locator('[data-testid*="history"]')
-      .or(page.locator('text=/workout/i'))
-      .or(page.locator('[class*="history"]'));
-
     // Should have some content (even if empty state)
     const mainContent = page.locator('main').or(page.locator('[role="main"]'));
     await expect(mainContent).toBeVisible();
