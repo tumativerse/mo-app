@@ -4,7 +4,7 @@
 # 3-Phase Parallel Execution: ~2.5-3 minutes (optimized from 6-9 min)
 # Quality is greater than time - NO COMPROMISES
 
-echo "🚀 Pre-push: Running comprehensive validation (20 checks)..."
+echo "🚀 Pre-push: Running comprehensive validation (21 checks)..."
 echo "   Quality is greater than time - 100% coverage on EVERYTHING"
 echo ""
 
@@ -56,7 +56,7 @@ echo ""
 # =============================================================================
 # PHASE 2: Heavy Validation (~2 min) - PARALLEL WHERE POSSIBLE
 # =============================================================================
-echo "🔨 Phase 2/3: Heavy validation (6 checks, 3 parallel + 3 sequential)..."
+echo "🔨 Phase 2/3: Heavy validation (7 checks, 3 parallel + 4 sequential)..."
 echo ""
 
 # Step 1: Tests and Build in parallel (~30-45 sec)
@@ -74,6 +74,21 @@ if [ $TESTS_BUILD_EXIT -ne 0 ]; then
 fi
 
 echo "  ✓ Tests and build passed"
+echo ""
+
+# Step 1.5: Check coverage file count (~1 sec)
+echo "  → Checking coverage file count (ensures no untested files)..."
+npm run check:coverage-count
+
+COVERAGE_COUNT_EXIT=$?
+
+if [ $COVERAGE_COUNT_EXIT -ne 0 ]; then
+  echo ""
+  echo "❌ Phase 2a.5 failed - Coverage count check failed"
+  echo "   See error above for details."
+  exit 1
+fi
+
 echo ""
 
 # Step 2: E2E, Accessibility, and Lighthouse in parallel (~1-1.5 min)
@@ -186,12 +201,12 @@ echo ""
 # SUCCESS
 # =============================================================================
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "✅ ALL 20 PRE-PUSH CHECKS PASSED!"
+echo "✅ ALL 21 PRE-PUSH CHECKS PASSED!"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "📋 Quality Summary:"
 echo "   ✓ Phase 1: 12 static checks passed"
-echo "   ✓ Phase 2: 6 heavy validation checks passed"
+echo "   ✓ Phase 2: 7 heavy validation checks passed (includes coverage count)"
 echo "   ✓ Phase 3: 2 post-processing checks passed"
 echo ""
 echo "   100% Coverage Achieved:"
