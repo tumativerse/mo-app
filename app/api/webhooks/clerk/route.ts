@@ -67,8 +67,6 @@ export async function POST(req: NextRequest) {
   const eventType = evt.type;
   const { id: clerkId, email_addresses } = evt.data;
 
-  console.log(`Webhook received: ${eventType} for user ${clerkId}`);
-
   try {
     switch (eventType) {
       case 'user.created':
@@ -84,7 +82,8 @@ export async function POST(req: NextRequest) {
         break;
 
       default:
-        console.log(`Unhandled event type: ${eventType}`);
+        // Unhandled event type - silently ignore
+        break;
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
@@ -107,13 +106,10 @@ async function handleUserCreated(
   if (!primaryEmail) {
     // Handle test events from Clerk Dashboard (they have empty email arrays)
     if (emailAddresses.length === 0) {
-      console.log(`Test event received for user ${clerkId} - skipping (no email)`);
       return;
     }
     throw new Error('No email address found for user');
   }
-
-  console.log(`Creating user: ${clerkId} (${primaryEmail})`);
 
   // Check if user already exists
   const existingUser = await db.query.users.findFirst({
@@ -121,12 +117,11 @@ async function handleUserCreated(
   });
 
   if (existingUser) {
-    console.log(`User ${clerkId} already exists, skipping creation`);
     return;
   }
 
   // Create user
-  const [newUser] = await db
+  await db
     .insert(users)
     .values({
       clerkId,
@@ -136,8 +131,6 @@ async function handleUserCreated(
       updatedAt: new Date(),
     })
     .returning();
-
-  console.log(`Created user in DB: ${newUser.id}`);
 
   // Note: Preferences are auto-created on first access by getPreferences()
   // with proper encrypted defaults. No need to create them here.
@@ -156,13 +149,10 @@ async function handleUserUpdated(
   if (!primaryEmail) {
     // Handle test events from Clerk Dashboard (they have empty email arrays)
     if (emailAddresses.length === 0) {
-      console.log(`Test event received for user ${clerkId} - skipping (no email)`);
       return;
     }
     throw new Error('No email address found for user');
   }
-
-  console.log(`Updating user: ${clerkId} (${primaryEmail})`);
 
   // Find user
   const user = await db.query.users.findFirst({
@@ -170,7 +160,6 @@ async function handleUserUpdated(
   });
 
   if (!user) {
-    console.warn(`User ${clerkId} not found in database during update`);
     // Create them if they don't exist (shouldn't happen, but safeguard)
     await handleUserCreated(clerkId, emailAddresses);
     return;
@@ -185,8 +174,6 @@ async function handleUserUpdated(
         updatedAt: new Date(),
       })
       .where(eq(users.id, user.id));
-
-    console.log(`Updated email for user ${user.id}: ${primaryEmail}`);
   }
 }
 
@@ -195,22 +182,17 @@ async function handleUserUpdated(
  * Soft delete or remove user from database
  */
 async function handleUserDeleted(clerkId: string) {
-  console.log(`Deleting user: ${clerkId}`);
-
   // Find user
   const user = await db.query.users.findFirst({
     where: eq(users.clerkId, clerkId),
   });
 
   if (!user) {
-    console.warn(`User ${clerkId} not found in database during deletion`);
     return;
   }
 
-  // For now, just log - you can decide if you want to actually delete data
+  // For now, don't delete data - you can decide if you want to actually delete data
   // or soft delete (add a deletedAt field)
-  console.log(`User ${clerkId} deleted from Clerk. Database user ID: ${user.id}`);
-
   // Optional: Actually delete the user and all their data
   // await db.delete(users).where(eq(users.id, user.id));
 }

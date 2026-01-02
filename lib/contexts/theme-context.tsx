@@ -44,7 +44,6 @@ export function ThemeProvider({
         }
       } catch {
         // Silently fail and use defaults
-        console.log('Could not load theme preference, using defaults');
       }
     }
 

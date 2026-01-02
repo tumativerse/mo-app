@@ -48,7 +48,6 @@ export function ThemeProvider({
         }
       } catch {
         // Silently fail and use defaults
-        console.log('Could not load accent color preference, using default');
       }
     }
 
