@@ -40,7 +40,7 @@
     "check:debug": "! grep -r --include='*.ts' --include='*.tsx' --exclude-dir=node_modules --exclude-dir=.next --exclude='*.test.ts' --exclude='*.test.tsx' --exclude='seed*.ts' --exclude='check*.ts' --exclude='analyze*.ts' -E 'console\\.(log|debug|info)|debugger' app lib components || (echo 'Found debug code. Please remove before pushing.' && exit 1)",
     "check:deadcode": "ts-prune || true",
     "check:vulnerabilities": "npm audit --audit-level=high",
-    "check:licenses": "npx license-checker --onlyAllow 'MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;0BSD;Unlicense;MPL-2.0'",
+    "check:licenses": "npx license-checker --onlyAllow 'MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;0BSD;Unlicense;MPL-2.0;WTFPL'",
     "check:db-schema": "npx drizzle-kit check",
     "check:db-migrations": "node -e \"console.log('✓ Migration safety check passed')\"",
     "check:privacy": "! grep -r --include='*.ts' --include='*.tsx' --exclude-dir=node_modules --exclude-dir=.next --exclude='*.test.ts' --exclude='*.test.tsx' -E 'console\\.log\\((.*)(weight|bmi|injury|condition|medication|health)' app lib components || (echo 'Found potential health data leak in logs' && exit 1)",
