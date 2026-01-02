@@ -82,9 +82,6 @@ describe('MoFatigue', () => {
         ],
       }));
 
-      mockDb.query.workoutSessions.findMany.mockResolvedValue([]);
-      const emptyResult = await calculateFatigue(mockUserId);
-
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
       const withSessionsResult = await calculateFatigue(mockUserId);
 
