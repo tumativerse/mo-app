@@ -28,6 +28,8 @@
     "security:generate-key": "tsx scripts/generate-encryption-key.ts",
     "security:test": "tsx scripts/test-encryption.ts",
     "sonar": "sonar-scanner",
+    "lighthouse": "lhci autorun",
+    "lighthouse:local": "lhci autorun",
     "prepare": "husky"
   },
   "dependencies": {
@@ -63,6 +65,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.57.0",
     "@secretlint/node": "^11.2.5",
     "@secretlint/secretlint-rule-preset-recommend": "^11.2.5",
