@@ -86,6 +86,8 @@ jobs:
         run: npm run test:e2e:critical
         env:
           CI: true
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
         # BLOCKING: Any E2E failures fail the build
 
       - name: Upload E2E test results
@@ -154,6 +156,8 @@ jobs:
         run: npm run test:axe
         env:
           CI: true
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
         # BLOCKING: Any accessibility violations fail the build
 
       - name: Upload accessibility results
