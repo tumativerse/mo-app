@@ -1,0 +1,205 @@
+name: Post-Merge Validation
+
+# CRITICAL: Validates main branch health after every merge
+# Catches integration issues that might slip through PR checks
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false # Don't cancel - we want all main validations
+
+jobs:
+  # Full test suite with coverage
+  full-test-suite:
+    name: Full Test Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run all tests with coverage
+        run: npm run test:coverage
+
+      - name: Verify 100% coverage
+        run: npm run check:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: post-merge-coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  # Production build verification
+  production-build:
+    name: Production Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for production
+        run: npm run build
+
+      - name: Check bundle size
+        run: |
+          echo "Bundle size analysis:"
+          du -sh .next/static
+
+  # Critical E2E flows
+  e2e-critical:
+    name: E2E Critical Flows
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Run critical E2E tests
+        run: npx playwright test tests/e2e/critical --reporter=list
+
+      - name: Upload E2E results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results-post-merge
+          path: test-results/
+
+  # Database migration check
+  database-safety:
+    name: Database Migration Safety
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check schema integrity
+        run: npm run check:db-schema
+
+      - name: Verify migrations
+        run: npm run check:db-migrations
+
+  # Code quality double-check
+  code-quality:
+    name: Code Quality Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript check
+        run: npm run check:types
+
+      - name: ESLint check
+        run: npm run check:lint
+
+      - name: Dead code check
+        run: npm run check:deadcode
+
+  # Summary job - BLOCKS if any fail
+  post-merge-status:
+    name: Post-Merge Status
+    runs-on: ubuntu-latest
+    needs: [full-test-suite, production-build, e2e-critical, database-safety, code-quality]
+    if: always()
+
+    steps:
+      - name: Check all validations passed
+        run: |
+          echo "Checking post-merge validations..."
+
+          if [ "${{ needs.full-test-suite.result }}" != "success" ]; then
+            echo "❌ Full test suite failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.production-build.result }}" != "success" ]; then
+            echo "❌ Production build failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.e2e-critical.result }}" != "success" ]; then
+            echo "❌ E2E critical flows failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.database-safety.result }}" != "success" ]; then
+            echo "❌ Database safety check failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.code-quality.result }}" != "success" ]; then
+            echo "❌ Code quality verification failed"
+            exit 1
+          fi
+
+          echo "✅ All post-merge validations passed!"
+          echo "Main branch is healthy and production-ready."
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "🚨 CRITICAL: Main branch validation failed!"
+          echo "Action required: Investigate and fix immediately."
+          echo "Consider reverting the last merge if issue is severe."
