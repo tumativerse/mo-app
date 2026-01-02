@@ -193,9 +193,7 @@ describe('MoProgression', () => {
             {
               exerciseId: mockExerciseId,
               exercise: { name: 'Bench Press' },
-              sets: [
-                { weight: 185, reps: 8, rpe: 7, isWarmup: false },
-              ],
+              sets: [{ weight: 185, reps: 8, rpe: 7, isWarmup: false }],
             },
           ],
         },
@@ -205,9 +203,7 @@ describe('MoProgression', () => {
             {
               exerciseId: mockExerciseId,
               exercise: { name: 'Bench Press' },
-              sets: [
-                { weight: 185, reps: 9, rpe: 7, isWarmup: false },
-              ],
+              sets: [{ weight: 185, reps: 9, rpe: 7, isWarmup: false }],
             },
           ],
         },
@@ -349,9 +345,7 @@ describe('MoProgression', () => {
             {
               exerciseId: mockExerciseId,
               exercise: { name: 'Squat' },
-              sets: [
-                { weight: 225, reps: 8, rpe: 7, isWarmup: false },
-              ],
+              sets: [{ weight: 225, reps: 8, rpe: 7, isWarmup: false }],
             },
           ],
         },
@@ -361,9 +355,7 @@ describe('MoProgression', () => {
             {
               exerciseId: mockExerciseId,
               exercise: { name: 'Squat' },
-              sets: [
-                { weight: 225, reps: 9, rpe: 7, isWarmup: false },
-              ],
+              sets: [{ weight: 225, reps: 9, rpe: 7, isWarmup: false }],
             },
           ],
         },
@@ -387,9 +379,7 @@ describe('MoProgression', () => {
           {
             exerciseId: mockExerciseId,
             exercise: { name: 'Curl' },
-            sets: [
-              { weight: 30, reps: 10, rpe: 8, isWarmup: false },
-            ],
+            sets: [{ weight: 30, reps: 10, rpe: 8, isWarmup: false }],
           },
         ],
       }));
@@ -537,9 +527,7 @@ describe('MoProgression', () => {
             {
               exerciseId: mockExerciseId,
               exercise: { id: mockExerciseId, name: 'Bench Press' },
-              sets: [
-                { weight: 185, reps: 8, rpe: 7, isWarmup: false },
-              ],
+              sets: [{ weight: 185, reps: 8, rpe: 7, isWarmup: false }],
             },
           ],
         },
@@ -551,9 +539,7 @@ describe('MoProgression', () => {
             {
               exerciseId: mockExerciseId,
               exercise: { id: mockExerciseId, name: 'Bench Press' },
-              sets: [
-                { weight: 185, reps: 9, rpe: 7, isWarmup: false },
-              ],
+              sets: [{ weight: 185, reps: 9, rpe: 7, isWarmup: false }],
             },
           ],
         },

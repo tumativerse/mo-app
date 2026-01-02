@@ -41,12 +41,42 @@ describe('MoFatigue - Comprehensive Tests', () => {
       // Realistic scenario: User's RPE increasing over 5 sessions
       const sessions = [
         // Most recent (higher RPE)
-        { id: '5', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), avgRpe: '9.0', totalVolume: '1000', status: 'completed' },
-        { id: '4', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), avgRpe: '8.5', totalVolume: '1000', status: 'completed' },
+        {
+          id: '5',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '9.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '4',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '8.5',
+          totalVolume: '1000',
+          status: 'completed',
+        },
         // Earlier (lower RPE)
-        { id: '3', date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), avgRpe: '7.5', totalVolume: '1000', status: 'completed' },
-        { id: '2', date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '1000', status: 'completed' },
-        { id: '1', date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '1000', status: 'completed' },
+        {
+          id: '3',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.5',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '1',
+          date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -59,9 +89,27 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
     it('should not detect RPE creep when RPE is stable or decreasing', async () => {
       const sessions = [
-        { id: '3', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '1000', status: 'completed' },
-        { id: '2', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), avgRpe: '7.5', totalVolume: '1000', status: 'completed' },
-        { id: '1', date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), avgRpe: '8.0', totalVolume: '1000', status: 'completed' },
+        {
+          id: '3',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.5',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '1',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          avgRpe: '8.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -73,8 +121,20 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
     it('should require at least 3 sessions to detect RPE creep', async () => {
       const sessions = [
-        { id: '2', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), avgRpe: '9.0', totalVolume: '1000', status: 'completed' },
-        { id: '1', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '1000', status: 'completed' },
+        {
+          id: '2',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '9.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '1',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -88,8 +148,20 @@ describe('MoFatigue - Comprehensive Tests', () => {
   describe('calculateFatigue - Factor 2: Performance Drop', () => {
     it('should score 2 when average RPE > 8.5 (grinding sets)', async () => {
       const sessions = [
-        { id: '3', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), avgRpe: '9.0', totalVolume: '1000', status: 'completed' },
-        { id: '2', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), avgRpe: '9.0', totalVolume: '1000', status: 'completed' },
+        {
+          id: '3',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '9.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '9.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -102,8 +174,20 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
     it('should score 1 when average RPE between 8.0 and 8.5', async () => {
       const sessions = [
-        { id: '2', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), avgRpe: '8.2', totalVolume: '1000', status: 'completed' },
-        { id: '1', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), avgRpe: '8.3', totalVolume: '1000', status: 'completed' },
+        {
+          id: '2',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '8.2',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '1',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '8.3',
+          totalVolume: '1000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -115,8 +199,20 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
     it('should score 0 when average RPE <= 8.0', async () => {
       const sessions = [
-        { id: '2', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), avgRpe: '7.5', totalVolume: '1000', status: 'completed' },
-        { id: '1', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), avgRpe: '7.5', totalVolume: '1000', status: 'completed' },
+        {
+          id: '2',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.5',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '1',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.5',
+          totalVolume: '1000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -130,8 +226,20 @@ describe('MoFatigue - Comprehensive Tests', () => {
   describe('calculateFatigue - Factor 3: Recovery Debt', () => {
     it('should score +2 for severe sleep debt (< 5 hours)', async () => {
       mockDb.query.recoveryLogs.findMany.mockResolvedValue([
-        { userId: mockUserId, date: new Date(), sleepHours: '4.5', energyLevel: 5, overallSoreness: 3 },
-        { userId: mockUserId, date: new Date(Date.now() - 24 * 60 * 60 * 1000), sleepHours: '4.0', energyLevel: 5, overallSoreness: 3 },
+        {
+          userId: mockUserId,
+          date: new Date(),
+          sleepHours: '4.5',
+          energyLevel: 5,
+          overallSoreness: 3,
+        },
+        {
+          userId: mockUserId,
+          date: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          sleepHours: '4.0',
+          energyLevel: 5,
+          overallSoreness: 3,
+        },
       ]);
 
       const result = await calculateFatigue(mockUserId);
@@ -142,7 +250,13 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
     it('should score +1 for low sleep (< 6 hours)', async () => {
       mockDb.query.recoveryLogs.findMany.mockResolvedValue([
-        { userId: mockUserId, date: new Date(), sleepHours: '5.5', energyLevel: 5, overallSoreness: 3 },
+        {
+          userId: mockUserId,
+          date: new Date(),
+          sleepHours: '5.5',
+          energyLevel: 5,
+          overallSoreness: 3,
+        },
       ]);
 
       const result = await calculateFatigue(mockUserId);
@@ -153,7 +267,13 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
     it('should score +1 for low energy (< 3)', async () => {
       mockDb.query.recoveryLogs.findMany.mockResolvedValue([
-        { userId: mockUserId, date: new Date(), sleepHours: '8.0', energyLevel: 2, overallSoreness: 3 },
+        {
+          userId: mockUserId,
+          date: new Date(),
+          sleepHours: '8.0',
+          energyLevel: 2,
+          overallSoreness: 3,
+        },
       ]);
 
       const result = await calculateFatigue(mockUserId);
@@ -164,7 +284,13 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
     it('should score +1 for high soreness (> 4)', async () => {
       mockDb.query.recoveryLogs.findMany.mockResolvedValue([
-        { userId: mockUserId, date: new Date(), sleepHours: '8.0', energyLevel: 5, overallSoreness: 5 },
+        {
+          userId: mockUserId,
+          date: new Date(),
+          sleepHours: '8.0',
+          energyLevel: 5,
+          overallSoreness: 5,
+        },
       ]);
 
       const result = await calculateFatigue(mockUserId);
@@ -176,8 +302,20 @@ describe('MoFatigue - Comprehensive Tests', () => {
     it('should cap recovery debt at 3 points', async () => {
       // All recovery metrics are bad
       mockDb.query.recoveryLogs.findMany.mockResolvedValue([
-        { userId: mockUserId, date: new Date(), sleepHours: '4.0', energyLevel: 2, overallSoreness: 5 },
-        { userId: mockUserId, date: new Date(Date.now() - 24 * 60 * 60 * 1000), sleepHours: '4.0', energyLevel: 2, overallSoreness: 5 },
+        {
+          userId: mockUserId,
+          date: new Date(),
+          sleepHours: '4.0',
+          energyLevel: 2,
+          overallSoreness: 5,
+        },
+        {
+          userId: mockUserId,
+          date: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          sleepHours: '4.0',
+          energyLevel: 2,
+          overallSoreness: 5,
+        },
       ]);
 
       const result = await calculateFatigue(mockUserId);
@@ -199,11 +337,35 @@ describe('MoFatigue - Comprehensive Tests', () => {
     it('should detect high volume spike (> 140% of baseline)', async () => {
       const sessions = [
         // This week (high volume)
-        { id: '4', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '5000', status: 'completed' },
-        { id: '3', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '5000', status: 'completed' },
-        { id: '2', date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '5000', status: 'completed' },
+        {
+          id: '4',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '5000',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '5000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '5000',
+          status: 'completed',
+        },
         // Previous weeks (baseline)
-        { id: '1', date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '3000', status: 'completed' },
+        {
+          id: '1',
+          date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '3000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -217,12 +379,42 @@ describe('MoFatigue - Comprehensive Tests', () => {
     it('should detect moderate volume increase (> 120% of baseline)', async () => {
       const sessions = [
         // This week - total 7500
-        { id: '5', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '2500', status: 'completed' },
-        { id: '4', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '2500', status: 'completed' },
-        { id: '3', date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '2500', status: 'completed' },
+        {
+          id: '5',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '2500',
+          status: 'completed',
+        },
+        {
+          id: '4',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '2500',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '2500',
+          status: 'completed',
+        },
         // Baseline - avg 3000 per week, so ratio = 7500/3000 = 2.5x which is >1.4
-        { id: '2', date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '3000', status: 'completed' },
-        { id: '1', date: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '3000', status: 'completed' },
+        {
+          id: '2',
+          date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '3000',
+          status: 'completed',
+        },
+        {
+          id: '1',
+          date: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '3000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -236,9 +428,27 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
     it('should not penalize normal volume', async () => {
       const sessions = [
-        { id: '3', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '3000', status: 'completed' },
-        { id: '2', date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '3000', status: 'completed' },
-        { id: '1', date: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '3000', status: 'completed' },
+        {
+          id: '3',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '3000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '3000',
+          status: 'completed',
+        },
+        {
+          id: '1',
+          date: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '3000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -265,15 +475,35 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
       expect(result.factors.streak).toBe(1);
       // Message includes number of consecutive days
-      expect(result.recommendations.some((r) => r.includes('consecutive training days'))).toBe(true);
+      expect(result.recommendations.some((r) => r.includes('consecutive training days'))).toBe(
+        true
+      );
     });
 
     it('should score 0 for < 5 consecutive days', async () => {
       const sessions = [
-        { id: '3', date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '1000', status: 'completed' },
-        { id: '2', date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '1000', status: 'completed' },
+        {
+          id: '3',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
         // Gap here - not consecutive
-        { id: '1', date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '1000', status: 'completed' },
+        {
+          id: '1',
+          date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -297,7 +527,13 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
       mockDb.query.recoveryLogs.findMany.mockResolvedValue([
-        { userId: mockUserId, date: new Date(), sleepHours: '4.0', energyLevel: 2, overallSoreness: 5 },
+        {
+          userId: mockUserId,
+          date: new Date(),
+          sleepHours: '4.0',
+          energyLevel: 2,
+          overallSoreness: 5,
+        },
       ]);
 
       const result = await calculateFatigue(mockUserId);
@@ -461,7 +697,13 @@ describe('MoFatigue - Comprehensive Tests', () => {
     it('should handle null/missing avgRpe values', async () => {
       const sessions = [
         { id: '1', date: new Date(), avgRpe: null, totalVolume: '1000', status: 'completed' },
-        { id: '2', date: new Date(Date.now() - 24 * 60 * 60 * 1000), avgRpe: '', totalVolume: '1000', status: 'completed' },
+        {
+          id: '2',
+          date: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          avgRpe: '',
+          totalVolume: '1000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
@@ -476,7 +718,13 @@ describe('MoFatigue - Comprehensive Tests', () => {
     it('should handle null/missing totalVolume values', async () => {
       const sessions = [
         { id: '1', date: new Date(), avgRpe: '7.0', totalVolume: null, status: 'completed' },
-        { id: '2', date: new Date(Date.now() - 24 * 60 * 60 * 1000), avgRpe: '7.0', totalVolume: '', status: 'completed' },
+        {
+          id: '2',
+          date: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);

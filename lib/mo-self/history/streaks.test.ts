@@ -519,9 +519,15 @@ describe('MoStreaks', () => {
 
       // Mock new system workouts (3 calls)
       mockDb.query.workoutSessions.findMany
-        .mockResolvedValueOnce([{ id: '1', userId: mockUserId, status: 'completed', completedAt: now }])
-        .mockResolvedValueOnce([{ id: '1', userId: mockUserId, status: 'completed', completedAt: now }])
-        .mockResolvedValueOnce([{ id: '1', userId: mockUserId, status: 'completed', completedAt: now }]);
+        .mockResolvedValueOnce([
+          { id: '1', userId: mockUserId, status: 'completed', completedAt: now },
+        ])
+        .mockResolvedValueOnce([
+          { id: '1', userId: mockUserId, status: 'completed', completedAt: now },
+        ])
+        .mockResolvedValueOnce([
+          { id: '1', userId: mockUserId, status: 'completed', completedAt: now },
+        ]);
 
       // Mock legacy system workouts (3 calls)
       const legacyWorkouts = [

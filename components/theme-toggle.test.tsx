@@ -244,9 +244,7 @@ describe('ThemeToggle', () => {
       });
 
       const { rerender } = render(<ThemeToggle />);
-      expect(
-        screen.getByRole('button', { name: /switch to light/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /switch to light/i })).toBeInTheDocument();
 
       // Light mode
       vi.mocked(useTheme).mockReturnValue({
@@ -260,9 +258,7 @@ describe('ThemeToggle', () => {
       });
 
       rerender(<ThemeToggle />);
-      expect(
-        screen.getByRole('button', { name: /switch to dark/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /switch to dark/i })).toBeInTheDocument();
     });
   });
 

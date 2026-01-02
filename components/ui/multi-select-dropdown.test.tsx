@@ -72,9 +72,7 @@ describe('MultiSelectDropdown', () => {
     });
 
     it('should not show dropdown menu initially', () => {
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       expect(screen.queryByText('First option')).not.toBeInTheDocument();
     });
@@ -83,9 +81,7 @@ describe('MultiSelectDropdown', () => {
   describe('User Interactions', () => {
     it('should open dropdown when clicked', async () => {
       const user = userEvent.setup();
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       await user.click(button);
@@ -98,9 +94,7 @@ describe('MultiSelectDropdown', () => {
 
     it('should close dropdown when trigger is clicked again', async () => {
       const user = userEvent.setup();
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
 
@@ -117,9 +111,7 @@ describe('MultiSelectDropdown', () => {
 
     it('should add item to selection when clicked', async () => {
       const user = userEvent.setup();
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       await user.click(button);
@@ -151,9 +143,7 @@ describe('MultiSelectDropdown', () => {
 
     it('should allow multiple selections in one session', async () => {
       const user = userEvent.setup();
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       await user.click(button);
@@ -174,9 +164,7 @@ describe('MultiSelectDropdown', () => {
 
     it('should keep dropdown open after selecting an option', async () => {
       const user = userEvent.setup();
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       await user.click(button);
@@ -221,11 +209,7 @@ describe('MultiSelectDropdown', () => {
     it('should show checkmark for selected items', async () => {
       const user = userEvent.setup();
       render(
-        <MultiSelectDropdown
-          value={['option1']}
-          options={mockOptions}
-          onChange={mockOnChange}
-        />
+        <MultiSelectDropdown value={['option1']} options={mockOptions} onChange={mockOnChange} />
       );
 
       const button = screen.getByRole('button');
@@ -241,9 +225,7 @@ describe('MultiSelectDropdown', () => {
 
     it('should show description when provided', async () => {
       const user = userEvent.setup();
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       await user.click(button);
@@ -257,11 +239,7 @@ describe('MultiSelectDropdown', () => {
       const optionsWithoutDesc = [{ value: 'a', label: 'Alpha' }];
 
       render(
-        <MultiSelectDropdown
-          value={[]}
-          options={optionsWithoutDesc}
-          onChange={mockOnChange}
-        />
+        <MultiSelectDropdown value={[]} options={optionsWithoutDesc} onChange={mockOnChange} />
       );
 
       const button = screen.getByRole('button');
@@ -276,9 +254,7 @@ describe('MultiSelectDropdown', () => {
 
     it('should rotate chevron icon when dropdown is open', async () => {
       const user = userEvent.setup();
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       const chevronSvg = button.querySelector('svg');
@@ -293,9 +269,7 @@ describe('MultiSelectDropdown', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty value array', () => {
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       expect(button).toHaveTextContent('Select options');
@@ -315,9 +289,7 @@ describe('MultiSelectDropdown', () => {
     });
 
     it('should handle empty options array', () => {
-      render(
-        <MultiSelectDropdown value={[]} options={[]} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={[]} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       expect(button).toBeInTheDocument();
@@ -372,11 +344,7 @@ describe('MultiSelectDropdown', () => {
 
     it('should show count by default', () => {
       render(
-        <MultiSelectDropdown
-          value={['option1']}
-          options={mockOptions}
-          onChange={mockOnChange}
-        />
+        <MultiSelectDropdown value={['option1']} options={mockOptions} onChange={mockOnChange} />
       );
 
       expect(screen.getByText('1 selected')).toBeInTheDocument();
@@ -411,9 +379,7 @@ describe('MultiSelectDropdown', () => {
   describe('Accessibility', () => {
     it('should have correct button types', async () => {
       const user = userEvent.setup();
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       expect(button).toHaveAttribute('type', 'button');
@@ -427,9 +393,7 @@ describe('MultiSelectDropdown', () => {
     });
 
     it('should have focus styles', () => {
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       expect(button).toHaveClass('focus:border-primary');
@@ -465,9 +429,7 @@ describe('MultiSelectDropdown', () => {
     });
 
     it('should have touch-manipulation class for mobile', () => {
-      render(
-        <MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />
-      );
+      render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       expect(button).toHaveClass('touch-manipulation');

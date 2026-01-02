@@ -563,9 +563,7 @@ describe('MoRecords - Comprehensive Tests', () => {
           achievedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
         },
       ]);
-      mockDb.query.exercises.findMany.mockResolvedValue([
-        { id: 'bench', name: 'Bench Press' },
-      ]);
+      mockDb.query.exercises.findMany.mockResolvedValue([{ id: 'bench', name: 'Bench Press' }]);
 
       const result = await getRecentPRs(mockUserId); // No days parameter
 

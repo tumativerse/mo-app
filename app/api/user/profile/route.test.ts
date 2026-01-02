@@ -64,7 +64,8 @@ describe('/api/user/profile', () => {
       expect(response.status).toBe(200);
       expect(data.profile).toEqual({
         id: 'profile_123',
-        
+        clerkId: 'clerk_123',
+        email: 'test@example.com',
         fullName: 'John Doe',
         dateOfBirth: '1990-01-15',
         gender: 'male',
@@ -75,8 +76,8 @@ describe('/api/user/profile', () => {
         chronicConditions: null,
         medications: null,
         units: 'metric',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
       });
     });
 
@@ -118,9 +119,7 @@ describe('/api/user/profile', () => {
 
     it('should handle generic errors', async () => {
       vi.mocked(moSelfModule.getCurrentUser).mockResolvedValue(mockUser);
-      vi.mocked(moSelfModule.getProfile).mockRejectedValue(
-        new Error('Database connection failed')
-      );
+      vi.mocked(moSelfModule.getProfile).mockRejectedValue(new Error('Database connection failed'));
 
       const response = await GET();
       const data = await response.json();
@@ -303,9 +302,9 @@ describe('/api/user/profile', () => {
       for (const gender of genders) {
         vi.mocked(moSelfModule.updateProfile).mockResolvedValue({
           id: 'profile_123',
-        clerkId: 'clerk_123',
-        email: 'test@example.com',
-        fullName: 'Test User',
+          clerkId: 'clerk_123',
+          email: 'test@example.com',
+          fullName: 'Test User',
           dateOfBirth: '1990-01-01',
           gender: gender as 'male' | 'female' | 'non_binary' | 'prefer_not_to_say',
           heightCm: 175,
@@ -315,9 +314,9 @@ describe('/api/user/profile', () => {
           chronicConditions: null,
           medications: null,
           units: 'metric',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
 
         const request = new NextRequest('http://localhost:3000/api/user/profile', {
           method: 'PATCH',
@@ -380,9 +379,7 @@ describe('/api/user/profile', () => {
 
     it('should handle generic errors during update', async () => {
       vi.mocked(moSelfModule.getCurrentUser).mockResolvedValue(mockUser);
-      vi.mocked(moSelfModule.updateProfile).mockRejectedValue(
-        new Error('Database write failed')
-      );
+      vi.mocked(moSelfModule.updateProfile).mockRejectedValue(new Error('Database write failed'));
 
       const request = new NextRequest('http://localhost:3000/api/user/profile', {
         method: 'PATCH',

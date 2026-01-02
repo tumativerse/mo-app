@@ -180,7 +180,8 @@ export async function getAllPRs(userId: string): Promise<PersonalRecord[]> {
     const existing = bestPRs.get(record.exerciseId);
     if (
       !existing ||
-      Number.parseFloat(record.estimated1RM || '0') > Number.parseFloat(existing.estimated1RM || '0')
+      Number.parseFloat(record.estimated1RM || '0') >
+        Number.parseFloat(existing.estimated1RM || '0')
     ) {
       bestPRs.set(record.exerciseId, record);
     }

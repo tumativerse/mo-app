@@ -198,13 +198,7 @@ describe('CustomDropdown', () => {
         { value: 'b', label: 'Beta' },
       ];
 
-      render(
-        <CustomDropdown
-          value="a"
-          options={stringOptions}
-          onChange={mockOnChange}
-        />
-      );
+      render(<CustomDropdown value="a" options={stringOptions} onChange={mockOnChange} />);
 
       const button = screen.getByRole('button');
       await user.click(button);
@@ -245,12 +239,7 @@ describe('CustomDropdown', () => {
 
     it('should apply custom width', () => {
       const { container } = render(
-        <CustomDropdown
-          value={1}
-          options={mockOptions}
-          onChange={mockOnChange}
-          width="200px"
-        />
+        <CustomDropdown value={1} options={mockOptions} onChange={mockOnChange} width="200px" />
       );
 
       const dropdown = container.querySelector('[style*="width: 200px"]');

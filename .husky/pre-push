@@ -1,47 +1,205 @@
-#!/bin/sh
-# Week 2: Pre-push validation
-# Runs before EVERY push - comprehensive checks
-# Target: < 5 minutes
+#!/bin/bash
+# Pre-push validation - COMPREHENSIVE QUALITY GATES
+# Runs before EVERY push - 100% MANDATORY ON EVERYTHING
+# 3-Phase Parallel Execution: ~2.5-3 minutes (optimized from 6-9 min)
+# Quality is greater than time - NO COMPROMISES
 
-echo "🚀 Pre-push: Running comprehensive validation..."
+echo "🚀 Pre-push: Running comprehensive validation (20 checks)..."
+echo "   Quality is greater than time - 100% coverage on EVERYTHING"
+echo ""
 
-# 1. Full unit test suite with coverage (~30 sec)
-echo "  → Running full test suite with coverage..."
-npm run test:coverage || {
-  echo "❌ Tests failed or coverage below threshold. Please fix and try again."
+# =============================================================================
+# PHASE 1: Fast Static Checks (~15-20 sec) - ALL IN PARALLEL
+# =============================================================================
+echo "📋 Phase 1/3: Fast static analysis (12 checks in parallel)..."
+echo ""
+
+# Run all fast checks in parallel
+npx npm-run-all --parallel \
+  check:secrets \
+  check:types \
+  check:lint \
+  check:debug \
+  check:deadcode \
+  check:licenses \
+  check:db-schema \
+  check:db-migrations \
+  check:privacy \
+  check:e2e-coverage \
+  check:a11y-coverage \
+  check:api-coverage
+
+PHASE1_EXIT=$?
+
+if [ $PHASE1_EXIT -ne 0 ]; then
+  echo ""
+  echo "❌ Phase 1 failed - Static analysis checks did not pass"
+  echo "   Please fix the errors above and try again."
+  echo ""
+  echo "   Quick fixes:"
+  echo "   - Secrets: Remove any exposed API keys or tokens"
+  echo "   - Types: Run 'npm run type-check' to see TypeScript errors"
+  echo "   - Lint: Run 'npm run lint' to see ESLint errors"
+  echo "   - Debug: Remove console.log(), debugger statements"
+  echo "   - Dead code: Remove unused exports"
+  echo "   - Licenses: Check dependencies use approved licenses"
+  echo "   - DB schema: Run 'npx drizzle-kit check' for details"
+  echo "   - Privacy: Remove health data from console logs"
+  echo "   - Coverage: Add missing E2E/accessibility/API tests"
   exit 1
-}
-
-# 2. Build verification (~1-2 min)
-echo "  → Building for production..."
-npm run build || {
-  echo "❌ Build failed. Please fix errors and try again."
-  exit 1
-}
-
-# 3. SonarCloud code quality analysis (skip if token not set) (~15-30 sec)
-if [ -n "$SONAR_TOKEN" ]; then
-  echo "  → Running SonarCloud analysis..."
-  npm run sonar || {
-    echo "❌ SonarCloud analysis failed. Please fix code quality issues and try again."
-    echo "   View details: https://sonarcloud.io/dashboard?id=tumativerse_mo-app"
-    exit 1
-  }
-else
-  echo "  ⚠️  Skipping SonarCloud analysis (SONAR_TOKEN not set)"
-  echo "     Run 'export SONAR_TOKEN=your-token' to enable SonarCloud in pre-push hook"
 fi
 
-# 4. E2E critical paths (skip if browsers not installed) (~1.5 min)
-if [ -d "$HOME/Library/Caches/ms-playwright" ]; then
-  echo "  → Running E2E critical path tests..."
-  npm run test:e2e:critical || {
-    echo "❌ E2E tests failed. Please fix and try again."
-    exit 1
-  }
-else
-  echo "  ⚠️  Skipping E2E tests (Playwright browsers not installed)"
-  echo "     Run 'npx playwright install' to enable E2E tests in pre-push hook"
+echo ""
+echo "✅ Phase 1 complete - All static checks passed"
+echo ""
+
+# =============================================================================
+# PHASE 2: Heavy Validation (~2 min) - PARALLEL WHERE POSSIBLE
+# =============================================================================
+echo "🔨 Phase 2/3: Heavy validation (6 checks, 3 parallel + 3 sequential)..."
+echo ""
+
+# Step 1: Tests and Build in parallel (~30-45 sec)
+echo "  → Running tests and build in parallel..."
+# Note: Lint already runs in Phase 1, so we skip it here
+npx npm-run-all --parallel test:coverage build
+
+TESTS_BUILD_EXIT=$?
+
+if [ $TESTS_BUILD_EXIT -ne 0 ]; then
+  echo ""
+  echo "❌ Phase 2a failed - Tests or build failed"
+  echo "   Please fix test failures or build errors and try again."
+  exit 1
 fi
 
-echo "✅ Pre-push checks passed! Safe to push."
+echo "  ✓ Tests and build passed"
+echo ""
+
+# Step 2: E2E, Accessibility, and Lighthouse in parallel (~1-1.5 min)
+echo "  → Running E2E, accessibility, and Lighthouse tests in parallel..."
+
+# Check for Playwright browsers first
+if [ ! -d "$HOME/Library/Caches/ms-playwright" ] && [ ! -d "$HOME/.cache/ms-playwright" ]; then
+  echo "❌ Playwright browsers not installed. E2E and accessibility tests are MANDATORY."
+  echo "   Run: npx playwright install"
+  exit 1
+fi
+
+# Check if port 3000 is already in use
+DEV_PID=""
+if lsof -Pi :3000 -sTCP:LISTEN -t >/dev/null 2>&1; then
+  echo "  ⚠️  Port 3000 is already in use - using existing dev server..."
+else
+  # Start dev server in background for E2E/accessibility/Lighthouse tests
+  echo "  → Starting dev server for integration tests..."
+  npm run dev > /tmp/dev-server.log 2>&1 &
+  DEV_PID=$!
+fi
+
+# Wait for server to be ready (max 30 seconds)
+echo "  → Waiting for dev server to be ready..."
+for i in $(seq 1 30); do
+  if curl -s http://localhost:3000 > /dev/null 2>&1; then
+    echo "  ✓ Dev server ready"
+    break
+  fi
+  if [ $i -eq 30 ]; then
+    echo "❌ Dev server failed to start within 30 seconds"
+    if [ -n "$DEV_PID" ]; then
+      kill $DEV_PID 2>/dev/null
+    fi
+    exit 1
+  fi
+  sleep 1
+done
+
+# Run E2E, accessibility, and Lighthouse in parallel
+npx npm-run-all --parallel \
+  test:e2e:critical \
+  test:axe \
+  lighthouse:ci
+
+INTEGRATION_EXIT=$?
+
+# Clean up dev server (only if we started it)
+if [ -n "$DEV_PID" ]; then
+  kill $DEV_PID 2>/dev/null
+  wait $DEV_PID 2>/dev/null
+fi
+
+if [ $INTEGRATION_EXIT -ne 0 ]; then
+  echo ""
+  echo "❌ Phase 2b failed - E2E, accessibility, or Lighthouse tests failed"
+  echo "   Please fix the errors above and try again."
+  echo ""
+  echo "   Check logs:"
+  echo "   - E2E: See Playwright test output above"
+  echo "   - Accessibility: See axe-core violations above"
+  echo "   - Lighthouse: See performance metrics above"
+  exit 1
+fi
+
+echo "  ✓ E2E, accessibility, and Lighthouse tests passed"
+echo ""
+
+echo "✅ Phase 2 complete - All heavy validation passed"
+echo ""
+
+# =============================================================================
+# PHASE 3: Post-Processing (~30 sec) - PARALLEL
+# =============================================================================
+echo "📊 Phase 3/3: Post-processing analysis (2 checks in parallel)..."
+echo ""
+
+# Check for SONAR_TOKEN
+if [ -z "$SONAR_TOKEN" ]; then
+  echo "❌ SONAR_TOKEN not set. SonarCloud analysis is MANDATORY."
+  echo "   Run: export SONAR_TOKEN=your-token"
+  echo "   Get token from: https://sonarcloud.io/account/security"
+  exit 1
+fi
+
+# Run SonarCloud and vulnerability check in parallel
+npx npm-run-all --parallel \
+  sonar \
+  check:vulnerabilities
+
+PHASE3_EXIT=$?
+
+if [ $PHASE3_EXIT -ne 0 ]; then
+  echo ""
+  echo "❌ Phase 3 failed - SonarCloud or vulnerability check failed"
+  echo "   Please fix the errors above and try again."
+  echo ""
+  echo "   Resources:"
+  echo "   - SonarCloud: https://sonarcloud.io/dashboard?id=tumativerse_mo-app"
+  echo "   - Vulnerabilities: Run 'npm audit' for details"
+  exit 1
+fi
+
+echo ""
+echo "✅ Phase 3 complete - All post-processing passed"
+echo ""
+
+# =============================================================================
+# SUCCESS
+# =============================================================================
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "✅ ALL 20 PRE-PUSH CHECKS PASSED!"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+echo "📋 Quality Summary:"
+echo "   ✓ Phase 1: 12 static checks passed"
+echo "   ✓ Phase 2: 6 heavy validation checks passed"
+echo "   ✓ Phase 3: 2 post-processing checks passed"
+echo ""
+echo "   100% Coverage Achieved:"
+echo "   ✓ Code coverage: 100% (lines, functions, branches, statements)"
+echo "   ✓ E2E coverage: 100% (all critical flows)"
+echo "   ✓ Accessibility coverage: 100% (all pages)"
+echo "   ✓ API contract coverage: 100% (all endpoints)"
+echo "   ✓ Performance: Lighthouse thresholds met"
+echo ""
+echo "🚀 Safe to push - production-ready code!"
+echo ""

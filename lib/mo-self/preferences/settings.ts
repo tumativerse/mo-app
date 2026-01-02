@@ -173,8 +173,7 @@ function encryptPreferencesForDb(prefs: Partial<UserPreferences>): Record<string
     experienceLevel: prefs.experienceLevel ? encrypt(prefs.experienceLevel) : null,
     trainingFrequency:
       prefs.trainingFrequency != null ? encrypt(String(prefs.trainingFrequency)) : null,
-    sessionDuration:
-      prefs.sessionDuration != null ? encrypt(String(prefs.sessionDuration)) : null,
+    sessionDuration: prefs.sessionDuration != null ? encrypt(String(prefs.sessionDuration)) : null,
     focusAreas: prefs.focusAreas ? encrypt(JSON.stringify(prefs.focusAreas)) : null,
     preferredTrainingTimes: prefs.preferredTrainingTimes
       ? encrypt(JSON.stringify(prefs.preferredTrainingTimes))
