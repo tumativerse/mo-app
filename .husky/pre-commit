@@ -97,10 +97,10 @@ STAGED_SOURCE=$(git diff --cached --name-only --diff-filter=ACM | \
   grep -v 'components/ui/' | \
   grep -v '.config' | \
   grep -v 'middleware' | \
-  grep -v 'instrumentation')
+  grep -v 'instrumentation' || true)
 
 # Get staged test files
-STAGED_TESTS=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(test|spec)\.(ts|tsx)$')
+STAGED_TESTS=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(test|spec)\.(ts|tsx)$' || true)
 
 # Check if source files changed without corresponding test changes
 if [ -n "$STAGED_SOURCE" ] && [ -z "$STAGED_TESTS" ]; then
@@ -118,7 +118,7 @@ fi
 echo "  → [4/6] Verifying all new test files execute..."
 
 # Get new/modified Vitest test files (unit/integration/component)
-NEW_VITEST_TESTS=$(git diff --cached --name-only --diff-filter=AM | grep -E '\.(test|spec)\.(ts|tsx)$' | grep -v 'tests/')
+NEW_VITEST_TESTS=$(git diff --cached --name-only --diff-filter=AM | grep -E '\.(test|spec)\.(ts|tsx)$' | grep -v 'tests/' || true)
 
 if [ -n "$NEW_VITEST_TESTS" ]; then
   echo "     Checking Vitest tests (unit/integration/component)..."
@@ -173,7 +173,7 @@ else
 fi
 
 # Get new/modified Playwright test files (E2E/Accessibility)
-NEW_PLAYWRIGHT_TESTS=$(git diff --cached --name-only --diff-filter=AM | grep 'tests/.*\.spec\.ts$')
+NEW_PLAYWRIGHT_TESTS=$(git diff --cached --name-only --diff-filter=AM | grep 'tests/.*\.spec\.ts$' || true)
 
 if [ -n "$NEW_PLAYWRIGHT_TESTS" ]; then
   echo "     Checking Playwright tests (E2E/Accessibility)..."
