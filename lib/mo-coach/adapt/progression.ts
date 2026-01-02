@@ -451,7 +451,7 @@ async function getExercisePerformance(
           const bestWeight = Number(best.weight) || 0;
           const currentWeight = Number(current.weight) || 0;
           return currentWeight > bestWeight ? current : best;
-        });
+        }, workingSets[0]);
 
         performance.push({
           exerciseId,

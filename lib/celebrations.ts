@@ -248,12 +248,14 @@ export function celebrateFirstWorkout() {
 // New celebration: Session milestone (10, 25, 50, 100 workouts)
 export function celebrateSessionMilestone(count: number) {
   // Epic celebration for major milestones
-  const colors =
-    count >= 100
-      ? ['#ffd700', '#ff6b6b', '#4ecdc4']
-      : count >= 50
-        ? ['#10b981', '#3b82f6', '#f59e0b']
-        : ['#3b82f6', '#10b981'];
+  let colors: string[];
+  if (count >= 100) {
+    colors = ['#ffd700', '#ff6b6b', '#4ecdc4'];
+  } else if (count >= 50) {
+    colors = ['#10b981', '#3b82f6', '#f59e0b'];
+  } else {
+    colors = ['#3b82f6', '#10b981'];
+  }
 
   celebrateCannon();
 

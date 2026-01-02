@@ -19,7 +19,20 @@ npm run build || {
   exit 1
 }
 
-# 3. E2E critical paths (skip if browsers not installed) (~1.5 min)
+# 3. SonarCloud code quality analysis (skip if token not set) (~15-30 sec)
+if [ -n "$SONAR_TOKEN" ]; then
+  echo "  → Running SonarCloud analysis..."
+  npm run sonar || {
+    echo "❌ SonarCloud analysis failed. Please fix code quality issues and try again."
+    echo "   View details: https://sonarcloud.io/dashboard?id=tumativerse_mo-app"
+    exit 1
+  }
+else
+  echo "  ⚠️  Skipping SonarCloud analysis (SONAR_TOKEN not set)"
+  echo "     Run 'export SONAR_TOKEN=your-token' to enable SonarCloud in pre-push hook"
+fi
+
+# 4. E2E critical paths (skip if browsers not installed) (~1.5 min)
 if [ -d "$HOME/Library/Caches/ms-playwright" ]; then
   echo "  → Running E2E critical path tests..."
   npm run test:e2e:critical || {
