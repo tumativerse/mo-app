@@ -61,7 +61,7 @@ export async function checkAndRecordPR(
   });
 
   const newEstimated1RM = calculateEstimated1RM(weight, reps);
-  const currentEstimated1RM = currentPR ? parseFloat(currentPR.estimated1RM || '0') : 0;
+  const currentEstimated1RM = currentPR ? Number.parseFloat(currentPR.estimated1RM || '0') : 0;
 
   // Check if this is a new PR (based on estimated 1RM)
   const isNewPR = newEstimated1RM > currentEstimated1RM;
@@ -76,7 +76,7 @@ export async function checkAndRecordPR(
             id: currentPR.id,
             exerciseId: currentPR.exerciseId,
             exerciseName: '',
-            weight: parseFloat(currentPR.weight),
+            weight: Number.parseFloat(currentPR.weight),
             reps: currentPR.reps,
             estimated1RM: currentEstimated1RM,
             achievedAt: new Date(currentPR.achievedAt),
@@ -108,7 +108,7 @@ export async function checkAndRecordPR(
   // Determine PR type
   let prType: PRCheckResult['prType'] = 'estimated1rm';
   if (currentPR) {
-    const currentWeight = parseFloat(currentPR.weight);
+    const currentWeight = Number.parseFloat(currentPR.weight);
     if (weight > currentWeight) {
       prType = 'weight';
     } else if (reps > currentPR.reps && weight >= currentWeight) {
@@ -136,7 +136,7 @@ export async function checkAndRecordPR(
           id: currentPR.id,
           exerciseId: currentPR.exerciseId,
           exerciseName: exercise?.name || '',
-          weight: parseFloat(currentPR.weight),
+          weight: Number.parseFloat(currentPR.weight),
           reps: currentPR.reps,
           estimated1RM: currentEstimated1RM,
           achievedAt: new Date(currentPR.achievedAt),
@@ -144,7 +144,7 @@ export async function checkAndRecordPR(
       : null,
     improvement: currentPR
       ? {
-          weight: weight - parseFloat(currentPR.weight),
+          weight: weight - Number.parseFloat(currentPR.weight),
           reps: reps - currentPR.reps,
           estimated1RM: newEstimated1RM - currentEstimated1RM,
         }
@@ -180,7 +180,7 @@ export async function getAllPRs(userId: string): Promise<PersonalRecord[]> {
     const existing = bestPRs.get(record.exerciseId);
     if (
       !existing ||
-      parseFloat(record.estimated1RM || '0') > parseFloat(existing.estimated1RM || '0')
+      Number.parseFloat(record.estimated1RM || '0') > Number.parseFloat(existing.estimated1RM || '0')
     ) {
       bestPRs.set(record.exerciseId, record);
     }
@@ -190,9 +190,9 @@ export async function getAllPRs(userId: string): Promise<PersonalRecord[]> {
     id: r.id,
     exerciseId: r.exerciseId,
     exerciseName: exerciseMap.get(r.exerciseId) || '',
-    weight: parseFloat(r.weight),
+    weight: Number.parseFloat(r.weight),
     reps: r.reps,
-    estimated1RM: parseFloat(r.estimated1RM || '0'),
+    estimated1RM: Number.parseFloat(r.estimated1RM || '0'),
     achievedAt: new Date(r.achievedAt),
   }));
 }
@@ -217,9 +217,9 @@ export async function getExercisePRHistory(
     id: r.id,
     exerciseId: r.exerciseId,
     exerciseName: exercise?.name || '',
-    weight: parseFloat(r.weight),
+    weight: Number.parseFloat(r.weight),
     reps: r.reps,
-    estimated1RM: parseFloat(r.estimated1RM || '0'),
+    estimated1RM: Number.parseFloat(r.estimated1RM || '0'),
     achievedAt: new Date(r.achievedAt),
   }));
 }
@@ -246,9 +246,9 @@ export async function getCurrentPR(
     id: record.id,
     exerciseId: record.exerciseId,
     exerciseName: exercise?.name || '',
-    weight: parseFloat(record.weight),
+    weight: Number.parseFloat(record.weight),
     reps: record.reps,
-    estimated1RM: parseFloat(record.estimated1RM || '0'),
+    estimated1RM: Number.parseFloat(record.estimated1RM || '0'),
     achievedAt: new Date(record.achievedAt),
   };
 }
@@ -282,9 +282,9 @@ export async function getRecentPRs(userId: string, days: number = 7): Promise<Pe
     id: r.id,
     exerciseId: r.exerciseId,
     exerciseName: exerciseMap.get(r.exerciseId) || '',
-    weight: parseFloat(r.weight),
+    weight: Number.parseFloat(r.weight),
     reps: r.reps,
-    estimated1RM: parseFloat(r.estimated1RM || '0'),
+    estimated1RM: Number.parseFloat(r.estimated1RM || '0'),
     achievedAt: new Date(r.achievedAt),
   }));
 }

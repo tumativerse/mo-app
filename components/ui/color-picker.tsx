@@ -19,7 +19,7 @@ const PRESET_COLORS = [
   { name: 'Cyan Clarity', value: '#36E8F3' },
 ];
 
-export function ColorPicker({ value, onChange, className = '' }: ColorPickerProps) {
+export function ColorPicker({ value, onChange, className = '' }: Readonly<ColorPickerProps>) {
   const handlePresetClick = (color: string) => {
     onChange(color);
   };

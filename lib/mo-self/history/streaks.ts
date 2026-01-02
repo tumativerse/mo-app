@@ -64,8 +64,8 @@ export async function getStreak(userId: string): Promise<StreakData> {
         streakStatus = 'at_risk';
       }
     } else {
-      streakStatus = 'broken';
-      // Reset streak if broken
+      // Streak is broken (already set to 'broken' at initialization)
+      // Reset streak count if it was active
       if (streak.currentStreak! > 0) {
         await db.update(streaks).set({ currentStreak: 0 }).where(eq(streaks.id, streak.id));
         streak.currentStreak = 0;

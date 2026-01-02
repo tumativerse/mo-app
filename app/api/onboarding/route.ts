@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Invalid onboarding data',
-          details: parsed.error.flatten(),
+          details: parsed.error.format(),
         },
         { status: 400 }
       );

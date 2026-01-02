@@ -456,7 +456,7 @@ async function getExercisePerformance(
         performance.push({
           exerciseId,
           exerciseName: ex.exercise?.name || 'Unknown',
-          sessionDate: session.date!,
+          sessionDate: session.date,
           weight: Number(bestSet.weight) || 0,
           reps: bestSet.reps || 0,
           rpe: Number(bestSet.rpe) || 0,

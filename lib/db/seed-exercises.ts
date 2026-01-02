@@ -332,7 +332,7 @@ function parseRestPeriod(restPeriod: string | undefined): number | null {
 
 function cleanArray(arr: string[] | undefined): string[] | null {
   if (!arr || arr.length === 0) return null;
-  return arr.map((s) => s.toLowerCase().replace(/-/g, ' ').trim()).filter(Boolean);
+  return arr.map((s) => s.toLowerCase().replaceAll('-', ' ').trim()).filter(Boolean);
 }
 
 /**

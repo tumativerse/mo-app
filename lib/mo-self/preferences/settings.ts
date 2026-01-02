@@ -172,9 +172,9 @@ function encryptPreferencesForDb(prefs: Partial<UserPreferences>): Record<string
     fitnessGoal: prefs.fitnessGoal ? encrypt(prefs.fitnessGoal) : null,
     experienceLevel: prefs.experienceLevel ? encrypt(prefs.experienceLevel) : null,
     trainingFrequency:
-      prefs.trainingFrequency !== undefined ? encrypt(String(prefs.trainingFrequency)) : null,
+      prefs.trainingFrequency != null ? encrypt(String(prefs.trainingFrequency)) : null,
     sessionDuration:
-      prefs.sessionDuration !== undefined ? encrypt(String(prefs.sessionDuration)) : null,
+      prefs.sessionDuration != null ? encrypt(String(prefs.sessionDuration)) : null,
     focusAreas: prefs.focusAreas ? encrypt(JSON.stringify(prefs.focusAreas)) : null,
     preferredTrainingTimes: prefs.preferredTrainingTimes
       ? encrypt(JSON.stringify(prefs.preferredTrainingTimes))

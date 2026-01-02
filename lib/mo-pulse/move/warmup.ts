@@ -91,7 +91,7 @@ export async function getWarmupTemplate(
     phases: template.phases.map((phase) => ({
       id: phase.id,
       name: phase.name,
-      phaseType: phase.phaseType as WarmupPhase['phaseType'],
+      phaseType: phase.phaseType,
       durationSeconds: phase.durationSeconds,
       exercises: phase.exercises.map((ex) => ({
         id: ex.id,
