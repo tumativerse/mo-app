@@ -45,6 +45,7 @@ jobs:
             -Dsonar.projectKey=tumativerse_mo-app
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.exclusions=**/*.test.ts,**/*.test.tsx,**/*.spec.ts,**/*.spec.tsx,**/node_modules/**,**/.next/**,**/coverage/**,**/dist/**,**/*.config.js,**/*.config.ts,**/playwright-report/**,**/test-results/**,.scannerwork/**
             -Dsonar.qualitygate.wait=true
             -Dsonar.qualitygate.timeout=300
         # BLOCKING: Quality gate must pass
