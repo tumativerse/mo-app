@@ -128,6 +128,19 @@ describe('/api/preferences', () => {
       expect(response.status).toBe(500);
       expect(data.error).toBe('Failed to fetch preferences');
     });
+
+    it('should handle non-Error thrown values', async () => {
+      vi.mocked(moSelfModule.getCurrentUser).mockResolvedValue(mockUser);
+      // Throw a non-Error object (string) to trigger the 'Unknown error' branch (line 18)
+      vi.mocked(moSelfModule.getPreferences).mockRejectedValue('Something went wrong');
+
+      const response = await GET();
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.error).toBe('Failed to fetch preferences');
+      // The 'Unknown error' branch is covered even though it's not in the response
+    });
   });
 
   describe('PATCH /api/preferences', () => {
@@ -341,6 +354,24 @@ describe('/api/preferences', () => {
 
       expect(response.status).toBe(500);
       expect(data.error).toBe('Failed to update preferences');
+    });
+
+    it('should handle non-Error thrown values during update', async () => {
+      vi.mocked(moSelfModule.getCurrentUser).mockResolvedValue(mockUser);
+      // Throw a non-Error object to trigger the 'Unknown error' branch (line 109)
+      vi.mocked(moSelfModule.updatePreferences).mockRejectedValue({ code: 'SOME_ERROR' });
+
+      const request = new NextRequest('http://localhost:3000/api/preferences', {
+        method: 'PATCH',
+        body: JSON.stringify({ fitnessGoal: 'strength' }),
+      });
+
+      const response = await PATCH(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.error).toBe('Failed to update preferences');
+      // The 'Unknown error' branch is covered even though it's not in the response
     });
 
     it('should accept array fields', async () => {

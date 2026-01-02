@@ -692,4 +692,217 @@ describe('MoSettings', () => {
       expect(result).toBe(false);
     });
   });
+
+  describe('updatePreferences - lifestyle and training times', () => {
+    it('should update lifestyle fields (activityLevel, occupationType, sleep times)', async () => {
+      const mockUpdate = vi.fn().mockReturnValue({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            returning: vi.fn().mockResolvedValue([{}]),
+          }),
+        }),
+      });
+
+      mockDb.update = mockUpdate;
+
+      // First call - check for existing preferences
+      mockDb.query.userPreferences.findFirst.mockResolvedValueOnce({
+        userId: mockUserId,
+        trainingFrequency: 'encrypted:4',
+        sessionDuration: 'encrypted:60',
+        defaultEquipmentLevel: 'encrypted:full_gym',
+        activityLevel: null,
+        occupationType: null,
+        typicalBedtime: null,
+        typicalWakeTime: null,
+        warmupDuration: '5',
+        skipGeneralWarmup: false,
+        includeMobilityWork: true,
+        weightUnit: 'lbs',
+        theme: 'dark',
+        accentColor: '#10b981',
+      });
+
+      // Second call - return updated preferences
+      mockDb.query.userPreferences.findFirst.mockResolvedValueOnce({
+        userId: mockUserId,
+        trainingFrequency: 'encrypted:4',
+        sessionDuration: 'encrypted:60',
+        defaultEquipmentLevel: 'encrypted:full_gym',
+        activityLevel: 'encrypted:moderately_active',
+        occupationType: 'encrypted:desk_job',
+        typicalBedtime: 'encrypted:22:30',
+        typicalWakeTime: 'encrypted:06:30',
+        warmupDuration: '5',
+        skipGeneralWarmup: false,
+        includeMobilityWork: true,
+        weightUnit: 'lbs',
+        theme: 'dark',
+        accentColor: '#10b981',
+      });
+
+      const updates = {
+        activityLevel: 'moderately_active' as const,
+        occupationType: 'desk_job' as const,
+        typicalBedtime: '22:30',
+        typicalWakeTime: '06:30',
+      };
+
+      await updatePreferences(mockUserId, updates);
+
+      // Verify encryption was called for lifestyle fields
+      expect(encryptionModule.encrypt).toHaveBeenCalledWith('moderately_active');
+      expect(encryptionModule.encrypt).toHaveBeenCalledWith('desk_job');
+      expect(encryptionModule.encrypt).toHaveBeenCalledWith('22:30');
+      expect(encryptionModule.encrypt).toHaveBeenCalledWith('06:30');
+    });
+
+    it('should update preferredCardio field', async () => {
+      const mockUpdate = vi.fn().mockReturnValue({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            returning: vi.fn().mockResolvedValue([{}]),
+          }),
+        }),
+      });
+
+      mockDb.update = mockUpdate;
+
+      mockDb.query.userPreferences.findFirst.mockResolvedValueOnce({
+        userId: mockUserId,
+        trainingFrequency: 'encrypted:4',
+        sessionDuration: 'encrypted:60',
+        defaultEquipmentLevel: 'encrypted:full_gym',
+        preferredCardio: null,
+        warmupDuration: '5',
+        skipGeneralWarmup: false,
+        includeMobilityWork: true,
+        weightUnit: 'lbs',
+        theme: 'dark',
+        accentColor: '#10b981',
+      });
+
+      mockDb.query.userPreferences.findFirst.mockResolvedValueOnce({
+        userId: mockUserId,
+        trainingFrequency: 'encrypted:4',
+        sessionDuration: 'encrypted:60',
+        defaultEquipmentLevel: 'encrypted:full_gym',
+        preferredCardio: 'encrypted:running',
+        warmupDuration: '5',
+        skipGeneralWarmup: false,
+        includeMobilityWork: true,
+        weightUnit: 'lbs',
+        theme: 'dark',
+        accentColor: '#10b981',
+      });
+
+      const updates = {
+        preferredCardio: 'running',
+      };
+
+      await updatePreferences(mockUserId, updates);
+
+      expect(encryptionModule.encrypt).toHaveBeenCalledWith('running');
+    });
+
+    it('should update preferredTrainingTimes and restDaysPreference', async () => {
+      const mockUpdate = vi.fn().mockReturnValue({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            returning: vi.fn().mockResolvedValue([{}]),
+          }),
+        }),
+      });
+
+      mockDb.update = mockUpdate;
+
+      mockDb.query.userPreferences.findFirst.mockResolvedValueOnce({
+        userId: mockUserId,
+        trainingFrequency: 'encrypted:4',
+        sessionDuration: 'encrypted:60',
+        defaultEquipmentLevel: 'encrypted:full_gym',
+        preferredTrainingTimes: null,
+        restDaysPreference: null,
+        warmupDuration: '5',
+        skipGeneralWarmup: false,
+        includeMobilityWork: true,
+        weightUnit: 'lbs',
+        theme: 'dark',
+        accentColor: '#10b981',
+      });
+
+      mockDb.query.userPreferences.findFirst.mockResolvedValueOnce({
+        userId: mockUserId,
+        trainingFrequency: 'encrypted:4',
+        sessionDuration: 'encrypted:60',
+        defaultEquipmentLevel: 'encrypted:full_gym',
+        preferredTrainingTimes: 'encrypted:["morning","evening"]',
+        restDaysPreference: 'encrypted:["sunday","wednesday"]',
+        warmupDuration: '5',
+        skipGeneralWarmup: false,
+        includeMobilityWork: true,
+        weightUnit: 'lbs',
+        theme: 'dark',
+        accentColor: '#10b981',
+      });
+
+      const updates = {
+        preferredTrainingTimes: ['morning', 'evening'],
+        restDaysPreference: ['sunday', 'wednesday'],
+      };
+
+      await updatePreferences(mockUserId, updates);
+
+      expect(encryptionModule.encrypt).toHaveBeenCalledWith(JSON.stringify(['morning', 'evening']));
+      expect(encryptionModule.encrypt).toHaveBeenCalledWith(
+        JSON.stringify(['sunday', 'wednesday'])
+      );
+    });
+
+    it('should update weightUnit field (line 280)', async () => {
+      const mockUpdate = vi.fn().mockReturnValue({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            returning: vi.fn().mockResolvedValue([{}]),
+          }),
+        }),
+      });
+
+      mockDb.update = mockUpdate;
+
+      mockDb.query.userPreferences.findFirst.mockResolvedValueOnce({
+        userId: mockUserId,
+        trainingFrequency: 'encrypted:4',
+        sessionDuration: 'encrypted:60',
+        defaultEquipmentLevel: 'encrypted:full_gym',
+        warmupDuration: '5',
+        skipGeneralWarmup: false,
+        includeMobilityWork: true,
+        weightUnit: 'lbs',
+        theme: 'dark',
+        accentColor: '#10b981',
+      });
+
+      mockDb.query.userPreferences.findFirst.mockResolvedValueOnce({
+        userId: mockUserId,
+        trainingFrequency: 'encrypted:4',
+        sessionDuration: 'encrypted:60',
+        defaultEquipmentLevel: 'encrypted:full_gym',
+        warmupDuration: '5',
+        skipGeneralWarmup: false,
+        includeMobilityWork: true,
+        weightUnit: 'kg',
+        theme: 'dark',
+        accentColor: '#10b981',
+      });
+
+      const updates = {
+        weightUnit: 'kg' as const,
+      };
+
+      const result = await updatePreferences(mockUserId, updates);
+
+      expect(result.weightUnit).toBe('kg');
+    });
+  });
 });

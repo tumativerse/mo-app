@@ -329,4 +329,55 @@ describe('Encryption utilities', () => {
       }
     });
   });
+
+  describe('formatErrorMessage', () => {
+    it('should return error message for Error objects', async () => {
+      const { formatErrorMessage } = await import('./encryption');
+      const error = new Error('Test error message');
+
+      const result = formatErrorMessage(error);
+
+      expect(result).toBe('Test error message');
+    });
+
+    it('should return "Unknown error" for non-Error values (string)', async () => {
+      const { formatErrorMessage } = await import('./encryption');
+
+      const result = formatErrorMessage('string error');
+
+      expect(result).toBe('Unknown error');
+    });
+
+    it('should return "Unknown error" for non-Error values (number)', async () => {
+      const { formatErrorMessage } = await import('./encryption');
+
+      const result = formatErrorMessage(12345);
+
+      expect(result).toBe('Unknown error');
+    });
+
+    it('should return "Unknown error" for non-Error values (object)', async () => {
+      const { formatErrorMessage } = await import('./encryption');
+
+      const result = formatErrorMessage({ code: 'SOME_ERROR', details: 'Something went wrong' });
+
+      expect(result).toBe('Unknown error');
+    });
+
+    it('should return "Unknown error" for null', async () => {
+      const { formatErrorMessage } = await import('./encryption');
+
+      const result = formatErrorMessage(null);
+
+      expect(result).toBe('Unknown error');
+    });
+
+    it('should return "Unknown error" for undefined', async () => {
+      const { formatErrorMessage } = await import('./encryption');
+
+      const result = formatErrorMessage(undefined);
+
+      expect(result).toBe('Unknown error');
+    });
+  });
 });

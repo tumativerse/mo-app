@@ -127,6 +127,18 @@ describe('/api/user/profile', () => {
       expect(response.status).toBe(500);
       expect(data.error).toBe('Failed to fetch profile');
     });
+
+    it('should handle non-Error thrown values', async () => {
+      vi.mocked(moSelfModule.getCurrentUser).mockResolvedValue(mockUser);
+      // Throw a non-Error object to trigger the 'Unknown error' branch (line 23)
+      vi.mocked(moSelfModule.getProfile).mockRejectedValue('Database error');
+
+      const response = await GET();
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.error).toBe('Failed to fetch profile');
+    });
   });
 
   describe('PATCH /api/user/profile', () => {
@@ -380,6 +392,23 @@ describe('/api/user/profile', () => {
     it('should handle generic errors during update', async () => {
       vi.mocked(moSelfModule.getCurrentUser).mockResolvedValue(mockUser);
       vi.mocked(moSelfModule.updateProfile).mockRejectedValue(new Error('Database write failed'));
+
+      const request = new NextRequest('http://localhost:3000/api/user/profile', {
+        method: 'PATCH',
+        body: JSON.stringify({ fullName: 'Test User' }),
+      });
+
+      const response = await PATCH(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.error).toBe('Failed to update profile');
+    });
+
+    it('should handle non-Error thrown values during update', async () => {
+      vi.mocked(moSelfModule.getCurrentUser).mockResolvedValue(mockUser);
+      // Throw a non-Error object to trigger the 'Unknown error' branch (line 96)
+      vi.mocked(moSelfModule.updateProfile).mockRejectedValue(12345);
 
       const request = new NextRequest('http://localhost:3000/api/user/profile', {
         method: 'PATCH',

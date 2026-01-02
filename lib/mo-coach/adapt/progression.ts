@@ -411,7 +411,7 @@ export async function getPlateauedExercises(
 // HELPER FUNCTIONS
 // ============================================
 
-async function getExercisePerformance(
+export async function getExercisePerformance(
   userId: string,
   exerciseId: string,
   limit: number

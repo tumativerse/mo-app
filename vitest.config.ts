@@ -22,6 +22,8 @@ export default defineConfig({
         '**/*.d.ts',
         'scripts/**',
         'tests/**',
+        'lib/db/schema.ts', // Pure declarations - no executable logic to test
+        'lib/db/index.ts', // Re-exports of schema
       ],
       thresholds: {
         lines: 100,

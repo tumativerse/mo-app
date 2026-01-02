@@ -1,5 +1,13 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { calculateFatigue, getFatigueStatus, logFatigue, getFatigueHistory } from './fatigue';
+import {
+  calculateFatigue,
+  getFatigueStatus,
+  logFatigue,
+  getFatigueHistory,
+  checkIncreasingTrend,
+  average,
+  isWithinDays,
+} from './fatigue';
 import * as dbModule from '@/lib/db';
 
 vi.mock('@/lib/db', () => ({
@@ -378,29 +386,31 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
     it('should detect moderate volume increase (> 120% of baseline)', async () => {
       const sessions = [
-        // This week - total 7500
+        // This week - total 3900 (weekly volume)
         {
           id: '5',
           date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
           avgRpe: '7.0',
-          totalVolume: '2500',
+          totalVolume: '1300',
           status: 'completed',
         },
         {
           id: '4',
           date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
           avgRpe: '7.0',
-          totalVolume: '2500',
+          totalVolume: '1300',
           status: 'completed',
         },
         {
           id: '3',
           date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
           avgRpe: '7.0',
-          totalVolume: '2500',
+          totalVolume: '1300',
           status: 'completed',
         },
-        // Baseline - avg 3000 per week, so ratio = 7500/3000 = 2.5x which is >1.4
+        // Baseline sessions (older than 7 days)
+        // baselineVolume = (3000 + 3000 + 3000) / 3 = 3000
+        // Ratio: 3900 / 3000 = 1.3 (between 1.2 and 1.4)
         {
           id: '2',
           date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
@@ -415,15 +425,21 @@ describe('MoFatigue - Comprehensive Tests', () => {
           totalVolume: '3000',
           status: 'completed',
         },
+        {
+          id: '0',
+          date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '3000',
+          status: 'completed',
+        },
       ];
 
       mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
 
       const result = await calculateFatigue(mockUserId);
 
-      // With ratio > 1.4, it should score 2, not 1
-      // Let me test between 1.2 and 1.4
-      expect(result.factors.volumeLoad).toBeGreaterThan(0);
+      // With ratio between 1.2 and 1.4, should score 1 (moderate increase)
+      expect(result.factors.volumeLoad).toBe(1);
     });
 
     it('should not penalize normal volume', async () => {
@@ -757,6 +773,646 @@ describe('MoFatigue - Comprehensive Tests', () => {
 
       // Should still work
       expect(mockDb.query.workoutSessions.findMany).toHaveBeenCalled();
+    });
+
+    it('should calculate volume load with baseline from old sessions', async () => {
+      // This week sessions (within 7 days) - total 3900
+      const thisWeek = [
+        {
+          id: '1',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1300',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1300',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1300',
+          status: 'completed',
+        },
+      ];
+
+      // Baseline sessions (older than 7 days but within 14 days) - avg 3000
+      const baseline = [
+        {
+          id: '4',
+          date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '3000',
+          status: 'completed',
+        },
+        {
+          id: '5',
+          date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '3000',
+          status: 'completed',
+        },
+      ];
+
+      const sessions = [...thisWeek, ...baseline];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([]);
+
+      // Use 14 days to include baseline sessions
+      const result = await calculateFatigue(mockUserId, 14);
+
+      // 3900 / 3000 = 1.3 (moderate increase)
+      expect(result.factors.volumeLoad).toBe(1);
+    });
+
+    it('should handle empty baseline sessions', async () => {
+      // Only sessions within 7 days, no baseline
+      const sessions = [
+        {
+          id: '1',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([]);
+
+      const result = await calculateFatigue(mockUserId);
+
+      // No baseline to compare, should not crash
+      expect(result).toBeDefined();
+      expect(result.factors.volumeLoad).toBe(0);
+    });
+
+    it('should handle sessions with null dates in volume calculation', async () => {
+      const sessions = [
+        {
+          id: '1',
+          date: null, // Null date - filtered out
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: null, // Null date - filtered out
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: null, // Null date - filtered out
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([]);
+
+      const result = await calculateFatigue(mockUserId);
+
+      // All sessions filtered out due to null dates
+      expect(result).toBeDefined();
+      expect(result.factors.volumeLoad).toBe(0);
+    });
+
+    it('should handle empty weekly volume (all sessions outside 7 days)', async () => {
+      const sessions = [
+        {
+          id: '1',
+          date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([]);
+
+      // Use 21 days to include these sessions
+      const result = await calculateFatigue(mockUserId, 21);
+
+      // weeklyVolume will be 0 (no sessions within last 7 days)
+      expect(result).toBeDefined();
+      expect(result.factors.volumeLoad).toBe(0);
+    });
+  });
+
+  describe('RPE creep detection', () => {
+    it('should detect increasing RPE trend', async () => {
+      // Create sessions with increasing RPE values
+      const sessions = [
+        {
+          id: '1',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '9.0', // Recent - high
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '8.5', // Recent - high
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0', // Earlier - lower
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '4',
+          date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+          avgRpe: '7.0', // Earlier - lower
+          totalVolume: '1000',
+          status: 'completed',
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([]);
+
+      const result = await calculateFatigue(mockUserId);
+
+      // Should detect increasing trend
+      expect(result.factors.rpeCreep).toBe(2);
+      expect(result.recommendations).toContain('RPE trending up - consider reducing intensity');
+    });
+
+    it('should handle less than 3 RPE values after filtering', async () => {
+      const sessions = [
+        {
+          id: '1',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '9.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '8.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          avgRpe: '0', // Invalid RPE (filtered out)
+          totalVolume: '1000',
+          status: 'completed',
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([]);
+
+      const result = await calculateFatigue(mockUserId);
+
+      // Should not crash - only 2 valid RPEs (less than 3 required for trend)
+      expect(result).toBeDefined();
+      expect(result.factors.rpeCreep).toBe(0);
+    });
+
+    it('should handle all zero RPE values', async () => {
+      const sessions = [
+        {
+          id: '1',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          avgRpe: '0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+          avgRpe: '0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+          avgRpe: '0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([]);
+
+      const result = await calculateFatigue(mockUserId);
+
+      // Should handle empty RPE array
+      expect(result).toBeDefined();
+      expect(result.factors.rpeCreep).toBe(0);
+    });
+  });
+
+  describe('Recovery debt with filtered values', () => {
+    it('should handle all zero sleep hours', async () => {
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([]);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([
+        { sleepHours: 0, energyLevel: 5, overallSoreness: 2 },
+        { sleepHours: 0, energyLevel: 5, overallSoreness: 2 },
+      ]);
+
+      const result = await calculateFatigue(mockUserId);
+
+      // Should handle empty array after filter
+      expect(result).toBeDefined();
+    });
+
+    it('should handle all zero energy levels', async () => {
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([]);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([
+        { sleepHours: 7, energyLevel: 0, overallSoreness: 2 },
+        { sleepHours: 7, energyLevel: 0, overallSoreness: 2 },
+      ]);
+
+      const result = await calculateFatigue(mockUserId);
+
+      // Should handle empty array after filter
+      expect(result).toBeDefined();
+    });
+
+    it('should handle all zero soreness values', async () => {
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([]);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([
+        { sleepHours: 7, energyLevel: 5, overallSoreness: 0 },
+        { sleepHours: 7, energyLevel: 5, overallSoreness: 0 },
+      ]);
+
+      const result = await calculateFatigue(mockUserId);
+
+      // Should handle empty array after filter
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('getFatigueHistory', () => {
+    it('should return empty array when no fatigue logs', async () => {
+      mockDb.query.fatigueLogs.findMany.mockResolvedValue([]);
+
+      const result = await getFatigueHistory(mockUserId);
+
+      expect(result).toEqual([]);
+    });
+
+    it('should return fatigue history with increasing trend detection', async () => {
+      const logs = [
+        {
+          id: '1',
+          userId: mockUserId,
+          fatigueScore: 8.5,
+          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+        },
+        {
+          id: '2',
+          userId: mockUserId,
+          fatigueScore: 8.0,
+          createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+        },
+        {
+          id: '3',
+          userId: mockUserId,
+          fatigueScore: 7.0,
+          createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
+        },
+      ];
+
+      mockDb.query.fatigueLogs.findMany.mockResolvedValue(logs);
+
+      const result = await getFatigueHistory(mockUserId);
+
+      expect(result).toHaveLength(3);
+      expect(result[0].fatigueScore).toBe(8.5);
+    });
+
+    it('should handle less than 3 logs for trend detection', async () => {
+      const logs = [
+        {
+          id: '1',
+          userId: mockUserId,
+          fatigueScore: 8.0,
+          createdAt: new Date(),
+        },
+        {
+          id: '2',
+          userId: mockUserId,
+          fatigueScore: 7.0,
+          createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+        },
+      ];
+
+      mockDb.query.fatigueLogs.findMany.mockResolvedValue(logs);
+
+      const result = await getFatigueHistory(mockUserId, 7);
+
+      expect(result).toHaveLength(2);
+    });
+  });
+
+  describe('Volume Load Filter Branches', () => {
+    it('should execute both filter branches in volume calculation', async () => {
+      // Create a precise scenario with sessions both within and outside 7 days
+      const withinSevenDays = [
+        {
+          id: '1',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago - WITHIN
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago - WITHIN
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago - WITHIN
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+      ];
+
+      const outsideSevenDays = [
+        {
+          id: '4',
+          date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago - OUTSIDE
+          avgRpe: '7.0',
+          totalVolume: '500',
+          status: 'completed',
+        },
+        {
+          id: '5',
+          date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000), // 12 days ago - OUTSIDE
+          avgRpe: '7.0',
+          totalVolume: '500',
+          status: 'completed',
+        },
+      ];
+
+      const allSessions = [...withinSevenDays, ...outsideSevenDays];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(allSessions);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([]);
+
+      // Use 14 days to include both groups
+      const result = await calculateFatigue(mockUserId, 14);
+
+      // Weekly volume: 3000 (from 3 sessions within 7 days)
+      // Baseline volume: 1000 (avg of 2 sessions outside 7 days)
+      // Ratio: 3000 / 1000 = 3.0 (very high spike)
+      expect(result.factors.volumeLoad).toBe(2);
+      expect(result.recommendations).toContain('Volume spike detected - risk of overreaching');
+    });
+
+    it('should handle sessions at exact 7 day boundary', async () => {
+      const withinSevenDays = new Date(Date.now() - 6.9 * 24 * 60 * 60 * 1000); // Just under 7 days
+      const eightDaysAgo = new Date(Date.now() - 8 * 24 * 60 * 60 * 1000);
+
+      const sessions = [
+        {
+          id: '1',
+          date: withinSevenDays, // Just under 7 days - should be WITHIN
+          avgRpe: '7.0',
+          totalVolume: '2000',
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: eightDaysAgo, // 8 days - should be OUTSIDE
+          avgRpe: '7.0',
+          totalVolume: '1000',
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day - WITHIN
+          avgRpe: '7.0',
+          totalVolume: '2000',
+          status: 'completed',
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([]);
+
+      const result = await calculateFatigue(mockUserId, 10);
+
+      // Weekly: 4000 (2 sessions within 7 days)
+      // Baseline: 1000 (1 session outside 7 days)
+      // Ratio: 4000 / 1000 = 4.0
+      expect(result.factors.volumeLoad).toBe(2);
+    });
+
+    it('should handle null/empty totalVolume in both filter branches', async () => {
+      const sessions = [
+        {
+          id: '1',
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // WITHIN 7 days
+          avgRpe: '7.0',
+          totalVolume: null, // NULL - triggers || 0 branch
+          status: 'completed',
+        },
+        {
+          id: '2',
+          date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // WITHIN 7 days
+          avgRpe: '7.0',
+          totalVolume: '', // EMPTY - triggers || 0 branch
+          status: 'completed',
+        },
+        {
+          id: '3',
+          date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // WITHIN 7 days
+          avgRpe: '7.0',
+          totalVolume: '1000', // Valid
+          status: 'completed',
+        },
+        {
+          id: '4',
+          date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // OUTSIDE 7 days
+          avgRpe: '7.0',
+          totalVolume: null, // NULL - triggers || 0 branch in baseline filter
+          status: 'completed',
+        },
+        {
+          id: '5',
+          date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000), // OUTSIDE 7 days
+          avgRpe: '7.0',
+          totalVolume: '', // EMPTY - triggers || 0 branch in baseline filter
+          status: 'completed',
+        },
+        {
+          id: '6',
+          date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // OUTSIDE 7 days
+          avgRpe: '7.0',
+          totalVolume: '500', // Valid
+          status: 'completed',
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.recoveryLogs.findMany.mockResolvedValue([]);
+
+      // Use 21 days to include all sessions
+      const result = await calculateFatigue(mockUserId, 21);
+
+      // Weekly volume: 1000 (only 1 valid session)
+      // Baseline volume: 500 (only 1 valid session / 3 total sessions outside 7 days)
+      // Ratio: 1000 / (500/3) = 1000 / 166.67 = 6.0 (very high)
+      expect(result.factors.volumeLoad).toBe(2);
+    });
+  });
+
+  describe('Helper Functions - Direct Unit Tests', () => {
+    describe('checkIncreasingTrend', () => {
+      it('should return false for less than 3 values', () => {
+        expect(checkIncreasingTrend([])).toBe(false);
+        expect(checkIncreasingTrend([8.0])).toBe(false);
+        expect(checkIncreasingTrend([8.0, 7.5])).toBe(false);
+      });
+
+      it('should return true for increasing trend', () => {
+        // Recent avg: (9.0 + 8.5) / 2 = 8.75
+        // Earlier avg: (7.0 + 7.0) / 2 = 7.0
+        // Diff: 8.75 - 7.0 = 1.75 > 0.5 ✓
+        expect(checkIncreasingTrend([9.0, 8.5, 7.0, 7.0])).toBe(true);
+      });
+
+      it('should return false for decreasing trend', () => {
+        // Recent avg: (7.0 + 7.0) / 2 = 7.0
+        // Earlier avg: (8.0 + 8.5) / 2 = 8.25
+        // Diff: 7.0 - 8.25 = -1.25 < 0.5 ✗
+        expect(checkIncreasingTrend([7.0, 7.0, 8.0, 8.5])).toBe(false);
+      });
+
+      it('should return false for stable trend', () => {
+        // Recent avg: (7.5 + 7.5) / 2 = 7.5
+        // Earlier avg: (7.5 + 7.5) / 2 = 7.5
+        // Diff: 0 < 0.5 ✗
+        expect(checkIncreasingTrend([7.5, 7.5, 7.5, 7.5])).toBe(false);
+      });
+
+      it('should require at least 0.5 RPE increase', () => {
+        // Recent avg: (7.3 + 7.2) / 2 = 7.25
+        // Earlier avg: (7.0 + 7.0) / 2 = 7.0
+        // Diff: 7.25 - 7.0 = 0.25 < 0.5 ✗
+        expect(checkIncreasingTrend([7.3, 7.2, 7.0, 7.0])).toBe(false);
+
+        // Recent avg: (7.6 + 7.5) / 2 = 7.55
+        // Earlier avg: (7.0 + 7.0) / 2 = 7.0
+        // Diff: 7.55 - 7.0 = 0.55 > 0.5 ✓
+        expect(checkIncreasingTrend([7.6, 7.5, 7.0, 7.0])).toBe(true);
+      });
+    });
+
+    describe('average', () => {
+      it('should return 0 for empty array', () => {
+        expect(average([])).toBe(0);
+      });
+
+      it('should calculate average correctly', () => {
+        expect(average([1, 2, 3, 4, 5])).toBe(3);
+        expect(average([10])).toBe(10);
+        expect(average([5, 10])).toBe(7.5);
+      });
+
+      it('should handle decimal values', () => {
+        expect(average([1.5, 2.5, 3.0])).toBe(2.3333333333333335);
+      });
+
+      it('should handle negative values', () => {
+        expect(average([-5, 5])).toBe(0);
+        expect(average([-10, -20, -30])).toBe(-20);
+      });
+    });
+
+    describe('isWithinDays', () => {
+      it('should return false for null date', () => {
+        expect(isWithinDays(null, 7)).toBe(false);
+      });
+
+      it('should return true for date within threshold', () => {
+        const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        expect(isWithinDays(yesterday, 7)).toBe(true);
+
+        const sixDaysAgo = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000);
+        expect(isWithinDays(sixDaysAgo, 7)).toBe(true);
+      });
+
+      it('should return false for date outside threshold', () => {
+        const eightDaysAgo = new Date(Date.now() - 8 * 24 * 60 * 60 * 1000);
+        expect(isWithinDays(eightDaysAgo, 7)).toBe(false);
+
+        const tenDaysAgo = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
+        expect(isWithinDays(tenDaysAgo, 7)).toBe(false);
+      });
+
+      it('should handle boundary condition (exactly 7 days)', () => {
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        expect(isWithinDays(sevenDaysAgo, 7)).toBe(true);
+      });
+
+      it('should work with different day thresholds', () => {
+        const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
+        expect(isWithinDays(threeDaysAgo, 3)).toBe(true);
+        expect(isWithinDays(threeDaysAgo, 2)).toBe(false);
+
+        const fourteenDaysAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+        expect(isWithinDays(fourteenDaysAgo, 14)).toBe(true);
+        expect(isWithinDays(fourteenDaysAgo, 7)).toBe(false);
+      });
     });
   });
 });

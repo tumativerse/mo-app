@@ -312,7 +312,7 @@ async function getRecentRecovery(userId: string, days: number) {
   });
 }
 
-function checkIncreasingTrend(values: number[]): boolean {
+export function checkIncreasingTrend(values: number[]): boolean {
   if (values.length < 3) return false;
 
   // Check if most recent values are higher than earlier ones
@@ -322,12 +322,12 @@ function checkIncreasingTrend(values: number[]): boolean {
   return recentAvg > earlierAvg + 0.5; // Need at least 0.5 RPE increase
 }
 
-function average(values: number[]): number {
+export function average(values: number[]): number {
   if (values.length === 0) return 0;
   return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
-function isWithinDays(date: Date | null, days: number): boolean {
+export function isWithinDays(date: Date | null, days: number): boolean {
   if (!date) return false;
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);

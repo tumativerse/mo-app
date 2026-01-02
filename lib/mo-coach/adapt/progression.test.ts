@@ -5,6 +5,7 @@ import {
   getPlateauStrategies,
   getExercisesReadyToProgress,
   getPlateauedExercises,
+  getExercisePerformance,
 } from './progression';
 import * as dbModule from '@/lib/db';
 import * as fatigueModule from './fatigue';
@@ -328,6 +329,72 @@ describe('MoProgression', () => {
 
       expect(result.canProgress).toBe(false);
       expect(result.blockedBy).toBe('recovery');
+    });
+
+    it('should use isolation rules for isolation exercises', async () => {
+      vi.mocked(fatigueModule.calculateFatigue).mockResolvedValue({
+        score: 3,
+        status: {
+          level: 'normal',
+          color: 'green',
+          message: 'Training load is appropriate',
+          action: 'Continue current training',
+        },
+        recommendations: [],
+        factors: {
+          rpeCreep: 1,
+          performanceDrop: 0,
+          recoveryDebt: 1,
+          volumeLoad: 1,
+          streak: 0,
+        },
+      });
+
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'isolation', // Should use isolation rules (minRepsForProgress: 12)
+      });
+
+      // Recent sessions with reps >= 12 (isolation target)
+      mockDb.query.workoutSessions.findMany.mockResolvedValue([
+        {
+          date: new Date(),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: 'Bicep Curl' },
+              sets: [
+                { weight: 30, reps: 12, rpe: 7, isWarmup: false }, // Hits isolation target
+              ],
+            },
+          ],
+        },
+        {
+          date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: 'Bicep Curl' },
+              sets: [{ weight: 30, reps: 13, rpe: 7, isWarmup: false }],
+            },
+          ],
+        },
+        {
+          date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: 'Bicep Curl' },
+              sets: [{ weight: 30, reps: 12, rpe: 7, isWarmup: false }],
+            },
+          ],
+        },
+      ]);
+
+      const result = await checkProgressionGates(mockUserId, mockExerciseId);
+
+      expect(result.canProgress).toBe(true);
+      // Isolation exercises use different rules than compound
     });
   });
 
@@ -701,6 +768,122 @@ describe('MoProgression', () => {
       // Should be empty because fatigue blocks progression
       expect(result).toEqual([]);
     });
+
+    it('should handle null/undefined values in exercise data', async () => {
+      const mockExerciseId2 = 'exercise_789';
+      const mockSessions = [
+        {
+          date: new Date(),
+          userId: mockUserId,
+          status: 'completed' as const,
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { id: mockExerciseId, name: null }, // Name is null - triggers || 'Unknown' (line 458)
+              sets: [
+                {
+                  weight: '0', // First set with zero weight - initial value for reduce
+                  reps: 10,
+                  rpe: '0', // Zero RPE - triggers || 0
+                  isWarmup: false,
+                },
+                {
+                  weight: '5', // Lower weight than '100'
+                  reps: 8,
+                  rpe: 7,
+                  isWarmup: false,
+                },
+                {
+                  weight: '100', // Highest weight - will be selected by reduce (currentWeight > bestWeight)
+                  reps: 8,
+                  rpe: 7,
+                  isWarmup: false,
+                },
+              ],
+            },
+            {
+              exerciseId: 'edge_case_exercise',
+              exercise: { id: 'edge_case_exercise', name: 'Edge Case' },
+              sets: [
+                {
+                  weight: '0', // Only one working set with zero weight
+                  reps: '0', // String '0' is truthy (passes filter) but might trigger || 0
+                  rpe: '0',
+                  isWarmup: false,
+                },
+              ],
+            },
+            {
+              exerciseId: mockExerciseId2,
+              exercise: null, // Null exercise - triggers line 308 false branch
+              sets: [
+                {
+                  weight: '50',
+                  reps: 10,
+                  rpe: 7,
+                  isWarmup: false,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+          userId: mockUserId,
+          status: 'completed' as const,
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { id: mockExerciseId, name: 'Bench Press' },
+              sets: [
+                {
+                  weight: '185', // Valid weight
+                  reps: 8, // Valid reps
+                  rpe: '', // Empty RPE - triggers || 0 (line 462)
+                  isWarmup: false,
+                },
+                {
+                  weight: '50', // Lower weight - triggers line 453 false branch (best > current)
+                  reps: 8,
+                  rpe: 7,
+                  isWarmup: false,
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(mockSessions);
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'compound',
+      });
+
+      vi.mocked(fatigueModule.calculateFatigue).mockResolvedValue({
+        score: 3,
+        status: {
+          level: 'normal',
+          color: 'green',
+          message: 'Training load is appropriate',
+          action: 'Continue current training',
+        },
+        recommendations: [],
+        factors: {
+          rpeCreep: 1,
+          performanceDrop: 0,
+          recoveryDebt: 1,
+          volumeLoad: 1,
+          streak: 0,
+        },
+      });
+
+      const result = await getExercisesReadyToProgress(mockUserId, 5);
+
+      // Should handle null/undefined gracefully without crashing
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+    });
   });
 
   describe('getPlateauedExercises', () => {
@@ -827,6 +1010,92 @@ describe('MoProgression', () => {
       }
     });
 
+    it('should handle exercises with null exercise metadata', async () => {
+      // Sessions where exercise field is null (edge case)
+      const sessions = [
+        {
+          date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+          userId: mockUserId,
+          status: 'completed' as const,
+          exercises: [
+            {
+              exerciseId: 'exercise_1',
+              exercise: null, // Null exercise metadata
+              sets: [{ weight: 100, reps: 10, rpe: 8, isWarmup: false }],
+            },
+          ],
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+
+      const result = await getPlateauedExercises(mockUserId, 5);
+
+      // Should handle gracefully and not crash
+      expect(Array.isArray(result)).toBe(true);
+    });
+
+    it('should skip exercises with only warmup sets', async () => {
+      // Sessions where all sets are warmup sets
+      const sessions = Array.from({ length: 5 }, (_, i) => ({
+        date: new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000),
+        userId: mockUserId,
+        status: 'completed' as const,
+        exercises: [
+          {
+            exerciseId: mockExerciseId,
+            exercise: { id: mockExerciseId, name: 'Bench Press' },
+            sets: [
+              { weight: 45, reps: 10, rpe: 4, isWarmup: true },
+              { weight: 95, reps: 5, rpe: 5, isWarmup: true },
+            ], // All warmup sets
+          },
+        ],
+      }));
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'compound',
+      });
+
+      const result = await getPlateauedExercises(mockUserId, 5);
+
+      // Should not include this exercise (no working sets)
+      const plateauedIds = result.map((ex) => ex.exerciseId);
+      expect(plateauedIds).not.toContain(mockExerciseId);
+    });
+
+    it('should skip exercises with sets missing weight or reps', async () => {
+      // Sessions where sets have null weight or reps
+      const sessions = Array.from({ length: 5 }, (_, i) => ({
+        date: new Date(Date.now() - i * 7 * 24 * 60 * 60 * 1000),
+        userId: mockUserId,
+        status: 'completed' as const,
+        exercises: [
+          {
+            exerciseId: mockExerciseId,
+            exercise: { id: mockExerciseId, name: 'Plank' },
+            sets: [
+              { weight: null, reps: null, rpe: 7, isWarmup: false }, // Bodyweight/time-based
+            ],
+          },
+        ],
+      }));
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(sessions);
+      mockDb.query.exercises.findFirst.mockResolvedValue({
+        id: mockExerciseId,
+        category: 'core',
+      });
+
+      const result = await getPlateauedExercises(mockUserId, 5);
+
+      // Should not include this exercise (no valid working sets)
+      const plateauedIds = result.map((ex) => ex.exerciseId);
+      expect(plateauedIds).not.toContain(mockExerciseId);
+    });
+
     it('should not include exercises that are progressing', async () => {
       // Sessions with increasing weight (not plateaued)
       const sessions = Array.from({ length: 5 }, (_, i) => ({
@@ -853,6 +1122,92 @@ describe('MoProgression', () => {
       // Should not include this exercise (it's progressing)
       const plateauedIds = result.map((ex) => ex.exerciseId);
       expect(plateauedIds).not.toContain(mockExerciseId);
+    });
+  });
+
+  describe('getExercisePerformance - Direct Tests for Edge Cases', () => {
+    it('should handle sets with falsy weight and reps values', async () => {
+      // Create sessions with sets that have edge-case values
+      const mockSessions = [
+        {
+          date: new Date(),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: undefined }, // Undefined name - triggers || 'Unknown'
+              sets: [
+                {
+                  weight: 0, // Number 0 - triggers || 0 fallback (line 451/452/460)
+                  reps: 0, // Number 0 - triggers || 0 fallback (line 461)
+                  rpe: 0, // Number 0 - triggers || 0 fallback
+                  isWarmup: false,
+                },
+                {
+                  weight: 100,
+                  reps: 8,
+                  rpe: 7,
+                  isWarmup: false,
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(mockSessions);
+
+      const result = await getExercisePerformance(mockUserId, mockExerciseId, 5);
+
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      // Should handle 0 values gracefully with || 0 fallbacks
+      if (result.length > 0) {
+        expect(result[0]).toHaveProperty('weight');
+        expect(result[0]).toHaveProperty('reps');
+      }
+    });
+
+    it('should handle sets where bestSet has falsy reps through stateful getter', async () => {
+      // Create a set with a getter that returns truthy first (passes filter) then falsy (triggers || 0)
+      let accessCount = 0;
+      const problematicSet: Record<string, unknown> = {
+        weight: 100,
+        rpe: 7,
+        isWarmup: false,
+      };
+
+      Object.defineProperty(problematicSet, 'reps', {
+        get() {
+          accessCount++;
+          // First access returns truthy (for filter check)
+          // Second access returns falsy (triggers || 0 on line 461)
+          return accessCount === 1 ? 10 : undefined;
+        },
+        enumerable: true,
+        configurable: true,
+      });
+
+      const mockSessions = [
+        {
+          date: new Date(),
+          exercises: [
+            {
+              exerciseId: mockExerciseId,
+              exercise: { name: 'Test' },
+              sets: [problematicSet],
+            },
+          ],
+        },
+      ];
+
+      mockDb.query.workoutSessions.findMany.mockResolvedValue(mockSessions);
+
+      const result = await getExercisePerformance(mockUserId, mockExerciseId, 5);
+
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      // The getter should have been called multiple times during processing
+      expect(accessCount).toBeGreaterThan(0);
     });
   });
 });

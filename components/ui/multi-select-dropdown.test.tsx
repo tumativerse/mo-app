@@ -71,6 +71,21 @@ describe('MultiSelectDropdown', () => {
       expect(button).toHaveTextContent('Option 1, Option 2');
     });
 
+    it('should show placeholder when showCount is false and no selections', () => {
+      render(
+        <MultiSelectDropdown
+          value={[]}
+          options={mockOptions}
+          onChange={mockOnChange}
+          showCount={false}
+          placeholder="Choose options"
+        />
+      );
+
+      const button = screen.getByRole('button');
+      expect(button).toHaveTextContent('Choose options');
+    });
+
     it('should not show dropdown menu initially', () => {
       render(<MultiSelectDropdown value={[]} options={mockOptions} onChange={mockOnChange} />);
 
@@ -373,6 +388,23 @@ describe('MultiSelectDropdown', () => {
       );
 
       expect(screen.getByText('All selected')).toBeInTheDocument();
+    });
+
+    it('should show placeholder when value has IDs not in options', () => {
+      // Edge case: value contains IDs that don't exist in options
+      // This triggers the selectedLabels || placeholder fallback (line 83)
+      render(
+        <MultiSelectDropdown
+          value={['nonexistent1', 'nonexistent2']}
+          options={mockOptions}
+          onChange={mockOnChange}
+          showCount={false}
+          placeholder="Choose items"
+        />
+      );
+
+      // Should fall back to placeholder since no labels match
+      expect(screen.getByText('Choose items')).toBeInTheDocument();
     });
   });
 

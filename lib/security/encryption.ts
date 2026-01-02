@@ -75,6 +75,15 @@ export function encrypt(plaintext: string | number | boolean | null | undefined)
 }
 
 /**
+ * Helper: Format error message for logging (exported for testing)
+ * @param error - Error object or other value
+ * @returns Error message string
+ */
+export function formatErrorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : 'Unknown error';
+}
+
+/**
  * Decrypt encrypted data
  * @param ciphertext - Base64-encoded encrypted data
  * @returns Decrypted plaintext
@@ -119,7 +128,7 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
   } catch (error) {
     // Log error for monitoring
     console.error('CRITICAL: Decryption failed:', {
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: formatErrorMessage(error),
       dataLength: ciphertext.length,
       dataPreview: ciphertext.substring(0, 50) + '...',
     });
@@ -130,7 +139,7 @@ export function decrypt(ciphertext: string | null | undefined): string | null {
         '(1) Data corruption in database, ' +
         '(2) Incorrect ENCRYPTION_KEY, or ' +
         '(3) Data encrypted with different key. ' +
-        `Original error: ${error instanceof Error ? error.message : 'Unknown'}`
+        `Original error: ${formatErrorMessage(error)}`
     );
   }
 }

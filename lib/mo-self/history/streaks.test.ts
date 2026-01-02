@@ -90,7 +90,7 @@ describe('MoStreaks', () => {
 
       mockDb.update.mockReturnValue({
         set: vi.fn().mockReturnValue({
-          where: vi.fn(),
+          where: vi.fn().mockResolvedValue(undefined), // Complete the Promise chain
         }),
       });
 
@@ -99,6 +99,26 @@ describe('MoStreaks', () => {
       expect(result.streakStatus).toBe('broken');
       expect(result.isStreakActive).toBe(false);
       expect(mockDb.update).toHaveBeenCalled(); // Should reset streak
+    });
+
+    it('should handle broken streak that is already at 0', async () => {
+      const now = new Date();
+      const lastWorkout = new Date(now.getTime() - 50 * 60 * 60 * 1000); // 50 hours ago
+
+      mockDb.query.streaks.findFirst.mockResolvedValue({
+        id: '1',
+        userId: mockUserId,
+        currentStreak: 0, // Already at 0
+        longestStreak: 10,
+        lastWorkoutDate: lastWorkout,
+      });
+
+      const result = await getStreak(mockUserId);
+
+      expect(result.streakStatus).toBe('broken');
+      expect(result.isStreakActive).toBe(false);
+      expect(result.currentStreak).toBe(0);
+      expect(mockDb.update).not.toHaveBeenCalled(); // Should not update when already 0
     });
 
     it('should create new streak for new user', async () => {
@@ -263,6 +283,50 @@ describe('MoStreaks', () => {
   });
 
   describe('updateStreakOnWorkout - edge cases', () => {
+    it('should handle broken streak that is already at 0', async () => {
+      const now = new Date();
+      const oldWorkout = new Date(now.getTime() - 60 * 60 * 60 * 1000); // 60 hours ago
+
+      // Streak is already 0 (broken previously)
+      mockDb.query.streaks.findFirst.mockResolvedValueOnce({
+        id: '1',
+        userId: mockUserId,
+        currentStreak: 0, // Already at 0
+        longestStreak: 10,
+        lastWorkoutDate: oldWorkout,
+      });
+
+      mockDb.update.mockReturnValue({
+        set: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            returning: vi.fn().mockResolvedValue([
+              {
+                id: '1',
+                userId: mockUserId,
+                currentStreak: 1, // Start fresh
+                longestStreak: 10,
+                lastWorkoutDate: now,
+              },
+            ]),
+          }),
+        }),
+      });
+
+      mockDb.query.streaks.findFirst.mockResolvedValueOnce({
+        id: '1',
+        userId: mockUserId,
+        currentStreak: 1,
+        longestStreak: 10,
+        lastWorkoutDate: now,
+      });
+
+      const result = await updateStreakOnWorkout(mockUserId);
+
+      expect(result.currentStreak).toBe(1);
+      // Should NOT call update with currentStreak: 0 since it's already 0
+      expect(mockDb.update).toHaveBeenCalled();
+    });
+
     it('should create streak for first workout ever', async () => {
       const now = new Date();
 
