@@ -26,10 +26,10 @@ test.describe('Accessibility', () => {
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  test('sign-in page should not have any automatically detectable accessibility issues', async ({
+  test('login page should not have any automatically detectable accessibility issues', async ({
     page,
   }) => {
-    await page.goto('/sign-in');
+    await page.goto('/login');
 
     // Wait for page to load (Clerk may redirect or show iframe)
     await page.waitForLoadState('networkidle');
