@@ -7,6 +7,7 @@ This project uses [Husky](https://typicode.github.io/husky/) to manage git hooks
 **Location**: `.husky/pre-commit`
 
 **What it does**:
+
 - Runs TypeScript type checking (`npm run type-check`)
 - Prevents commits if TypeScript errors are found
 - Ensures production builds won't fail due to type errors
@@ -35,6 +36,7 @@ npm run type-check   # Run TypeScript type checking (no emit)
 ## Example Output
 
 **Success**:
+
 ```
 🔍 Running pre-commit checks...
 📝 Checking TypeScript...
@@ -43,6 +45,7 @@ npm run type-check   # Run TypeScript type checking (no emit)
 ```
 
 **Failure**:
+
 ```
 🔍 Running pre-commit checks...
 📝 Checking TypeScript...
@@ -66,12 +69,14 @@ git commit --no-verify -m "Your message"
 ## Troubleshooting
 
 **Hook not running?**
+
 ```bash
 # Reinstall hooks
 npm run prepare
 ```
 
 **Permission errors?**
+
 ```bash
 chmod +x .husky/pre-commit
 ```
@@ -79,12 +84,14 @@ chmod +x .husky/pre-commit
 ## Development Workflow
 
 **Before this hook**:
+
 1. ❌ Commit code
 2. ❌ Push to git
 3. ❌ Vercel build fails
 4. ❌ Fix errors and push again
 
 **With this hook**:
+
 1. ✅ Commit blocked if errors exist
 2. ✅ Fix errors locally
 3. ✅ Commit succeeds

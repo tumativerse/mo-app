@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser, getPreferences, updatePreferences } from "@/lib/mo-self";
-import { z } from "zod";
+import { NextRequest, NextResponse } from 'next/server';
+import { getCurrentUser, getPreferences, updatePreferences } from '@/lib/mo-self';
+import { z } from 'zod';
 
 // GET /api/preferences - Get user preferences
 export async function GET() {
@@ -8,19 +8,19 @@ export async function GET() {
     const user = await getCurrentUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const preferences = await getPreferences(user.id);
     return NextResponse.json({ preferences });
   } catch (error) {
     // Check if this is a decryption error
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    const isDecryptionError = errorMessage.includes("Failed to decrypt data");
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const isDecryptionError = errorMessage.includes('Failed to decrypt data');
 
     if (isDecryptionError) {
       // Log critical security error for monitoring
-      console.error("CRITICAL: Preferences decryption failed", {
+      console.error('CRITICAL: Preferences decryption failed', {
         userId: (await getCurrentUser())?.id,
         error: errorMessage,
         timestamp: new Date().toISOString(),
@@ -28,20 +28,17 @@ export async function GET() {
 
       return NextResponse.json(
         {
-          error: "Data integrity error",
-          message: "Unable to read your preferences data. Please contact support.",
-          code: "DECRYPTION_FAILED",
+          error: 'Data integrity error',
+          message: 'Unable to read your preferences data. Please contact support.',
+          code: 'DECRYPTION_FAILED',
         },
         { status: 500 }
       );
     }
 
     // Generic error handling
-    console.error("Error fetching preferences:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch preferences" },
-      { status: 500 }
-    );
+    console.error('Error fetching preferences:', error);
+    return NextResponse.json({ error: 'Failed to fetch preferences' }, { status: 500 });
   }
 }
 
@@ -56,12 +53,16 @@ const updatePreferencesSchema = z.object({
   restDaysPreference: z.array(z.string()).optional(),
 
   // Equipment
-  defaultEquipmentLevel: z.enum(["full_gym", "home_gym", "bodyweight"]).optional(),
+  defaultEquipmentLevel: z.enum(['full_gym', 'home_gym', 'bodyweight']).optional(),
   availableEquipment: z.array(z.string()).optional(),
 
   // Lifestyle
-  activityLevel: z.enum(["sedentary", "lightly_active", "moderately_active", "very_active"]).optional(),
-  occupationType: z.enum(["desk_job", "standing_job", "physical_labor", "mixed", "student", "retired", "other"]).optional(),
+  activityLevel: z
+    .enum(['sedentary', 'lightly_active', 'moderately_active', 'very_active'])
+    .optional(),
+  occupationType: z
+    .enum(['desk_job', 'standing_job', 'physical_labor', 'mixed', 'student', 'retired', 'other'])
+    .optional(),
   typicalBedtime: z.string().optional(), // "HH:mm" format
   typicalWakeTime: z.string().optional(), // "HH:mm" format
 
@@ -69,14 +70,17 @@ const updatePreferencesSchema = z.object({
   preferredCardio: z.string().optional(),
 
   // App settings
-  warmupDuration: z.string().optional(),
+  warmupDuration: z.enum(['quick', 'normal', 'extended']).optional(),
   skipGeneralWarmup: z.boolean().optional(),
   includeMobilityWork: z.boolean().optional(),
-  weightUnit: z.enum(["lbs", "kg"]).optional(),
+  weightUnit: z.enum(['lbs', 'kg']).optional(),
 
   // Theme settings
-  theme: z.enum(["light", "dark"]).optional(),
-  accentColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(), // Hex color validation
+  theme: z.enum(['light', 'dark']).optional(),
+  accentColor: z
+    .string()
+    .regex(/^#[0-9A-Fa-f]{6}$/)
+    .optional(), // Hex color validation
 });
 
 // PATCH /api/preferences - Update user preferences
@@ -85,7 +89,7 @@ export async function PATCH(request: NextRequest) {
     const user = await getCurrentUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -93,7 +97,7 @@ export async function PATCH(request: NextRequest) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid data", details: parsed.error.flatten() },
+        { error: 'Invalid data', details: parsed.error.format() },
         { status: 400 }
       );
     }
@@ -102,12 +106,12 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ preferences });
   } catch (error) {
     // Check if this is a decryption error
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    const isDecryptionError = errorMessage.includes("Failed to decrypt data");
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const isDecryptionError = errorMessage.includes('Failed to decrypt data');
 
     if (isDecryptionError) {
       // Log critical security error for monitoring
-      console.error("CRITICAL: Preferences decryption failed during update", {
+      console.error('CRITICAL: Preferences decryption failed during update', {
         userId: (await getCurrentUser())?.id,
         error: errorMessage,
         timestamp: new Date().toISOString(),
@@ -115,19 +119,16 @@ export async function PATCH(request: NextRequest) {
 
       return NextResponse.json(
         {
-          error: "Data integrity error",
-          message: "Unable to read your existing preferences data. Please contact support.",
-          code: "DECRYPTION_FAILED",
+          error: 'Data integrity error',
+          message: 'Unable to read your existing preferences data. Please contact support.',
+          code: 'DECRYPTION_FAILED',
         },
         { status: 500 }
       );
     }
 
     // Generic error handling
-    console.error("Error updating preferences:", error);
-    return NextResponse.json(
-      { error: "Failed to update preferences" },
-      { status: 500 }
-    );
+    console.error('Error updating preferences:', error);
+    return NextResponse.json({ error: 'Failed to update preferences' }, { status: 500 });
   }
 }

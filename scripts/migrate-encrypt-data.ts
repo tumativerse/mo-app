@@ -27,28 +27,6 @@ config({ path: resolve(__dirname, '../.env.local') });
 const DRY_RUN = process.argv.includes('--dry-run');
 const EXECUTE = process.argv.includes('--execute');
 
-interface UserRecord {
-  id: string;
-  fullName: string | null;
-  heightCm: string | null;
-  currentWeight: string | null;
-  goalWeight: string | null;
-  injuryHistory: string | null;
-}
-
-interface UserPreferencesRecord {
-  id: string;
-  userId: string;
-  fitnessGoal: string | null;
-  experienceLevel: string | null;
-  trainingFrequency: string | null;
-  sessionDuration: string | null;
-  focusAreas: string | null;
-  defaultEquipmentLevel: string | null;
-  availableEquipment: string | null;
-  preferredCardio: string | null;
-}
-
 async function main() {
   console.log('🔐 MO:SELF Data Encryption Migration\n');
 
@@ -114,10 +92,7 @@ async function main() {
         };
 
         if (EXECUTE) {
-          await db
-            .update(users)
-            .set(encrypted)
-            .where(eq(users.id, user.id));
+          await db.update(users).set(encrypted).where(eq(users.id, user.id));
         }
 
         console.log(`      ✓ Full name: ${user.fullName ? 'encrypted' : 'null'}`);
@@ -165,19 +140,22 @@ async function main() {
         const encrypted = {
           fitnessGoal: pref.fitnessGoal ? encrypt(pref.fitnessGoal) : null,
           experienceLevel: pref.experienceLevel ? encrypt(pref.experienceLevel) : null,
-          trainingFrequency: pref.trainingFrequency ? encrypt(String(pref.trainingFrequency)) : null,
+          trainingFrequency: pref.trainingFrequency
+            ? encrypt(String(pref.trainingFrequency))
+            : null,
           sessionDuration: pref.sessionDuration ? encrypt(String(pref.sessionDuration)) : null,
           focusAreas: pref.focusAreas ? encrypt(JSON.stringify(pref.focusAreas)) : null,
-          defaultEquipmentLevel: pref.defaultEquipmentLevel ? encrypt(pref.defaultEquipmentLevel) : null,
-          availableEquipment: pref.availableEquipment ? encrypt(JSON.stringify(pref.availableEquipment)) : null,
+          defaultEquipmentLevel: pref.defaultEquipmentLevel
+            ? encrypt(pref.defaultEquipmentLevel)
+            : null,
+          availableEquipment: pref.availableEquipment
+            ? encrypt(JSON.stringify(pref.availableEquipment))
+            : null,
           preferredCardio: pref.preferredCardio ? encrypt(pref.preferredCardio) : null,
         };
 
         if (EXECUTE) {
-          await db
-            .update(userPreferences)
-            .set(encrypted)
-            .where(eq(userPreferences.id, pref.id));
+          await db.update(userPreferences).set(encrypted).where(eq(userPreferences.id, pref.id));
         }
 
         console.log(`      ✓ Fitness goal: ${pref.fitnessGoal ? 'encrypted' : 'null'}`);
@@ -204,7 +182,6 @@ async function main() {
       console.log('⚠️  IMPORTANT: Keep your ENCRYPTION_KEY safe!');
       console.log('   Without it, this data cannot be decrypted.\n');
     }
-
   } catch (error) {
     console.error('\n❌ Migration failed:');
     console.error(error);

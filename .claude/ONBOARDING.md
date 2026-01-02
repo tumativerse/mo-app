@@ -21,13 +21,14 @@ claude
 
 Claude automatically selects the appropriate model based on task complexity:
 
-| Model | When Used | Examples |
-|-------|-----------|----------|
-| **Opus** | Complex tasks requiring deep reasoning | Architecture design, complex schema, difficult multi-file bugs, major refactoring, security implementations |
-| **Sonnet** | Daily development work | Feature implementation, standard debugging, code reviews, writing tests, documentation |
-| **Haiku** | Quick simple tasks | Syntax questions, simple file lookups, formatting |
+| Model      | When Used                              | Examples                                                                                                    |
+| ---------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| **Opus**   | Complex tasks requiring deep reasoning | Architecture design, complex schema, difficult multi-file bugs, major refactoring, security implementations |
+| **Sonnet** | Daily development work                 | Feature implementation, standard debugging, code reviews, writing tests, documentation                      |
+| **Haiku**  | Quick simple tasks                     | Syntax questions, simple file lookups, formatting                                                           |
 
 ### Manual Override
+
 ```
 You: Use opus - help me redesign the authentication flow
 ```
@@ -81,12 +82,14 @@ You: Use opus - help me redesign the authentication flow
 ### Permissions (`settings.json`)
 
 **Allowed:**
+
 - `npm run`, `npm install`, `npm test`, `npx`
 - Git operations: `status`, `diff`, `log`, `branch`, `checkout`, `add`
 - File operations: `ls`, `mkdir`
 - All Claude tools: Read, Edit, Write, Glob, Grep, WebFetch, WebSearch
 
 **Denied (Security):**
+
 - Reading `.env`, `.env.local`, `.env.production` files
 - Reading `./secrets/**` directory
 - Reading `.git/config`
@@ -94,10 +97,10 @@ You: Use opus - help me redesign the authentication flow
 
 ### Hooks (Auto-run on file changes)
 
-| Hook | Trigger | Action |
-|------|---------|--------|
-| ESLint | Edit/Write `.ts`, `.tsx`, `.js`, `.jsx` | Auto-fix lint issues |
-| Prettier | Edit/Write `.ts`, `.tsx`, `.js`, `.jsx`, `.json`, `.md` | Auto-format |
+| Hook     | Trigger                                                 | Action               |
+| -------- | ------------------------------------------------------- | -------------------- |
+| ESLint   | Edit/Write `.ts`, `.tsx`, `.js`, `.jsx`                 | Auto-fix lint issues |
+| Prettier | Edit/Write `.ts`, `.tsx`, `.js`, `.jsx`, `.json`, `.md` | Auto-format          |
 
 ---
 
@@ -105,12 +108,12 @@ You: Use opus - help me redesign the authentication flow
 
 Rules are automatically applied based on file path patterns:
 
-| Rule | Files | Key Points |
-|------|-------|------------|
-| `typescript.md` | `*.ts`, `*.tsx` | No `any`, strict types, proper interfaces |
-| `react.md` | `*.tsx`, `components/**` | Functional components, hooks rules, accessibility |
-| `api.md` | `app/api/**/*.ts` | Auth check, Zod validation, error format |
-| `testing.md` | `*.test.ts`, `*.spec.ts` | React Testing Library, query by role |
+| Rule            | Files                    | Key Points                                        |
+| --------------- | ------------------------ | ------------------------------------------------- |
+| `typescript.md` | `*.ts`, `*.tsx`          | No `any`, strict types, proper interfaces         |
+| `react.md`      | `*.tsx`, `components/**` | Functional components, hooks rules, accessibility |
+| `api.md`        | `app/api/**/*.ts`        | Auth check, Zod validation, error format          |
+| `testing.md`    | `*.test.ts`, `*.spec.ts` | React Testing Library, query by role              |
 
 ---
 
@@ -118,16 +121,16 @@ Rules are automatically applied based on file path patterns:
 
 Agents are specialized assistants that Claude uses automatically for specific tasks:
 
-| Agent | Purpose | Model |
-|-------|---------|-------|
-| `code-reviewer` | Review code for quality, security, best practices | Sonnet |
-| `ui-improver` | Suggest UI/UX improvements | Sonnet |
-| `api-debugger` | Debug API issues, trace requests | Sonnet |
-| `test-runner` | Run tests, analyze failures | Sonnet |
-| `database-migrator` | Handle schema changes, migrations | Sonnet |
-| `performance-analyzer` | Find performance issues | Sonnet |
-| `researcher` | Research codebase or web | Sonnet |
-| `doc-writer` | Write documentation | Sonnet |
+| Agent                  | Purpose                                           | Model  |
+| ---------------------- | ------------------------------------------------- | ------ |
+| `code-reviewer`        | Review code for quality, security, best practices | Sonnet |
+| `ui-improver`          | Suggest UI/UX improvements                        | Sonnet |
+| `api-debugger`         | Debug API issues, trace requests                  | Sonnet |
+| `test-runner`          | Run tests, analyze failures                       | Sonnet |
+| `database-migrator`    | Handle schema changes, migrations                 | Sonnet |
+| `performance-analyzer` | Find performance issues                           | Sonnet |
+| `researcher`           | Research codebase or web                          | Sonnet |
+| `doc-writer`           | Write documentation                               | Sonnet |
 
 **Usage:** Claude automatically selects the appropriate agent based on your request.
 
@@ -138,6 +141,7 @@ Agents are specialized assistants that Claude uses automatically for specific ta
 Skills are code generation templates invoked with `/`:
 
 ### `/component <Name> [options]`
+
 Generate React components.
 
 ```
@@ -147,10 +151,12 @@ Generate React components.
 ```
 
 Options:
+
 - `--page` - Create as page in `app/(app)/`
 - `--with-api` - Also create API route
 
 ### `/api <route-name> [methods]`
+
 Generate API routes.
 
 ```
@@ -159,6 +165,7 @@ Generate API routes.
 ```
 
 ### `/test <file-path>`
+
 Generate tests for a file.
 
 ```
@@ -167,6 +174,7 @@ Generate tests for a file.
 ```
 
 ### `/drizzle <action> <table> [fields]`
+
 Generate database schema.
 
 ```
@@ -176,6 +184,7 @@ Generate database schema.
 ```
 
 ### `/readme [section]`
+
 Generate or update README.
 
 ```
@@ -191,6 +200,7 @@ Generate or update README.
 Commands are workflows invoked with `/`:
 
 ### `/test [pattern]`
+
 Run tests and analyze results.
 
 ```
@@ -200,6 +210,7 @@ Run tests and analyze results.
 ```
 
 ### `/review [scope]`
+
 Review code changes.
 
 ```
@@ -209,12 +220,15 @@ Review code changes.
 ```
 
 ### `/build`
+
 Full build verification: lint → typecheck → test → build.
 
 ### `/db-status`
+
 Check database schema sync and table counts.
 
 ### `/research <topic>`
+
 Research codebase or web for information.
 
 ```
@@ -223,6 +237,7 @@ Research codebase or web for information.
 ```
 
 ### `/docs <target>`
+
 Generate documentation.
 
 ```
@@ -231,6 +246,7 @@ Generate documentation.
 ```
 
 ### `/changelog [version]`
+
 Generate changelog from commits.
 
 ```
@@ -245,19 +261,23 @@ Generate changelog from commits.
 Claude automatically follows these patterns without explicit commands:
 
 ### Code Generation
+
 - Creating components → follows `skills/component.md`
 - Creating API routes → follows `skills/api.md`
 - Creating tests → follows `skills/test.md`
 - Modifying schema → follows `skills/drizzle.md`
 
 ### Workflows
+
 - After significant changes → runs tests
 - Before commits → reviews changes
 - Research questions → thorough investigation
 - Documentation requests → proper formatting
 
 ### Quality Checks
+
 After file changes:
+
 1. TypeScript compiles
 2. ESLint passes (auto-fixed)
 3. Tests pass if applicable
@@ -268,7 +288,9 @@ After file changes:
 ## Memory & Context
 
 ### `CLAUDE.md` (Project Root)
+
 Main context file containing:
+
 - Tech stack overview
 - Directory structure
 - Code patterns and examples
@@ -276,7 +298,9 @@ Main context file containing:
 - UI guidelines
 
 ### `MEMORY.md`
+
 Persistent context that survives sessions:
+
 - Current development state
 - Architecture decisions
 - Known issues
@@ -289,6 +313,7 @@ Persistent context that survives sessions:
 ## MCP Servers (Optional)
 
 See `MCP_SETUP.md` for configuring:
+
 - **GitHub MCP** - PR and issue management
 - **PostgreSQL MCP** - Direct database queries
 
@@ -297,24 +322,28 @@ See `MCP_SETUP.md` for configuring:
 ## Common Workflows
 
 ### Starting a New Feature
+
 ```
 You: I want to add a rest timer to the workout page
 Claude: [Uses Opus for architecture, plans implementation, creates components]
 ```
 
 ### Fixing a Bug
+
 ```
 You: The workout page crashes when completing a set
 Claude: [Uses api-debugger agent, traces issue, fixes code, runs tests]
 ```
 
 ### Code Review
+
 ```
 You: Review my changes before I commit
 Claude: [Uses code-reviewer agent, reports issues]
 ```
 
 ### Research
+
 ```
 You: How does the progression system work?
 Claude: [Uses researcher agent, explores codebase, explains]

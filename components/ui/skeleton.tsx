@@ -5,8 +5,7 @@ import { cn } from '@/lib/utils/cn';
 import { skeletonVariants } from '@/lib/design/variants';
 
 export interface SkeletonProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof skeletonVariants> {}
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof skeletonVariants> {}
 
 /**
  * Skeleton Component
@@ -20,12 +19,7 @@ export interface SkeletonProps
  * <Skeleton className="h-4 w-full" />
  */
 function Skeleton({ className, variant, ...props }: SkeletonProps) {
-  return (
-    <div
-      className={cn(skeletonVariants({ variant }), className)}
-      {...props}
-    />
-  );
+  return <div className={cn(skeletonVariants({ variant }), className)} {...props} />;
 }
 
 export { Skeleton, skeletonVariants };

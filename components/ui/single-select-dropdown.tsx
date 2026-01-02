@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { ChevronDown, type LucideIcon } from "lucide-react";
+import { useState, useRef, useEffect } from 'react';
+import { ChevronDown, type LucideIcon } from 'lucide-react';
 
 export interface SingleSelectDropdownOption {
   value: string;
@@ -24,9 +24,9 @@ export function SingleSelectDropdown({
   value,
   options,
   onChange,
-  placeholder = "Select...",
-  className = "",
-  width = "auto",
+  placeholder = 'Select...',
+  className = '',
+  width = 'auto',
   showIcons = true,
 }: SingleSelectDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,20 +37,21 @@ export function SingleSelectDropdown({
   const selectedOption = options.find((opt) => opt.value === value);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    const handleClickOutside = (event: Event) => {
+      const target = event.target as Node;
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside as any);
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("touchstart", handleClickOutside as any);
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [isOpen]);
 
@@ -64,7 +65,7 @@ export function SingleSelectDropdown({
       const buttonHeight = selectedButton.clientHeight;
 
       // Center the selected item in the viewport
-      menu.scrollTop = buttonTop - (menuHeight / 2) + (buttonHeight / 2);
+      menu.scrollTop = buttonTop - menuHeight / 2 + buttonHeight / 2;
     }
   }, [isOpen]);
 
@@ -87,7 +88,9 @@ export function SingleSelectDropdown({
           )}
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`h-4 w-4 text-muted-foreground transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+        />
       </button>
 
       {/* Dropdown Menu */}
@@ -108,8 +111,8 @@ export function SingleSelectDropdown({
                 onClick={() => handleSelect(option.value)}
                 className={`w-full px-3 py-3 text-base text-left transition-colors flex items-start gap-3 touch-manipulation ${
                   isSelected
-                    ? "bg-primary/10 text-foreground font-medium"
-                    : "text-foreground hover:bg-secondary active:bg-secondary"
+                    ? 'bg-primary/10 text-foreground font-medium'
+                    : 'text-foreground hover:bg-secondary active:bg-secondary'
                 }`}
               >
                 {/* Icon */}
@@ -119,13 +122,9 @@ export function SingleSelectDropdown({
 
                 {/* Label and Description */}
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium">
-                    {option.label}
-                  </div>
+                  <div className="text-sm font-medium">{option.label}</div>
                   {option.description && (
-                    <div className="text-xs mt-0.5 text-muted-foreground">
-                      {option.description}
-                    </div>
+                    <div className="text-xs mt-0.5 text-muted-foreground">{option.description}</div>
                   )}
                 </div>
               </button>

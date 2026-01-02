@@ -1,7 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Check } from "lucide-react";
+import { Check } from 'lucide-react';
 
 interface ColorPickerProps {
   value: string;
@@ -10,36 +9,18 @@ interface ColorPickerProps {
 }
 
 const PRESET_COLORS = [
-  { name: "Vibrant Teal", value: "#0BA08B" },
-  { name: "Electric Blue", value: "#4A90E2" },
-  { name: "Purple Power", value: "#8B5CF6" },
-  { name: "Lime Energy", value: "#A8E63D" },
-  { name: "Energetic Coral", value: "#FF6B6B" },
-  { name: "Sunset Orange", value: "#FF8C42" },
-  { name: "Magenta", value: "#E94B9C" },
-  { name: "Cyan Clarity", value: "#36E8F3" },
+  { name: 'Vibrant Teal', value: '#0BA08B' },
+  { name: 'Electric Blue', value: '#4A90E2' },
+  { name: 'Purple Power', value: '#8B5CF6' },
+  { name: 'Lime Energy', value: '#A8E63D' },
+  { name: 'Energetic Coral', value: '#FF6B6B' },
+  { name: 'Sunset Orange', value: '#FF8C42' },
+  { name: 'Magenta', value: '#E94B9C' },
+  { name: 'Cyan Clarity', value: '#36E8F3' },
 ];
 
-export function ColorPicker({ value, onChange, className = "" }: ColorPickerProps) {
-  const [customColor, setCustomColor] = useState(value);
-  const [isValidHex, setIsValidHex] = useState(true);
-
-  const handleCustomColorChange = (input: string) => {
-    setCustomColor(input);
-
-    // Validate hex color format
-    const hexRegex = /^#[0-9A-Fa-f]{6}$/;
-    const isValid = hexRegex.test(input);
-    setIsValidHex(isValid);
-
-    if (isValid) {
-      onChange(input);
-    }
-  };
-
+export function ColorPicker({ value, onChange, className = '' }: Readonly<ColorPickerProps>) {
   const handlePresetClick = (color: string) => {
-    setCustomColor(color);
-    setIsValidHex(true);
     onChange(color);
   };
 
@@ -62,8 +43,8 @@ export function ColorPicker({ value, onChange, className = "" }: ColorPickerProp
               <div
                 className={`w-7 h-7 rounded-md transition-all ${
                   value === preset.value
-                    ? "ring-2 ring-foreground ring-offset-2 ring-offset-background scale-110"
-                    : "hover:scale-105 active:scale-105"
+                    ? 'ring-2 ring-foreground ring-offset-2 ring-offset-background scale-110'
+                    : 'hover:scale-105 active:scale-105'
                 }`}
                 style={{ backgroundColor: preset.value }}
               />

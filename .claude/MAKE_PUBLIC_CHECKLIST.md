@@ -10,20 +10,24 @@
 ## 📋 Steps to Make Repo Public
 
 ### 1. Add LICENSE File (Required for Open Source)
+
 Choose a license that suits your needs:
 
 **MIT License (Recommended - Most Permissive):**
+
 - ✅ Anyone can use, modify, distribute
 - ✅ Must include copyright notice
 - ✅ You're not liable for damages
 - Used by: React, Next.js, Vue
 
 **Apache 2.0 (More Corporate-Friendly):**
+
 - ✅ Similar to MIT
 - ✅ Includes patent grant
 - Used by: Android, Kubernetes
 
 **GPL v3 (Copyleft - Forces Derivatives to be Open):**
+
 - ❌ Derivatives must also be GPL
 - ❌ Commercial companies may avoid
 - Used by: Linux kernel
@@ -31,7 +35,9 @@ Choose a license that suits your needs:
 **For mo-app, I recommend MIT** - it's simple and widely used.
 
 ### 2. Add README.md (Required for Good First Impression)
+
 Should include:
+
 - Project description
 - Features
 - Tech stack
@@ -39,7 +45,9 @@ Should include:
 - Contributing guidelines (even if just "not accepting contributions yet")
 
 ### 3. Review Git History (Optional but Recommended)
+
 Check if any past commits had secrets:
+
 ```bash
 # Scan all git history for secrets (takes ~2 min)
 git log --all --oneline | head -50
@@ -50,6 +58,7 @@ If you find old secrets in git history, they need to be removed using `git filte
 ### 4. Make Repository Public on GitHub
 
 **Steps:**
+
 1. Go to: https://github.com/YOUR_USERNAME/mo-app/settings
 2. Scroll to bottom "Danger Zone"
 3. Click "Change visibility"
@@ -73,6 +82,7 @@ All will automatically detect your public repo and give you free unlimited acces
 ## ⚠️ Important Warnings
 
 ### What Happens When You Make it Public:
+
 - ✅ Anyone can **view** your code
 - ✅ Anyone can **clone** your repo
 - ✅ Anyone can **fork** your repo (make their own copy)
@@ -82,6 +92,7 @@ All will automatically detect your public repo and give you free unlimited acces
 - ❌ They **cannot** access your database (credentials not in repo)
 
 ### What Stays Private:
+
 - Your Vercel deployment (only you can access the dashboard)
 - Your database (DATABASE_URL is in .env.local, not tracked)
 - Your Clerk account (keys are in .env.local)
@@ -89,6 +100,7 @@ All will automatically detect your public repo and give you free unlimited acces
 - GitHub repository secrets (for Actions)
 
 ### Risks:
+
 1. **Code copycats:** Someone could clone and launch a similar app
    - Mitigation: Being first to market matters more than secret code
    - Mitigation: Your brand, design, marketing make you unique
@@ -106,6 +118,7 @@ All will automatically detect your public repo and give you free unlimited acces
 ## 💰 Benefits of Making it Public
 
 ### Financial:
+
 - **Save $10-259/month** on quality tools
 - SonarCloud: FREE (was $10/month)
 - Code Climate: FREE (was $249/month)
@@ -116,12 +129,14 @@ All will automatically detect your public repo and give you free unlimited acces
 **Total savings: $10-259/month = $120-3,108/year**
 
 ### Technical:
+
 - ✅ Better tools for free
 - ✅ More generous limits
 - ✅ Community might contribute bug fixes
 - ✅ Open source looks good on your profile
 
 ### Marketing:
+
 - ✅ Portfolio piece you can share
 - ✅ Build in public - attract early users
 - ✅ Developer credibility
@@ -134,22 +149,26 @@ All will automatically detect your public repo and give you free unlimited acces
 Since you're comfortable making it public, here's what I recommend:
 
 ### Option A: Make it Public Now ✅ (Recommended)
+
 - All quality tools are FREE
 - Save $10-259/month
 - Start building in public
 - Attract potential users/contributors
 
 **Do this if:**
+
 - You're okay with competitors seeing your code
 - You want to build a community
 - You want free unlimited quality tools
 
 ### Option B: Keep Private Until Launch
+
 - Pay $10/month for SonarCloud only
 - Launch the app first
 - Make repo public after you have users
 
 **Do this if:**
+
 - You want stealth mode until launch
 - You're worried about copycats
 - $10/month is acceptable
@@ -159,6 +178,7 @@ Since you're comfortable making it public, here's what I recommend:
 ## 🚀 Next Steps (After Making it Public)
 
 1. **Add badges to README** (looks professional):
+
    ```markdown
    ![Build Status](https://github.com/username/mo-app/workflows/CI/badge.svg)
    ![Coverage](https://codecov.io/gh/username/mo-app/branch/main/graph/badge.svg)
@@ -170,6 +190,7 @@ Since you're comfortable making it public, here's what I recommend:
    - Week 4: Link SonarCloud, Codecov, Snyk
 
 3. **Optional: Add CONTRIBUTING.md:**
+
    ```markdown
    # Contributing to Mo
 

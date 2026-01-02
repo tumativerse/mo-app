@@ -18,7 +18,7 @@ import { toast } from 'sonner';
  *
  * Collects basic user profile information:
  * - Full name
- * - Date of birth  
+ * - Date of birth
  * - Gender
  * - Height
  * - Current weight
@@ -81,7 +81,7 @@ export default function OnboardingStep1Page() {
         // Convert imperial to metric
         const feet = parseFloat(formData.heightFt);
         const inches = parseFloat(formData.heightIn);
-        heightCm = ((feet * 12) + inches) * 2.54; // 1 inch = 2.54 cm
+        heightCm = (feet * 12 + inches) * 2.54; // 1 inch = 2.54 cm
 
         weightKg = parseFloat(formData.weightLbs) * 0.453592; // 1 lb = 0.453592 kg
       }

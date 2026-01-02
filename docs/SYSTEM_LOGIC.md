@@ -50,23 +50,23 @@ The fatigue score is calculated from 5 factors:
 Total Score = RPE Creep + Performance + Recovery Debt + Volume Load + Streak
 ```
 
-| Factor | Points | How It's Calculated |
-|--------|--------|---------------------|
-| **RPE Creep** | 0-2 | Compare recent RPE avg to earlier sessions. If RPE increasing by >0.5, add 2 points |
-| **Performance Drop** | 0-2 | If average RPE across recent sessions >8.5, add 2 points |
-| **Recovery Debt** | 0-3 | Sleep <6h (+1), Sleep <5h (+2), Energy <3 (+1), Soreness >4 (+1) |
-| **Volume Load** | 0-2 | If weekly volume >120% of baseline (+1), >140% (+2) |
-| **Training Streak** | 0-1 | If 5+ consecutive training days, add 1 point |
+| Factor               | Points | How It's Calculated                                                                 |
+| -------------------- | ------ | ----------------------------------------------------------------------------------- |
+| **RPE Creep**        | 0-2    | Compare recent RPE avg to earlier sessions. If RPE increasing by >0.5, add 2 points |
+| **Performance Drop** | 0-2    | If average RPE across recent sessions >8.5, add 2 points                            |
+| **Recovery Debt**    | 0-3    | Sleep <6h (+1), Sleep <5h (+2), Energy <3 (+1), Soreness >4 (+1)                    |
+| **Volume Load**      | 0-2    | If weekly volume >120% of baseline (+1), >140% (+2)                                 |
+| **Training Streak**  | 0-1    | If 5+ consecutive training days, add 1 point                                        |
 
 ### Fatigue Levels
 
-| Score | Level | Color | Message | Recommended Action |
-|-------|-------|-------|---------|-------------------|
-| 0-2 | Fresh | Green | "Well recovered" | Train normally, can push intensity |
-| 3-4 | Normal | Green | "Normal training fatigue" | Continue as planned |
-| 5-6 | Elevated | Yellow | "Fatigue accumulating" | Monitor closely, prioritize recovery |
-| 7-8 | High | Orange | "High fatigue - deload recommended" | Take deload week or reduce volume 40% |
-| 9-10 | Critical | Red | "Risk of overtraining" | Mandatory rest day or very light session |
+| Score | Level    | Color  | Message                             | Recommended Action                       |
+| ----- | -------- | ------ | ----------------------------------- | ---------------------------------------- |
+| 0-2   | Fresh    | Green  | "Well recovered"                    | Train normally, can push intensity       |
+| 3-4   | Normal   | Green  | "Normal training fatigue"           | Continue as planned                      |
+| 5-6   | Elevated | Yellow | "Fatigue accumulating"              | Monitor closely, prioritize recovery     |
+| 7-8   | High     | Orange | "High fatigue - deload recommended" | Take deload week or reduce volume 40%    |
+| 9-10  | Critical | Red    | "Risk of overtraining"              | Mandatory rest day or very light session |
 
 ### Fatigue Logging
 
@@ -116,34 +116,35 @@ Before suggesting a weight increase, the system checks 4 gates. ALL must pass:
 
 ### Progression Rules by Exercise Type
 
-| Exercise Type | Min Reps for Progress | Max RPE for Progress | Weight Increment | Sessions Required |
-|---------------|----------------------|---------------------|------------------|-------------------|
-| **Compound** (squat, bench, deadlift, rows, etc.) | 8 reps | RPE 8 | 5 lbs | 2 consecutive |
-| **Isolation** (curls, extensions, raises, etc.) | 10 reps | RPE 7 | 2.5 lbs | 1 session |
+| Exercise Type                                     | Min Reps for Progress | Max RPE for Progress | Weight Increment | Sessions Required |
+| ------------------------------------------------- | --------------------- | -------------------- | ---------------- | ----------------- |
+| **Compound** (squat, bench, deadlift, rows, etc.) | 8 reps                | RPE 8                | 5 lbs            | 2 consecutive     |
+| **Isolation** (curls, extensions, raises, etc.)   | 10 reps               | RPE 7                | 2.5 lbs          | 1 session         |
 
 ### Progression Statuses
 
-| Status | Meaning | Action |
-|--------|---------|--------|
-| `ready` | All gates passed, ready to add weight | Suggest new weight |
-| `maintain` | Not ready yet, keep current weight | Show current weight |
-| `plateau` | Same weight for 4+ sessions | Suggest plateau-breaking strategies |
-| `regress` | Recent RPE >9.5, weight too heavy | Suggest reducing weight |
+| Status     | Meaning                               | Action                              |
+| ---------- | ------------------------------------- | ----------------------------------- |
+| `ready`    | All gates passed, ready to add weight | Suggest new weight                  |
+| `maintain` | Not ready yet, keep current weight    | Show current weight                 |
+| `plateau`  | Same weight for 4+ sessions           | Suggest plateau-breaking strategies |
+| `regress`  | Recent RPE >9.5, weight too heavy     | Suggest reducing weight             |
 
 ### Plateau Detection & Breaking
 
 **Plateau Detected When:**
+
 - Same weight used for 4+ consecutive sessions
 - Not hitting target reps consistently
 
 **Plateau-Breaking Strategies:**
 
-| Strategy | Description | Duration |
-|----------|-------------|----------|
-| Rep Range Shift | Try 6-8 reps instead of 8-12 to build strength | 2-3 weeks |
-| Variation Swap | Switch to similar exercise (e.g., incline instead of flat) | 4 weeks |
-| Volume Increase | Add 1-2 sets per session for this exercise | 2 weeks |
-| Deload Then Push | Take deload week, come back at 90% and rebuild | 2 weeks |
+| Strategy         | Description                                                | Duration  |
+| ---------------- | ---------------------------------------------------------- | --------- |
+| Rep Range Shift  | Try 6-8 reps instead of 8-12 to build strength             | 2-3 weeks |
+| Variation Swap   | Switch to similar exercise (e.g., incline instead of flat) | 4 weeks   |
+| Volume Increase  | Add 1-2 sets per session for this exercise                 | 2 weeks   |
+| Deload Then Push | Take deload week, come back at 90% and rebuild             | 2 weeks   |
 
 ---
 
@@ -189,15 +190,16 @@ The system checks for deload needs in this priority order:
 
 ### Deload Types
 
-| Type | Volume Modifier | Intensity Modifier | When to Use |
-|------|-----------------|-------------------|-------------|
-| **Volume** | 60% (fewer sets) | 100% (same weight) | Scheduled deloads, moderate fatigue |
-| **Intensity** | 70% | 85% (lighter weight) | High fatigue with poor recovery |
-| **Full Rest** | 0% | 0% | Critical fatigue, risk of injury |
+| Type          | Volume Modifier  | Intensity Modifier   | When to Use                         |
+| ------------- | ---------------- | -------------------- | ----------------------------------- |
+| **Volume**    | 60% (fewer sets) | 100% (same weight)   | Scheduled deloads, moderate fatigue |
+| **Intensity** | 70%              | 85% (lighter weight) | High fatigue with poor recovery     |
+| **Full Rest** | 0%               | 0%                   | Critical fatigue, risk of injury    |
 
 ### Deload Application
 
 When deload is active:
+
 1. `volumeModifier` applied to target sets (e.g., 4 sets → 2-3 sets)
 2. `intensityModifier` applied to suggested weights (e.g., 100 lbs → 85 lbs)
 3. Banner shown on workout page with days remaining
@@ -246,12 +248,12 @@ During Deload:
 
 ### Rotation Messages
 
-| Condition | Message |
-|-----------|---------|
-| 3-6 days off | "Ease back in after break" |
-| 7+ days off | "Starting fresh after extended break" |
-| Deload active | "Deload week: 60% volume" |
-| Normal | (no message) |
+| Condition     | Message                               |
+| ------------- | ------------------------------------- |
+| 3-6 days off  | "Ease back in after break"            |
+| 7+ days off   | "Starting fresh after extended break" |
+| Deload active | "Deload week: 60% volume"             |
+| Normal        | (no message)                          |
 
 ---
 
@@ -288,11 +290,11 @@ During Deload:
 
 ### Warmup Progression
 
-| Set | Percentage | Reps |
-|-----|------------|------|
-| Warmup 1 | 50% of working weight | 10 |
-| Warmup 2 | 70% of working weight | 6 |
-| Warmup 3 | 85% of working weight | 3 |
+| Set      | Percentage            | Reps |
+| -------- | --------------------- | ---- |
+| Warmup 1 | 50% of working weight | 10   |
+| Warmup 2 | 70% of working weight | 6    |
+| Warmup 3 | 85% of working weight | 3    |
 
 ### Post-Set Suggestions
 
@@ -327,17 +329,18 @@ RPE Difference = Actual RPE - Target RPE
 
 Users can log daily (via dashboard or recovery page):
 
-| Metric | Range | Impact on Fatigue |
-|--------|-------|-------------------|
-| Sleep Hours | 0-24 | <6h: +1 fatigue, <5h: +2 fatigue |
-| Sleep Quality | 1-5 | Currently tracked, not used in score |
-| Energy Level | 1-5 | <3: +1 fatigue |
-| Soreness | 1-5 | >4: +1 fatigue |
-| Stress Level | 1-5 | Currently tracked, not used in score |
+| Metric        | Range | Impact on Fatigue                    |
+| ------------- | ----- | ------------------------------------ |
+| Sleep Hours   | 0-24  | <6h: +1 fatigue, <5h: +2 fatigue     |
+| Sleep Quality | 1-5   | Currently tracked, not used in score |
+| Energy Level  | 1-5   | <3: +1 fatigue                       |
+| Soreness      | 1-5   | >4: +1 fatigue                       |
+| Stress Level  | 1-5   | Currently tracked, not used in score |
 
 ### Recovery Averages
 
 The progression page shows rolling averages:
+
 - Average sleep (last N days)
 - Average energy (last N days)
 - Average soreness (last N days)
@@ -742,14 +745,14 @@ const REST_TIMERS = {
 
 ## Files Reference
 
-| File | Purpose |
-|------|---------|
-| `/lib/training-logic/fatigue.ts` | Fatigue calculation, status, logging |
+| File                                 | Purpose                                               |
+| ------------------------------------ | ----------------------------------------------------- |
+| `/lib/training-logic/fatigue.ts`     | Fatigue calculation, status, logging                  |
 | `/lib/training-logic/progression.ts` | Progression gates, recommendations, plateau detection |
-| `/lib/training-logic/deload.ts` | Deload detection, triggers, management |
-| `/lib/training-logic/suggestions.ts` | Weight suggestions, warmups, rest timers |
-| `/lib/training-logic/index.ts` | Library exports |
-| `/app/api/training/status/route.ts` | Training status endpoint |
-| `/app/api/training/suggest/route.ts` | Weight suggestion endpoint |
-| `/app/api/ppl/today/route.ts` | Today's workout with fatigue/deload data |
-| `/app/api/progression/route.ts` | Progression analysis endpoint |
+| `/lib/training-logic/deload.ts`      | Deload detection, triggers, management                |
+| `/lib/training-logic/suggestions.ts` | Weight suggestions, warmups, rest timers              |
+| `/lib/training-logic/index.ts`       | Library exports                                       |
+| `/app/api/training/status/route.ts`  | Training status endpoint                              |
+| `/app/api/training/suggest/route.ts` | Weight suggestion endpoint                            |
+| `/app/api/ppl/today/route.ts`        | Today's workout with fatigue/deload data              |
+| `/app/api/progression/route.ts`      | Progression analysis endpoint                         |

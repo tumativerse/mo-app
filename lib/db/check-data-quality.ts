@@ -2,7 +2,6 @@ import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/neon-http';
 import { neon } from '@neondatabase/serverless';
 import * as schema from './schema';
-import { sql, isNull, isNotNull, count, eq } from 'drizzle-orm';
 
 const sqlClient = neon(process.env.DATABASE_URL!);
 const db = drizzle(sqlClient, { schema });
@@ -51,7 +50,7 @@ async function checkDataQuality() {
 
   for (const ex of exercises) {
     for (const check of fieldChecks) {
-      const value = (ex as any)[check.name];
+      const value = (ex as Record<string, unknown>)[check.name];
       if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
         nullCounts[check.name] = (nullCounts[check.name] || 0) + 1;
       }
@@ -64,7 +63,9 @@ async function checkDataQuality() {
     const nullCount = nullCounts[check.name] || 0;
     const filledCount = exercises.length - nullCount;
     const pct = ((filledCount / exercises.length) * 100).toFixed(1);
-    console.log(`| ${check.name.padEnd(20)} | ${String(nullCount).padStart(10)} | ${String(filledCount).padStart(6)} | ${pct.padStart(9)}% |`);
+    console.log(
+      `| ${check.name.padEnd(20)} | ${String(nullCount).padStart(10)} | ${String(filledCount).padStart(6)} | ${pct.padStart(9)}% |`
+    );
   }
   console.log();
 
@@ -153,7 +154,7 @@ async function checkDataQuality() {
 
   console.log('Top 10 Exercises with Most Alternatives:');
   for (const [id, count] of sortedByAlternatives) {
-    const ex = exercises.find(e => e.id === id);
+    const ex = exercises.find((e) => e.id === id);
     console.log(`  ${ex?.name || id}: ${count} alternatives`);
   }
   console.log();
@@ -164,7 +165,7 @@ async function checkDataQuality() {
   console.log('═'.repeat(60));
   console.log('NAME LENGTH CHECK\n');
 
-  const longNames = exercises.filter(e => e.name.length > 90);
+  const longNames = exercises.filter((e) => e.name.length > 90);
   if (longNames.length > 0) {
     console.log(`⚠️  ${longNames.length} exercises have names > 90 chars (limit is 100):`);
     for (const ex of longNames) {
@@ -182,16 +183,26 @@ async function checkDataQuality() {
   console.log('ESSENTIAL EXERCISES CHECK\n');
 
   const essentialExercises = [
-    'bench-press', 'deadlift', 'squat', 'pull-up', 'row',
-    'overhead-press', 'romanian-deadlift', 'lat-pulldown', 'leg-press',
-    'bicep-curl', 'tricep-pushdown', 'plank', 'hip-thrust'
+    'bench-press',
+    'deadlift',
+    'squat',
+    'pull-up',
+    'row',
+    'overhead-press',
+    'romanian-deadlift',
+    'lat-pulldown',
+    'leg-press',
+    'bicep-curl',
+    'tricep-pushdown',
+    'plank',
+    'hip-thrust',
   ];
 
   const foundEssentials: string[] = [];
   const missingEssentials: string[] = [];
 
   for (const slug of essentialExercises) {
-    const found = exercises.find(e => e.slug.includes(slug));
+    const found = exercises.find((e) => e.slug.includes(slug));
     if (found) {
       foundEssentials.push(`${slug} → ${found.name}`);
     } else {
@@ -218,7 +229,7 @@ async function checkDataQuality() {
   console.log('SAMPLE EXERCISES (first 5 with full data)\n');
 
   const samplesWithFullData = exercises
-    .filter(e => e.difficulty && e.priority && e.movementPattern && e.primaryMuscles?.length)
+    .filter((e) => e.difficulty && e.priority && e.movementPattern && e.primaryMuscles?.length)
     .slice(0, 5);
 
   for (const ex of samplesWithFullData) {

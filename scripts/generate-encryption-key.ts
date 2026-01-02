@@ -5,7 +5,7 @@
  * Usage: npx tsx scripts/generate-encryption-key.ts
  */
 
-import { generateEncryptionKey, testEncryption } from '../lib/security/encryption';
+import { generateEncryptionKey } from '../lib/security/encryption';
 
 console.log('🔐 MO:SELF Encryption Key Generator\n');
 console.log('Generating 256-bit AES encryption key...\n');

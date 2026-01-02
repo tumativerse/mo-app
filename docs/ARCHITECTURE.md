@@ -30,11 +30,11 @@ This document defines the complete system architecture for the Mo fitness platfo
 DOMAIN (4) → VERTICAL (12) → SYSTEM (30+)
 ```
 
-| Level | Purpose | Naming Pattern | Example |
-|-------|---------|----------------|---------|
-| Domain | Strategic boundaries | `MO:NAME` | MO:COACH |
-| Vertical | Functional areas | `MoName` | MoAdapt |
-| System | Specific implementations | `MoName` | MoFatigue |
+| Level    | Purpose                  | Naming Pattern | Example   |
+| -------- | ------------------------ | -------------- | --------- |
+| Domain   | Strategic boundaries     | `MO:NAME`      | MO:COACH  |
+| Vertical | Functional areas         | `MoName`       | MoAdapt   |
+| System   | Specific implementations | `MoName`       | MoFatigue |
 
 ### The Mo Universe
 
@@ -64,12 +64,12 @@ DOMAIN (4) → VERTICAL (12) → SYSTEM (30+)
 
 ## The Four Domains
 
-| Domain | Name | Personality | Role |
-|--------|------|-------------|------|
-| Foundation | **MO:SELF** | "The Memory" | Knows who you are, what you want, where you've been |
-| Tracking | **MO:PULSE** | "The Observer" | Watches everything — workouts, body, recovery, fuel |
-| Intelligence | **MO:COACH** | "The Brain" | Thinks, adapts, learns, coaches |
-| Ecosystem | **MO:CONNECT** | "The Connector" | Links you to devices, community, knowledge |
+| Domain       | Name           | Personality     | Role                                                |
+| ------------ | -------------- | --------------- | --------------------------------------------------- |
+| Foundation   | **MO:SELF**    | "The Memory"    | Knows who you are, what you want, where you've been |
+| Tracking     | **MO:PULSE**   | "The Observer"  | Watches everything — workouts, body, recovery, fuel |
+| Intelligence | **MO:COACH**   | "The Brain"     | Thinks, adapts, learns, coaches                     |
+| Ecosystem    | **MO:CONNECT** | "The Connector" | Links you to devices, community, knowledge          |
 
 ### Domain Flow
 
@@ -83,35 +83,35 @@ MO:SELF      →    MO:PULSE    →    MO:COACH     →    MO:CONNECT
 
 ## MO:SELF - Foundation Domain
 
-> *"The Memory"* — "I remember everything about you"
+> _"The Memory"_ — "I remember everything about you"
 
 MO:SELF is the foundation layer that stores user identity, preferences, and history. All other domains reference MO:SELF to understand context.
 
 ### Verticals & Systems
 
-#### MoIdentity — *"I know who you are"*
+#### MoIdentity — _"I know who you are"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoAuth | *"The Gatekeeper"* | Authentication, user accounts | ✅ Built |
-| MoProfile | *"The Record"* | User profile, fitness level, goals | ✅ Built |
-| MoGoals | *"The Target"* | Training goals, target metrics | ⚠️ Partial |
+| System    | Name               | Description                        | Status     |
+| --------- | ------------------ | ---------------------------------- | ---------- |
+| MoAuth    | _"The Gatekeeper"_ | Authentication, user accounts      | ✅ Built   |
+| MoProfile | _"The Record"_     | User profile, fitness level, goals | ✅ Built   |
+| MoGoals   | _"The Target"_     | Training goals, target metrics     | ⚠️ Partial |
 
-#### MoPrefs — *"I know what you like"*
+#### MoPrefs — _"I know what you like"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoSettings | *"The Customizer"* | Training prefs, equipment level, units, warmup settings | ✅ Built |
-| MoGear | *"The Inventory"* | Available equipment, gym setup | ✅ Built |
-| MoAlerts | *"The Notifier"* | Notification preferences, reminders | ❌ Future |
+| System     | Name               | Description                                             | Status    |
+| ---------- | ------------------ | ------------------------------------------------------- | --------- |
+| MoSettings | _"The Customizer"_ | Training prefs, equipment level, units, warmup settings | ✅ Built  |
+| MoGear     | _"The Inventory"_  | Available equipment, gym setup                          | ✅ Built  |
+| MoAlerts   | _"The Notifier"_   | Notification preferences, reminders                     | ❌ Future |
 
-#### MoHistory — *"I remember your journey"*
+#### MoHistory — _"I remember your journey"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoRecords | *"The Historian"* | Personal records with auto-detection, estimated 1RM | ✅ Built |
-| MoBadges | *"The Trophy Case"* | Achievements, milestones, badges | ❌ Future |
-| MoStreaks | *"The Motivator"* | Workout streaks (48hr window), auto-update on completion | ✅ Built |
+| System    | Name                | Description                                              | Status    |
+| --------- | ------------------- | -------------------------------------------------------- | --------- |
+| MoRecords | _"The Historian"_   | Personal records with auto-detection, estimated 1RM      | ✅ Built  |
+| MoBadges  | _"The Trophy Case"_ | Achievements, milestones, badges                         | ❌ Future |
+| MoStreaks | _"The Motivator"_   | Workout streaks (48hr window), auto-update on completion | ✅ Built  |
 
 ### MO:SELF Data Model
 
@@ -138,46 +138,46 @@ interface MoSelfContext {
 
 ## MO:PULSE - Tracking Domain
 
-> *"The Observer"* — "I see everything you do"
+> _"The Observer"_ — "I see everything you do"
 
 MO:PULSE captures all user activity and health data. It's the primary input layer that feeds MO:COACH with data for analysis.
 
 ### Verticals & Systems
 
-#### MoMove — *"I track every rep, every mile"*
+#### MoMove — _"I track every rep, every mile"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoStrength | *"The Iron Counter"* | Weight training, sets, reps, RPE | ✅ Built |
-| MoCardio | *"The Distance Tracker"* | Running, cycling, swimming, rowing | ❌ Future |
-| MoMobility | *"The Flexibility Guide"* | Stretching, yoga, mobility work | ⚠️ Partial |
-| MoSession | *"The Workout Manager"* | Active session state, timers, flow | ✅ Built |
-| MoWarmup | *"The Preparer"* | Warmup templates, phase tracking, skip/complete | ✅ Built |
+| System     | Name                      | Description                                     | Status     |
+| ---------- | ------------------------- | ----------------------------------------------- | ---------- |
+| MoStrength | _"The Iron Counter"_      | Weight training, sets, reps, RPE                | ✅ Built   |
+| MoCardio   | _"The Distance Tracker"_  | Running, cycling, swimming, rowing              | ❌ Future  |
+| MoMobility | _"The Flexibility Guide"_ | Stretching, yoga, mobility work                 | ⚠️ Partial |
+| MoSession  | _"The Workout Manager"_   | Active session state, timers, flow              | ✅ Built   |
+| MoWarmup   | _"The Preparer"_          | Warmup templates, phase tracking, skip/complete | ✅ Built   |
 
-#### MoBody — *"I watch your transformation"*
+#### MoBody — _"I watch your transformation"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoWeight | *"The Scale"* | Daily weight logging, trends | ✅ Built |
-| MoMeasure | *"The Tape"* | Body measurements (chest, waist, arms) | ❌ Future |
-| MoComposition | *"The Analyzer"* | Body fat %, muscle mass estimates | ❌ Future |
+| System        | Name             | Description                            | Status    |
+| ------------- | ---------------- | -------------------------------------- | --------- |
+| MoWeight      | _"The Scale"_    | Daily weight logging, trends           | ✅ Built  |
+| MoMeasure     | _"The Tape"_     | Body measurements (chest, waist, arms) | ❌ Future |
+| MoComposition | _"The Analyzer"_ | Body fat %, muscle mass estimates      | ❌ Future |
 
-#### MoRecover — *"I monitor how you heal"*
+#### MoRecover — _"I monitor how you heal"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoSleep | *"The Night Watcher"* | Sleep hours, quality tracking | ✅ Built |
-| MoEnergy | *"The Battery"* | Daily energy levels (1-5) | ✅ Built |
-| MoSoreness | *"The Pain Map"* | Muscle soreness tracking | ✅ Built |
-| MoStrain | *"The Load Monitor"* | Daily strain from wearables | ❌ Future |
+| System     | Name                  | Description                   | Status    |
+| ---------- | --------------------- | ----------------------------- | --------- |
+| MoSleep    | _"The Night Watcher"_ | Sleep hours, quality tracking | ✅ Built  |
+| MoEnergy   | _"The Battery"_       | Daily energy levels (1-5)     | ✅ Built  |
+| MoSoreness | _"The Pain Map"_      | Muscle soreness tracking      | ✅ Built  |
+| MoStrain   | _"The Load Monitor"_  | Daily strain from wearables   | ❌ Future |
 
-#### MoFuel — *"I track what powers you"*
+#### MoFuel — _"I track what powers you"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoMeals | *"The Food Log"* | Meal logging, food diary | ❌ Future |
-| MoMacros | *"The Nutrient Counter"* | Protein, carbs, fats tracking | ❌ Future |
-| MoHydration | *"The Water Tracker"* | Daily water intake | ❌ Future |
+| System      | Name                     | Description                   | Status    |
+| ----------- | ------------------------ | ----------------------------- | --------- |
+| MoMeals     | _"The Food Log"_         | Meal logging, food diary      | ❌ Future |
+| MoMacros    | _"The Nutrient Counter"_ | Protein, carbs, fats tracking | ❌ Future |
+| MoHydration | _"The Water Tracker"_    | Daily water intake            | ❌ Future |
 
 ### MO:PULSE Data Model
 
@@ -209,36 +209,36 @@ interface MoPulseData {
 
 ## MO:COACH - Intelligence Domain
 
-> *"The Brain"* — "I think so you don't have to"
+> _"The Brain"_ — "I think so you don't have to"
 
 MO:COACH is the intelligence layer that analyzes data from MO:PULSE, applies training science, and provides personalized guidance.
 
 ### Verticals & Systems
 
-#### MoInsight — *"I find meaning in your data"*
+#### MoInsight — _"I find meaning in your data"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoTrends | *"The Pattern Finder"* | Long-term trend analysis | ⚠️ Partial |
-| MoReports | *"The Summarizer"* | Weekly/monthly progress reports | ❌ Future |
-| MoPatterns | *"The Detective"* | Behavioral pattern recognition | ❌ Future |
+| System     | Name                   | Description                     | Status     |
+| ---------- | ---------------------- | ------------------------------- | ---------- |
+| MoTrends   | _"The Pattern Finder"_ | Long-term trend analysis        | ⚠️ Partial |
+| MoReports  | _"The Summarizer"_     | Weekly/monthly progress reports | ❌ Future  |
+| MoPatterns | _"The Detective"_      | Behavioral pattern recognition  | ❌ Future  |
 
-#### MoAdapt — *"I adjust your training"*
+#### MoAdapt — _"I adjust your training"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoFatigue | *"The Guardian"* | Fatigue scoring (0-10), protection from overtraining | ✅ Built |
-| MoProgress | *"The Challenger"* | Progression gates, readiness checks | ✅ Built |
-| MoDeload | *"The Healer"* | Deload detection, recovery weeks | ✅ Built |
-| MoSuggest | *"The Advisor"* | Weight, set, and rest recommendations | ✅ Built |
+| System     | Name               | Description                                          | Status   |
+| ---------- | ------------------ | ---------------------------------------------------- | -------- |
+| MoFatigue  | _"The Guardian"_   | Fatigue scoring (0-10), protection from overtraining | ✅ Built |
+| MoProgress | _"The Challenger"_ | Progression gates, readiness checks                  | ✅ Built |
+| MoDeload   | _"The Healer"_     | Deload detection, recovery weeks                     | ✅ Built |
+| MoSuggest  | _"The Advisor"_    | Weight, set, and rest recommendations                | ✅ Built |
 
-#### MoChat — *"I speak to you directly"*
+#### MoChat — _"I speak to you directly"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoVoice | *"The Conversationalist"* | AI chat interface | ❌ Future |
-| MoAdvice | *"The Counselor"* | Contextual recommendations | ⚠️ Partial |
-| MoEducate | *"The Teacher"* | Training education, explanations | ❌ Future |
+| System    | Name                      | Description                      | Status     |
+| --------- | ------------------------- | -------------------------------- | ---------- |
+| MoVoice   | _"The Conversationalist"_ | AI chat interface                | ❌ Future  |
+| MoAdvice  | _"The Counselor"_         | Contextual recommendations       | ⚠️ Partial |
+| MoEducate | _"The Teacher"_           | Training education, explanations | ❌ Future  |
 
 ### MO:COACH Data Model
 
@@ -274,13 +274,13 @@ Fatigue Score (0-10) = Sum of:
 └── Streak Score (0-1)      → 5+ consecutive days
 ```
 
-| Score | Level | Color | Action |
-|-------|-------|-------|--------|
-| 0-3 | Fresh | Green | Train normally |
-| 4-5 | Normal | Yellow | Monitor closely |
-| 6-7 | Elevated | Orange | Consider reducing |
-| 8-9 | High | Red | Reduce intensity |
-| 10 | Critical | Red | Rest day recommended |
+| Score | Level    | Color  | Action               |
+| ----- | -------- | ------ | -------------------- |
+| 0-3   | Fresh    | Green  | Train normally       |
+| 4-5   | Normal   | Yellow | Monitor closely      |
+| 6-7   | Elevated | Orange | Consider reducing    |
+| 8-9   | High     | Red    | Reduce intensity     |
+| 10    | Critical | Red    | Rest day recommended |
 
 #### MoProgress — Progression Gates
 
@@ -298,52 +298,52 @@ Before allowing weight increase, all gates must pass:
 ```
 
 | Exercise Type | Target Reps | Max RPE | Weight Jump |
-|---------------|-------------|---------|-------------|
-| Compound | 8 | 8 | +5 lbs |
-| Isolation | 10 | 7 | +2.5 lbs |
+| ------------- | ----------- | ------- | ----------- |
+| Compound      | 8           | 8       | +5 lbs      |
+| Isolation     | 10          | 7       | +2.5 lbs    |
 
 #### MoDeload — Deload Triggers
 
-| Trigger | Condition | Deload Type |
-|---------|-----------|-------------|
-| Scheduled | Every 4 weeks | Volume (60% volume, 100% intensity) |
-| Critical Fatigue | 2+ days at score 8+ | Intensity (70% volume, 85% intensity) |
-| Prolonged Elevated | 5+ days at score 6+ | Volume |
-| Combined Factors | High fatigue + poor recovery | Full Rest |
+| Trigger            | Condition                    | Deload Type                           |
+| ------------------ | ---------------------------- | ------------------------------------- |
+| Scheduled          | Every 4 weeks                | Volume (60% volume, 100% intensity)   |
+| Critical Fatigue   | 2+ days at score 8+          | Intensity (70% volume, 85% intensity) |
+| Prolonged Elevated | 5+ days at score 6+          | Volume                                |
+| Combined Factors   | High fatigue + poor recovery | Full Rest                             |
 
 ---
 
 ## MO:CONNECT - Ecosystem Domain
 
-> *"The Connector"* — "I link you to everything"
+> _"The Connector"_ — "I link you to everything"
 
 MO:CONNECT handles all external connections — social features, device integrations, and content delivery.
 
 ### Verticals & Systems
 
-#### MoCommunity — *"I connect you to others"*
+#### MoCommunity — _"I connect you to others"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoShare | *"The Broadcaster"* | Workout sharing, social posts | ❌ Future |
-| MoChallenges | *"The Competitor"* | Weekly/monthly challenges | ❌ Future |
-| MoLeaderboard | *"The Ranks"* | Friend and global leaderboards | ❌ Future |
+| System        | Name                | Description                    | Status    |
+| ------------- | ------------------- | ------------------------------ | --------- |
+| MoShare       | _"The Broadcaster"_ | Workout sharing, social posts  | ❌ Future |
+| MoChallenges  | _"The Competitor"_  | Weekly/monthly challenges      | ❌ Future |
+| MoLeaderboard | _"The Ranks"_       | Friend and global leaderboards | ❌ Future |
 
-#### MoSync — *"I talk to your devices"*
+#### MoSync — _"I talk to your devices"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoWearables | *"The Device Whisperer"* | Apple Watch, Garmin, WHOOP, Fitbit | ❌ Future |
-| MoHealth | *"The Health Bridge"* | Apple Health, Google Fit integration | ❌ Future |
-| MoAPIs | *"The Translator"* | Third-party API connections | ❌ Future |
+| System      | Name                     | Description                          | Status    |
+| ----------- | ------------------------ | ------------------------------------ | --------- |
+| MoWearables | _"The Device Whisperer"_ | Apple Watch, Garmin, WHOOP, Fitbit   | ❌ Future |
+| MoHealth    | _"The Health Bridge"_    | Apple Health, Google Fit integration | ❌ Future |
+| MoAPIs      | _"The Translator"_       | Third-party API connections          | ❌ Future |
 
-#### MoLibrary — *"I hold the knowledge"*
+#### MoLibrary — _"I hold the knowledge"_
 
-| System | Name | Description | Status |
-|--------|------|-------------|--------|
-| MoExercises | *"The Encyclopedia"* | Exercise database, demos, cues | ✅ Built |
-| MoPrograms | *"The Curriculum"* | Training program templates | ✅ Built |
-| MoLearn | *"The Classroom"* | Educational content, articles | ❌ Future |
+| System      | Name                 | Description                    | Status    |
+| ----------- | -------------------- | ------------------------------ | --------- |
+| MoExercises | _"The Encyclopedia"_ | Exercise database, demos, cues | ✅ Built  |
+| MoPrograms  | _"The Curriculum"_   | Training program templates     | ✅ Built  |
+| MoLearn     | _"The Classroom"_    | Educational content, articles  | ❌ Future |
 
 ### MO:CONNECT Data Model
 
@@ -530,12 +530,12 @@ interface MoConnectInterface {
 
 ### By Domain
 
-| Domain | Verticals | Systems | Completion |
-|--------|-----------|---------|------------|
-| MO:SELF | 3/3 | 7/9 | 78% |
-| MO:PULSE | 3/4 | 8/13 | 62% |
-| MO:COACH | 2/3 | 5/9 | 56% |
-| MO:CONNECT | 1/3 | 2/9 | 22% |
+| Domain     | Verticals | Systems | Completion |
+| ---------- | --------- | ------- | ---------- |
+| MO:SELF    | 3/3       | 7/9     | 78%        |
+| MO:PULSE   | 3/4       | 8/13    | 62%        |
+| MO:COACH   | 2/3       | 5/9     | 56%        |
+| MO:CONNECT | 1/3       | 2/9     | 22%        |
 
 ### By System
 
@@ -694,26 +694,31 @@ import { calculateFatigue, checkProgressionGates } from '@/lib/mo-coach';
 ## Future Roadmap
 
 ### Phase 7: MO:PULSE Expansion
+
 - [ ] MoCardio — Running, cycling, swimming support
 - [ ] MoMeasure — Body measurements tracking
 - [ ] MoStrain — Wearable strain integration
 
 ### Phase 8: MO:COACH AI
+
 - [ ] MoVoice — AI chat interface
 - [ ] MoEducate — Training education content
 - [ ] MoReports — Automated progress reports
 
 ### Phase 9: MO:CONNECT Ecosystem
+
 - [ ] MoWearables — Apple Watch, Garmin, WHOOP integration
 - [ ] MoHealth — Apple Health, Google Fit sync
 - [ ] MoShare — Social workout sharing
 
 ### Phase 10: MO:CONNECT Community
+
 - [ ] MoChallenges — Weekly/monthly competitions
 - [ ] MoLeaderboard — Friend rankings
 - [ ] MoLearn — Educational content library
 
 ### Phase 11: MO:PULSE Nutrition
+
 - [ ] MoMeals — Food logging
 - [ ] MoMacros — Macro tracking
 - [ ] MoHydration — Water intake
@@ -723,19 +728,25 @@ import { calculateFatigue, checkProgressionGates } from '@/lib/mo-coach';
 ## Design Principles
 
 ### 1. Domain Isolation
+
 Each domain should be as independent as possible. Cross-domain communication happens through defined interfaces only.
 
 ### 2. Data Ownership
+
 Each system owns its data. Other systems request data through the owning system's interface.
 
 ### 3. Single Responsibility
+
 Each system does one thing well. If a system grows too complex, split it.
 
 ### 4. Progressive Enhancement
+
 Core features (MO:PULSE, MO:COACH) work without optional features (MO:CONNECT social, wearables).
 
 ### 5. User-Centric Flow
+
 The architecture follows the user's daily journey:
+
 ```
 Wake up → Log recovery (MO:PULSE)
 Check app → See status (MO:COACH)
@@ -748,23 +759,24 @@ Share → Post results (MO:CONNECT)
 
 ## Glossary
 
-| Term | Definition |
-|------|------------|
-| Domain | Top-level architectural boundary (MO:SELF, MO:PULSE, MO:COACH, MO:CONNECT) |
-| Vertical | Functional area within a domain (MoMove, MoAdapt, MoLibrary) |
-| System | Specific implementation unit (MoFatigue, MoWeight, MoExercises) |
-| Interface | Contract defining how domains/verticals communicate |
-| Gate | Checkpoint that must pass before an action (e.g., progression gate) |
+| Term      | Definition                                                                 |
+| --------- | -------------------------------------------------------------------------- |
+| Domain    | Top-level architectural boundary (MO:SELF, MO:PULSE, MO:COACH, MO:CONNECT) |
+| Vertical  | Functional area within a domain (MoMove, MoAdapt, MoLibrary)               |
+| System    | Specific implementation unit (MoFatigue, MoWeight, MoExercises)            |
+| Interface | Contract defining how domains/verticals communicate                        |
+| Gate      | Checkpoint that must pass before an action (e.g., progression gate)        |
 
 ---
 
-*Last updated: December 22, 2024*
-*Version: 1.1*
+_Last updated: December 22, 2024_
+_Version: 1.1_
 
 ### Recent Updates (v1.1)
+
 - Added MoWarmup system to MO:PULSE/MoMove
 - Completed MoSettings (was partial) with full preferences API
 - Added MoRecords with auto-PR detection and Brzycki 1RM formula
 - Added MoStreaks with 48-hour window and auto-update on workout completion
-- Reorganized codebase into Mo Universe directory structure (/lib/mo-*)
+- Reorganized codebase into Mo Universe directory structure (/lib/mo-\*)
 - Added import patterns documentation

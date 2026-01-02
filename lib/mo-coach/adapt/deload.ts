@@ -11,7 +11,7 @@
 import { db } from '@/lib/db';
 import { deloadPeriods, workoutSessions } from '@/lib/db/schema';
 import { eq, desc, and, gte, lte } from 'drizzle-orm';
-import { calculateFatigue, getFatigueHistory, type FatigueResult } from './fatigue';
+import { calculateFatigue, getFatigueHistory } from './fatigue';
 
 // ============================================
 // TYPES
@@ -24,7 +24,7 @@ export interface DeloadDecision {
   reason: string;
   deloadType: DeloadType;
   durationDays: number;
-  volumeModifier: number;   // e.g., 0.6 = 60% volume
+  volumeModifier: number; // e.g., 0.6 = 60% volume
   intensityModifier: number; // e.g., 0.9 = 90% weight
 }
 
@@ -65,7 +65,7 @@ export async function checkDeloadNeeded(userId: string): Promise<DeloadDecision>
   }
 
   // Rule 2: Fatigue score critical for 2+ days
-  const criticalDays = fatigueHistory.filter(f => f.fatigueScore >= 8).length;
+  const criticalDays = fatigueHistory.filter((f) => f.fatigueScore >= 8).length;
   if (criticalDays >= 2) {
     return {
       shouldDeload: true,
@@ -78,7 +78,7 @@ export async function checkDeloadNeeded(userId: string): Promise<DeloadDecision>
   }
 
   // Rule 3: Fatigue elevated (6+) for 5+ days
-  const elevatedDays = fatigueHistory.filter(f => f.fatigueScore >= 6).length;
+  const elevatedDays = fatigueHistory.filter((f) => f.fatigueScore >= 6).length;
   if (elevatedDays >= 5) {
     return {
       shouldDeload: true,
@@ -128,29 +128,30 @@ export async function startDeload(
   endDate.setDate(endDate.getDate() + decision.durationDays);
 
   // End any existing active deload
-  await db.update(deloadPeriods)
+  await db
+    .update(deloadPeriods)
     .set({
       isActive: false,
       completedAt: new Date(),
     })
-    .where(and(
-      eq(deloadPeriods.userId, userId),
-      eq(deloadPeriods.isActive, true)
-    ));
+    .where(and(eq(deloadPeriods.userId, userId), eq(deloadPeriods.isActive, true)));
 
   // Create new deload period
-  const [newDeload] = await db.insert(deloadPeriods).values({
-    userId,
-    startDate,
-    endDate,
-    durationDays: decision.durationDays,
-    deloadType: decision.deloadType,
-    volumeModifier: String(decision.volumeModifier),
-    intensityModifier: String(decision.intensityModifier),
-    triggerReason: decision.reason,
-    fatigueScoreAtTrigger: fatigueScore,
-    isActive: true,
-  }).returning();
+  const [newDeload] = await db
+    .insert(deloadPeriods)
+    .values({
+      userId,
+      startDate,
+      endDate,
+      durationDays: decision.durationDays,
+      deloadType: decision.deloadType,
+      volumeModifier: String(decision.volumeModifier),
+      intensityModifier: String(decision.intensityModifier),
+      triggerReason: decision.reason,
+      fatigueScoreAtTrigger: fatigueScore,
+      isActive: true,
+    })
+    .returning();
 
   return newDeload.id;
 }
@@ -159,15 +160,13 @@ export async function startDeload(
  * End an active deload early
  */
 export async function endDeload(userId: string): Promise<void> {
-  await db.update(deloadPeriods)
+  await db
+    .update(deloadPeriods)
     .set({
       isActive: false,
       completedAt: new Date(),
     })
-    .where(and(
-      eq(deloadPeriods.userId, userId),
-      eq(deloadPeriods.isActive, true)
-    ));
+    .where(and(eq(deloadPeriods.userId, userId), eq(deloadPeriods.isActive, true)));
 }
 
 /**
@@ -216,10 +215,7 @@ async function getWeeksSinceLastDeload(userId: string): Promise<number> {
   if (!lastDeload) {
     // Check when user started training
     const firstSession = await db.query.workoutSessions.findFirst({
-      where: and(
-        eq(workoutSessions.userId, userId),
-        eq(workoutSessions.status, 'completed')
-      ),
+      where: and(eq(workoutSessions.userId, userId), eq(workoutSessions.status, 'completed')),
       orderBy: [workoutSessions.date],
     });
 
@@ -245,7 +241,7 @@ async function getWeeksSinceLastDeload(userId: string): Promise<number> {
 export async function getDeloadHistory(
   userId: string,
   limit: number = 5
-): Promise<typeof deloadPeriods.$inferSelect[]> {
+): Promise<(typeof deloadPeriods.$inferSelect)[]> {
   return db.query.deloadPeriods.findMany({
     where: eq(deloadPeriods.userId, userId),
     orderBy: [desc(deloadPeriods.startDate)],
@@ -273,7 +269,7 @@ export function applyDeloadModifiers(
   const adjustedSets = Math.max(1, Math.round(originalSets * deload.volumeModifier));
 
   // Apply intensity modifier (reduce weight)
-  const adjustedWeight = Math.round(originalWeight * deload.intensityModifier / 5) * 5; // Round to nearest 5
+  const adjustedWeight = Math.round((originalWeight * deload.intensityModifier) / 5) * 5; // Round to nearest 5
 
   return {
     sets: adjustedSets,

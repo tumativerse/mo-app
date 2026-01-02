@@ -8,16 +8,16 @@
  * A streak is maintained by working out at least once every 48 hours.
  */
 
-import { db } from "@/lib/db";
-import { streaks, workoutSessions, workouts } from "@/lib/db/schema";
-import { eq, desc, and, gte } from "drizzle-orm";
+import { db } from '@/lib/db';
+import { streaks, workoutSessions, workouts } from '@/lib/db/schema';
+import { eq, and, gte } from 'drizzle-orm';
 
 export interface StreakData {
   currentStreak: number;
   longestStreak: number;
   lastWorkoutDate: Date | null;
   isStreakActive: boolean;
-  streakStatus: "on_fire" | "active" | "at_risk" | "broken";
+  streakStatus: 'on_fire' | 'active' | 'at_risk' | 'broken';
   hoursUntilBreak: number | null;
   message: string;
 }
@@ -45,46 +45,36 @@ export async function getStreak(userId: string): Promise<StreakData> {
   }
 
   const now = new Date();
-  const lastWorkout = streak.lastWorkoutDate
-    ? new Date(streak.lastWorkoutDate)
-    : null;
+  const lastWorkout = streak.lastWorkoutDate ? new Date(streak.lastWorkoutDate) : null;
 
   // Calculate if streak is still active (within 48 hours)
   let isStreakActive = false;
   let hoursUntilBreak: number | null = null;
-  let streakStatus: StreakData["streakStatus"] = "broken";
+  let streakStatus: StreakData['streakStatus'] = 'broken';
 
   if (lastWorkout) {
-    const hoursSinceLastWorkout =
-      (now.getTime() - lastWorkout.getTime()) / (1000 * 60 * 60);
+    const hoursSinceLastWorkout = (now.getTime() - lastWorkout.getTime()) / (1000 * 60 * 60);
     hoursUntilBreak = Math.max(0, 48 - hoursSinceLastWorkout);
 
     if (hoursSinceLastWorkout <= 48) {
       isStreakActive = true;
       if (hoursSinceLastWorkout <= 24) {
-        streakStatus = streak.currentStreak! >= 7 ? "on_fire" : "active";
+        streakStatus = streak.currentStreak! >= 7 ? 'on_fire' : 'active';
       } else {
-        streakStatus = "at_risk";
+        streakStatus = 'at_risk';
       }
     } else {
-      streakStatus = "broken";
-      // Reset streak if broken
+      // Streak is broken (already set to 'broken' at initialization)
+      // Reset streak count if it was active
       if (streak.currentStreak! > 0) {
-        await db
-          .update(streaks)
-          .set({ currentStreak: 0 })
-          .where(eq(streaks.id, streak.id));
+        await db.update(streaks).set({ currentStreak: 0 }).where(eq(streaks.id, streak.id));
         streak.currentStreak = 0;
       }
     }
   }
 
   // Generate motivational message
-  const message = getStreakMessage(
-    streak.currentStreak!,
-    streakStatus,
-    hoursUntilBreak
-  );
+  const message = getStreakMessage(streak.currentStreak!, streakStatus, hoursUntilBreak);
 
   return {
     currentStreak: streak.currentStreak!,
@@ -122,9 +112,7 @@ export async function updateStreakOnWorkout(userId: string): Promise<StreakData>
       })
       .returning();
   } else {
-    const lastWorkout = streak.lastWorkoutDate
-      ? new Date(streak.lastWorkoutDate)
-      : null;
+    const lastWorkout = streak.lastWorkoutDate ? new Date(streak.lastWorkoutDate) : null;
 
     let newStreak = streak.currentStreak!;
 
@@ -137,8 +125,7 @@ export async function updateStreakOnWorkout(userId: string): Promise<StreakData>
         lastWorkout.getMonth(),
         lastWorkout.getDate()
       );
-      const hoursSinceLastWorkout =
-        (now.getTime() - lastWorkout.getTime()) / (1000 * 60 * 60);
+      const hoursSinceLastWorkout = (now.getTime() - lastWorkout.getTime()) / (1000 * 60 * 60);
 
       // Same day - don't increment
       if (lastWorkoutDate.getTime() === today.getTime()) {
@@ -174,33 +161,33 @@ export async function updateStreakOnWorkout(userId: string): Promise<StreakData>
  */
 function getStreakMessage(
   currentStreak: number,
-  status: StreakData["streakStatus"],
+  status: StreakData['streakStatus'],
   hoursUntilBreak: number | null
 ): string {
-  if (status === "broken") {
-    return "Time to start a new streak! Every journey begins with a single workout.";
+  if (status === 'broken') {
+    return 'Time to start a new streak! Every journey begins with a single workout.';
   }
 
-  if (status === "at_risk" && hoursUntilBreak !== null) {
+  if (status === 'at_risk' && hoursUntilBreak !== null) {
     const hours = Math.floor(hoursUntilBreak);
     return `Your streak is at risk! ${hours} hours left to keep it alive.`;
   }
 
   // Milestone messages
   if (currentStreak === 1) {
-    return "Great start! Keep it going tomorrow.";
+    return 'Great start! Keep it going tomorrow.';
   } else if (currentStreak === 3) {
     return "3 days strong! You're building momentum.";
   } else if (currentStreak === 7) {
     return "One week streak! You're officially on fire!";
   } else if (currentStreak === 14) {
-    return "Two weeks! Consistency is becoming a habit.";
+    return 'Two weeks! Consistency is becoming a habit.';
   } else if (currentStreak === 30) {
     return "30 days! You're unstoppable!";
   } else if (currentStreak === 50) {
-    return "50 days! Elite consistency.";
+    return '50 days! Elite consistency.';
   } else if (currentStreak === 100) {
-    return "100 DAYS! Legendary dedication!";
+    return '100 DAYS! Legendary dedication!';
   } else if (currentStreak >= 7) {
     return `${currentStreak} day streak! Keep the fire burning!`;
   } else {
@@ -232,22 +219,19 @@ export async function getStreakStats(userId: string): Promise<{
     db.query.workoutSessions.findMany({
       where: and(
         eq(workoutSessions.userId, userId),
-        eq(workoutSessions.status, "completed"),
+        eq(workoutSessions.status, 'completed'),
         gte(workoutSessions.completedAt, oneWeekAgo)
       ),
     }),
     db.query.workoutSessions.findMany({
       where: and(
         eq(workoutSessions.userId, userId),
-        eq(workoutSessions.status, "completed"),
+        eq(workoutSessions.status, 'completed'),
         gte(workoutSessions.completedAt, oneMonthAgo)
       ),
     }),
     db.query.workoutSessions.findMany({
-      where: and(
-        eq(workoutSessions.userId, userId),
-        eq(workoutSessions.status, "completed")
-      ),
+      where: and(eq(workoutSessions.userId, userId), eq(workoutSessions.status, 'completed')),
     }),
   ]);
 
@@ -256,22 +240,19 @@ export async function getStreakStats(userId: string): Promise<{
     db.query.workouts.findMany({
       where: and(
         eq(workouts.userId, userId),
-        eq(workouts.status, "completed"),
+        eq(workouts.status, 'completed'),
         gte(workouts.completedAt, oneWeekAgo)
       ),
     }),
     db.query.workouts.findMany({
       where: and(
         eq(workouts.userId, userId),
-        eq(workouts.status, "completed"),
+        eq(workouts.status, 'completed'),
         gte(workouts.completedAt, oneMonthAgo)
       ),
     }),
     db.query.workouts.findMany({
-      where: and(
-        eq(workouts.userId, userId),
-        eq(workouts.status, "completed")
-      ),
+      where: and(eq(workouts.userId, userId), eq(workouts.status, 'completed')),
     }),
   ]);
 

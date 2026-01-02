@@ -10,7 +10,7 @@ export function celebrateWorkoutComplete() {
     return Math.random() * (max - min) + min;
   }
 
-  const interval: any = setInterval(function() {
+  const interval: NodeJS.Timeout = setInterval(() => {
     const timeLeft = animationEnd - Date.now();
 
     if (timeLeft <= 0) {
@@ -42,7 +42,7 @@ export function celebratePersonalRecord() {
     zIndex: 9999,
   };
 
-  function fire(particleRatio: number, opts: any) {
+  function fire(particleRatio: number, opts: confetti.Options) {
     confetti({
       ...defaults,
       ...opts,
@@ -125,7 +125,7 @@ export function celebrateFireworks() {
   const duration = 2000;
   const animationEnd = Date.now() + duration;
 
-  const interval: any = setInterval(function() {
+  const interval: NodeJS.Timeout = setInterval(() => {
     const timeLeft = animationEnd - Date.now();
 
     if (timeLeft <= 0) {
@@ -172,7 +172,7 @@ export function celebrateCannon() {
     if (Date.now() < end) {
       requestAnimationFrame(frame);
     }
-  }());
+  })();
 }
 
 // Vibration for mobile devices
@@ -221,7 +221,7 @@ export function celebrateFirstWorkout() {
   const duration = 5000;
   const animationEnd = Date.now() + duration;
 
-  const interval: any = setInterval(function() {
+  const interval: NodeJS.Timeout = setInterval(() => {
     const timeLeft = animationEnd - Date.now();
 
     if (timeLeft <= 0) {
@@ -248,9 +248,14 @@ export function celebrateFirstWorkout() {
 // New celebration: Session milestone (10, 25, 50, 100 workouts)
 export function celebrateSessionMilestone(count: number) {
   // Epic celebration for major milestones
-  const colors = count >= 100 ? ['#ffd700', '#ff6b6b', '#4ecdc4'] :
-                 count >= 50 ? ['#10b981', '#3b82f6', '#f59e0b'] :
-                 ['#3b82f6', '#10b981'];
+  let colors: string[];
+  if (count >= 100) {
+    colors = ['#ffd700', '#ff6b6b', '#4ecdc4'];
+  } else if (count >= 50) {
+    colors = ['#10b981', '#3b82f6', '#f59e0b'];
+  } else {
+    colors = ['#3b82f6', '#10b981'];
+  }
 
   celebrateCannon();
 
@@ -297,9 +302,9 @@ export function celebrateVolumePR() {
     setTimeout(() => {
       confetti({
         particleCount: 40,
-        angle: 60 + (i * 30),
+        angle: 60 + i * 30,
         spread: 55,
-        origin: { x: 0.3 + (i * 0.2), y: 0.7 },
+        origin: { x: 0.3 + i * 0.2, y: 0.7 },
         colors: ['#ef4444', '#f59e0b', '#10b981'],
       });
     }, i * 200);
@@ -330,7 +335,7 @@ export function celebratePerfectWeek() {
     if (Date.now() < end) {
       requestAnimationFrame(frame);
     }
-  }());
+  })();
 
   // Add star confetti
   setTimeout(() => {

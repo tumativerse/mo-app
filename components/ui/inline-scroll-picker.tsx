@@ -1,4 +1,4 @@
-import { CustomDropdown } from "./custom-dropdown";
+import { CustomDropdown } from './custom-dropdown';
 
 interface InlineScrollPickerProps {
   value: number | string;

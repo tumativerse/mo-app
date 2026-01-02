@@ -3,6 +3,7 @@
 Generate or update documentation.
 
 ## Arguments
+
 - `$ARGUMENTS` - What to document (file path, feature name, or "api")
 
 ## Steps
@@ -20,55 +21,68 @@ Generate or update documentation.
 3. **Generate documentation**:
 
    For API routes:
+
    ```markdown
    ## [METHOD] /api/[route]
 
    [Description]
 
    ### Authentication
+
    Required / Not required
 
    ### Request
+
    | Field | Type | Required | Description |
-   |-------|------|----------|-------------|
+   | ----- | ---- | -------- | ----------- |
 
    ### Response
+
    [Example response]
 
    ### Errors
+
    | Status | Error | Description |
-   |--------|-------|-------------|
+   | ------ | ----- | ----------- |
    ```
 
    For components:
+
    ```markdown
    ## ComponentName
 
    [Description]
 
    ### Props
+
    | Prop | Type | Default | Description |
-   |------|------|---------|-------------|
+   | ---- | ---- | ------- | ----------- |
 
    ### Usage
+
    [Code example]
    ```
 
    For features:
+
    ```markdown
    ## Feature Name
 
    ### Overview
+
    [Description]
 
    ### User Flow
+
    1. Step 1
    2. Step 2
 
    ### Technical Details
+
    [Implementation notes]
 
    ### Related Files
+
    - file1.ts
    - file2.ts
    ```

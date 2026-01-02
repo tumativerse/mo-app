@@ -3,6 +3,7 @@
 ## CRITICAL: Type Safety First
 
 ### ❌ BANNED:
+
 ```typescript
 // NEVER use 'any'
 const data: any = await fetch();  // ❌
@@ -23,6 +24,7 @@ interface User { ... }  // in another file ❌
 ### ✅ REQUIRED:
 
 **1. All Shared Types in `lib/types/index.ts`**
+
 ```typescript
 // lib/types/index.ts
 export interface User {
@@ -49,6 +51,7 @@ import type { User, WorkoutSession } from '@/lib/types';
 ```
 
 **2. API Response Types**
+
 ```typescript
 // lib/types/api.ts
 export interface ApiResponse<T> {
@@ -67,6 +70,7 @@ const response: ApiResponse<User> = await fetch('/api/user');
 ```
 
 **3. Component Props**
+
 ```typescript
 interface ButtonProps {
   children: React.ReactNode;
@@ -81,13 +85,14 @@ export function Button({
   variant = 'primary',
   size = 'md',
   onClick,
-  disabled = false
+  disabled = false,
 }: ButtonProps) {
   // ...
 }
 ```
 
 **4. Use Zod for Runtime Validation**
+
 ```typescript
 import { z } from 'zod';
 
@@ -111,6 +116,7 @@ if (!result.success) {
 ```
 
 **5. Use `unknown` instead of `any`**
+
 ```typescript
 // ✅ CORRECT
 try {
@@ -128,6 +134,7 @@ catch (error: any) {  // Never use any
 ```
 
 ## Type Checklist (Before Committing):
+
 - [ ] No `any` types
 - [ ] All function parameters typed
 - [ ] All function return types typed (or inferred correctly)

@@ -3,6 +3,7 @@
 Research a topic in the codebase or web.
 
 ## Arguments
+
 - `$ARGUMENTS` - The topic or question to research
 
 ## Steps
@@ -23,6 +24,7 @@ Research a topic in the codebase or web.
    - Find potential issues or improvements
 
 4. **Report format**:
+
    ```
    ## Research: $ARGUMENTS
 

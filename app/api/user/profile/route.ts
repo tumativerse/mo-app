@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getCurrentUser, getProfile, updateProfile } from "@/lib/mo-self";
-import { z } from "zod";
+import { NextRequest, NextResponse } from 'next/server';
+import { getCurrentUser, getProfile, updateProfile } from '@/lib/mo-self';
+import { z } from 'zod';
 
 // GET /api/user/profile - Get user profile
 export async function GET() {
@@ -8,24 +8,24 @@ export async function GET() {
     const user = await getCurrentUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const profile = await getProfile(user.id);
 
     if (!profile) {
-      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
     return NextResponse.json({ profile });
   } catch (error) {
     // Check if this is a decryption error
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    const isDecryptionError = errorMessage.includes("Failed to decrypt data");
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const isDecryptionError = errorMessage.includes('Failed to decrypt data');
 
     if (isDecryptionError) {
       // Log critical security error for monitoring
-      console.error("CRITICAL: Profile decryption failed", {
+      console.error('CRITICAL: Profile decryption failed', {
         userId: (await getCurrentUser())?.id,
         error: errorMessage,
         timestamp: new Date().toISOString(),
@@ -33,28 +33,28 @@ export async function GET() {
 
       return NextResponse.json(
         {
-          error: "Data integrity error",
-          message: "Unable to read your profile data. Please contact support.",
-          code: "DECRYPTION_FAILED",
+          error: 'Data integrity error',
+          message: 'Unable to read your profile data. Please contact support.',
+          code: 'DECRYPTION_FAILED',
         },
         { status: 500 }
       );
     }
 
     // Generic error handling
-    console.error("Error fetching profile:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch profile" },
-      { status: 500 }
-    );
+    console.error('Error fetching profile:', error);
+    return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 });
   }
 }
 
 const updateProfileSchema = z.object({
   // Personal Info
   fullName: z.string().min(1).max(255).optional(),
-  dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(), // YYYY-MM-DD
-  gender: z.enum(["male", "female", "non_binary", "prefer_not_to_say"]).optional(),
+  dateOfBirth: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(), // YYYY-MM-DD
+  gender: z.enum(['male', 'female', 'non_binary', 'prefer_not_to_say']).optional(),
 
   // Body Metrics
   heightCm: z.number().min(50).max(300).optional(), // 50cm to 300cm (1'8" to 9'10")
@@ -67,7 +67,7 @@ const updateProfileSchema = z.object({
   medications: z.string().max(1000).optional(),
 
   // Preferences
-  units: z.enum(["imperial", "metric"]).optional(),
+  units: z.enum(['imperial', 'metric']).optional(),
 });
 
 // PATCH /api/user/profile - Update user profile
@@ -76,7 +76,7 @@ export async function PATCH(request: NextRequest) {
     const user = await getCurrentUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
@@ -84,7 +84,7 @@ export async function PATCH(request: NextRequest) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { error: "Invalid data", details: parsed.error.flatten() },
+        { error: 'Invalid data', details: parsed.error.format() },
         { status: 400 }
       );
     }
@@ -93,12 +93,12 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ profile });
   } catch (error) {
     // Check if this is a decryption error
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    const isDecryptionError = errorMessage.includes("Failed to decrypt data");
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const isDecryptionError = errorMessage.includes('Failed to decrypt data');
 
     if (isDecryptionError) {
       // Log critical security error for monitoring
-      console.error("CRITICAL: Profile decryption failed during update", {
+      console.error('CRITICAL: Profile decryption failed during update', {
         userId: (await getCurrentUser())?.id,
         error: errorMessage,
         timestamp: new Date().toISOString(),
@@ -106,19 +106,16 @@ export async function PATCH(request: NextRequest) {
 
       return NextResponse.json(
         {
-          error: "Data integrity error",
-          message: "Unable to read your existing profile data. Please contact support.",
-          code: "DECRYPTION_FAILED",
+          error: 'Data integrity error',
+          message: 'Unable to read your existing profile data. Please contact support.',
+          code: 'DECRYPTION_FAILED',
         },
         { status: 500 }
       );
     }
 
     // Generic error handling
-    console.error("Error updating profile:", error);
-    return NextResponse.json(
-      { error: "Failed to update profile" },
-      { status: 500 }
-    );
+    console.error('Error updating profile:', error);
+    return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
   }
 }

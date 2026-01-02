@@ -9,7 +9,7 @@
  * - Loads user preferences from API
  */
 
-import { ThemeProvider as NextThemesProvider, type ThemeProviderProps as NextThemesProv } from 'next-themes';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
 
 type ThemeProviderProps = React.ComponentProps<typeof NextThemesProvider>;
@@ -32,12 +32,9 @@ export function ThemeProvider({
   ...props
 }: CustomThemeProviderProps & Omit<ThemeProviderProps, 'children'>) {
   const [accentColor, setAccentColorState] = useState<string>(defaultAccentColor);
-  const [mounted, setMounted] = useState(false);
 
   // Load user's saved theme and accent color preference on mount
   useEffect(() => {
-    setMounted(true);
-
     async function loadPreferences() {
       try {
         const res = await fetch('/api/preferences');
@@ -49,9 +46,8 @@ export function ThemeProvider({
             setAccentColorState(savedAccentColor);
           }
         }
-      } catch (error) {
+      } catch {
         // Silently fail and use defaults
-        console.log('Could not load accent color preference, using default');
       }
     }
 
@@ -60,11 +56,10 @@ export function ThemeProvider({
 
   // Apply accent color as CSS custom property
   useEffect(() => {
-    if (mounted) {
-      const root = document.documentElement;
-      root.style.setProperty('--user-accent-color', accentColor);
-    }
-  }, [accentColor, mounted]);
+    // useEffect only runs on client, safe to modify DOM
+    const root = document.documentElement;
+    root.style.setProperty('--user-accent-color', accentColor);
+  }, [accentColor]);
 
   const setAccentColor = useCallback((color: string) => {
     setAccentColorState(color);

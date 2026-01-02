@@ -9,14 +9,14 @@ export const pageTransition: Variants = {
     transition: {
       duration: 0.4,
       ease: [0.22, 1, 0.36, 1], // Custom easing for smooth feel
-    }
+    },
   },
   exit: {
     opacity: 0,
     y: -20,
     transition: {
       duration: 0.3,
-    }
+    },
   },
 };
 
@@ -38,7 +38,7 @@ export const staggerItem: Variants = {
     transition: {
       duration: 0.4,
       ease: [0.22, 1, 0.36, 1],
-    }
+    },
   },
 };
 
@@ -50,13 +50,13 @@ export const cardHover: Variants = {
     transition: {
       duration: 0.2,
       ease: 'easeOut',
-    }
+    },
   },
   tap: {
     scale: 0.98,
     transition: {
       duration: 0.1,
-    }
+    },
   },
 };
 
@@ -73,7 +73,7 @@ export const fadeIn: Variants = {
     opacity: 1,
     transition: {
       duration: 0.5,
-    }
+    },
   },
 };
 
@@ -87,14 +87,14 @@ export const slideUp: Variants = {
       type: 'spring',
       damping: 25,
       stiffness: 300,
-    }
+    },
   },
   exit: {
     y: '100%',
     opacity: 0,
     transition: {
       duration: 0.2,
-    }
+    },
   },
 };
 
@@ -108,7 +108,7 @@ export const scaleIn: Variants = {
       type: 'spring',
       damping: 15,
       stiffness: 300,
-    }
+    },
   },
 };
 

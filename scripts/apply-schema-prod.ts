@@ -57,13 +57,14 @@ async function applySchema() {
       console.log(`[${i + 1}/${statements.length}] ${preview}`);
       await db.execute(sql.raw(stmt));
       successCount++;
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Some statements may fail if already applied (e.g., column already exists)
-      if (error.message.includes('already exists') || error.message.includes('does not exist')) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (message.includes('already exists') || message.includes('does not exist')) {
         console.log(`   ⚠️  Already applied or not applicable`);
         successCount++;
       } else {
-        console.log(`   ❌ Error: ${error.message}`);
+        console.log(`   ❌ Error: ${message}`);
         failCount++;
       }
     }

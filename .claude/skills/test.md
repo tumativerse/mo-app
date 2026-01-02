@@ -3,6 +3,7 @@
 Generate tests for components or API routes.
 
 ## Usage
+
 `/test <file-path>`
 
 ## Behavior
@@ -10,6 +11,7 @@ Generate tests for components or API routes.
 Analyze the specified file and generate appropriate tests.
 
 ### For Components
+
 Create `<component-name>.test.tsx` next to the component:
 
 ```typescript
@@ -63,6 +65,7 @@ describe('ComponentName', () => {
 ```
 
 ### For API Routes
+
 Create `route.test.ts` next to the route:
 
 ```typescript
@@ -116,6 +119,7 @@ describe('API Route', () => {
 ```
 
 ## Guidelines
+
 - Query by role, label, text (not test-ids)
 - Use `userEvent` over `fireEvent`
 - Use `findBy*` for async content

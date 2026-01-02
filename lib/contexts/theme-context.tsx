@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 
-type Theme = "light" | "dark";
+type Theme = 'light' | 'dark';
 
 interface ThemeContextType {
   theme: Theme;
@@ -22,8 +22,8 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({
   children,
-  defaultTheme = "dark",
-  defaultAccentColor = "#0BA08B",
+  defaultTheme = 'dark',
+  defaultAccentColor = '#0BA08B',
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [accentColor, setAccentColorState] = useState<string>(defaultAccentColor);
@@ -32,7 +32,7 @@ export function ThemeProvider({
   useEffect(() => {
     async function loadThemePreference() {
       try {
-        const res = await fetch("/api/preferences");
+        const res = await fetch('/api/preferences');
         if (res.ok) {
           const data = await res.json();
           const savedTheme = data.preferences?.theme;
@@ -42,9 +42,8 @@ export function ThemeProvider({
           if (savedTheme) setThemeState(savedTheme);
           if (savedAccentColor) setAccentColorState(savedAccentColor);
         }
-      } catch (error) {
+      } catch {
         // Silently fail and use defaults
-        console.log("Could not load theme preference, using defaults");
       }
     }
 
@@ -54,14 +53,14 @@ export function ThemeProvider({
   // Apply theme class to HTML element - runs immediately and on theme change
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove("light", "dark");
+    root.classList.remove('light', 'dark');
     root.classList.add(theme);
   }, [theme]);
 
   // Apply accent color as CSS custom property - runs immediately and on color change
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty("--user-accent-color", accentColor);
+    root.style.setProperty('--user-accent-color', accentColor);
   }, [accentColor]);
 
   const setTheme = useCallback((newTheme: Theme) => {
@@ -73,7 +72,7 @@ export function ThemeProvider({
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setThemeState((prev) => (prev === "light" ? "dark" : "light"));
+    setThemeState((prev) => (prev === 'light' ? 'dark' : 'light'));
   }, []);
 
   return (
@@ -94,7 +93,7 @@ export function ThemeProvider({
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider");
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 }

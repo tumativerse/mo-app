@@ -39,9 +39,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
         <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-4">
           <div>
             <h1 className="text-xl font-bold text-foreground">Welcome to Mo</h1>
-            <p className="text-sm text-muted-foreground">
-              Let&apos;s set up your fitness profile
-            </p>
+            <p className="text-sm text-muted-foreground">Let&apos;s set up your fitness profile</p>
           </div>
           <ThemeToggle />
         </div>
@@ -67,8 +65,8 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
                           isCompleted
                             ? 'border-primary bg-primary text-primary-foreground'
                             : isCurrent
-                            ? 'border-primary bg-background text-primary'
-                            : 'border-border bg-background text-muted-foreground'
+                              ? 'border-primary bg-background text-primary'
+                              : 'border-border bg-background text-muted-foreground'
                         }
                       `}
                     >
@@ -81,11 +79,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
                     <span
                       className={`
                         mt-2 hidden text-xs font-medium sm:block
-                        ${
-                          isCurrent
-                            ? 'text-foreground'
-                            : 'text-muted-foreground'
-                        }
+                        ${isCurrent ? 'text-foreground' : 'text-muted-foreground'}
                       `}
                     >
                       {step.name}
@@ -97,11 +91,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
                     <div
                       className={`
                         h-0.5 w-6 sm:w-12 transition-all
-                        ${
-                          isCompleted
-                            ? 'bg-primary'
-                            : 'bg-border'
-                        }
+                        ${isCompleted ? 'bg-primary' : 'bg-border'}
                       `}
                     />
                   )}
@@ -120,9 +110,7 @@ export default function OnboardingLayout({ children }: OnboardingLayoutProps) {
       </div>
 
       {/* Content */}
-      <main className="mx-auto max-w-2xl px-4 py-8">
-        {children}
-      </main>
+      <main className="mx-auto max-w-2xl px-4 py-8">{children}</main>
 
       {/* Footer */}
       <footer className="border-t border-border py-4">

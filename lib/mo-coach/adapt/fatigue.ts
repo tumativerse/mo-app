@@ -19,11 +19,11 @@ import { eq, desc, gte, and } from 'drizzle-orm';
 export type FatigueLevel = 'fresh' | 'normal' | 'elevated' | 'high' | 'critical';
 
 export interface FatigueFactors {
-  rpeCreep: number;        // 0-2: RPE trending up over sessions
+  rpeCreep: number; // 0-2: RPE trending up over sessions
   performanceDrop: number; // 0-2: Reps declining at same weight
-  recoveryDebt: number;    // 0-3: Poor sleep/energy/soreness
-  volumeLoad: number;      // 0-2: High volume relative to baseline
-  streak: number;          // 0-1: Many consecutive training days
+  recoveryDebt: number; // 0-3: Poor sleep/energy/soreness
+  volumeLoad: number; // 0-2: High volume relative to baseline
+  streak: number; // 0-1: Many consecutive training days
 }
 
 export interface FatigueStatus {
@@ -71,7 +71,10 @@ export async function calculateFatigue(userId: string, days: number = 7): Promis
   // 1. RPE Creep (0-2 points)
   // Check if RPE is trending upward across recent sessions
   if (sessions.length >= 3) {
-    const recentRpes = sessions.slice(0, 5).map(s => Number(s.avgRpe) || 0).filter(r => r > 0);
+    const recentRpes = sessions
+      .slice(0, 5)
+      .map((s) => Number(s.avgRpe) || 0)
+      .filter((r) => r > 0);
     if (recentRpes.length >= 3) {
       const isIncreasing = checkIncreasingTrend(recentRpes);
       if (isIncreasing) {
@@ -84,9 +87,9 @@ export async function calculateFatigue(userId: string, days: number = 7): Promis
   // 2. Performance Drop (0-2 points)
   // Check if average RPE > 8.5 (indicating grinding sets)
   if (sessions.length >= 2) {
-    const avgRpe = sessions
-      .slice(0, 5)
-      .reduce((sum, s) => sum + (Number(s.avgRpe) || 0), 0) / Math.min(sessions.length, 5);
+    const avgRpe =
+      sessions.slice(0, 5).reduce((sum, s) => sum + (Number(s.avgRpe) || 0), 0) /
+      Math.min(sessions.length, 5);
 
     if (avgRpe > 8.5) {
       factors.performanceDrop = 2;
@@ -98,9 +101,13 @@ export async function calculateFatigue(userId: string, days: number = 7): Promis
 
   // 3. Recovery Debt (0-3 points)
   if (recoveryData.length > 0) {
-    const avgSleep = average(recoveryData.map(r => Number(r.sleepHours) || 0).filter(h => h > 0));
-    const avgEnergy = average(recoveryData.map(r => r.energyLevel || 0).filter(e => e > 0));
-    const avgSoreness = average(recoveryData.map(r => r.overallSoreness || 0).filter(s => s > 0));
+    const avgSleep = average(
+      recoveryData.map((r) => Number(r.sleepHours) || 0).filter((h) => h > 0)
+    );
+    const avgEnergy = average(recoveryData.map((r) => r.energyLevel || 0).filter((e) => e > 0));
+    const avgSoreness = average(
+      recoveryData.map((r) => r.overallSoreness || 0).filter((s) => s > 0)
+    );
 
     // Sleep debt
     if (avgSleep < 5) {
@@ -131,12 +138,14 @@ export async function calculateFatigue(userId: string, days: number = 7): Promis
   // Compare this week's volume to baseline
   if (sessions.length >= 3) {
     const weeklyVolume = sessions
-      .filter(s => isWithinDays(s.date, 7))
+      .filter((s) => isWithinDays(s.date, 7))
       .reduce((sum, s) => sum + (Number(s.totalVolume) || 0), 0);
 
-    const baselineVolume = sessions
-      .filter(s => !isWithinDays(s.date, 7))
-      .reduce((sum, s) => sum + (Number(s.totalVolume) || 0), 0) / Math.max(1, sessions.filter(s => !isWithinDays(s.date, 7)).length);
+    const baselineVolume =
+      sessions
+        .filter((s) => !isWithinDays(s.date, 7))
+        .reduce((sum, s) => sum + (Number(s.totalVolume) || 0), 0) /
+      Math.max(1, sessions.filter((s) => !isWithinDays(s.date, 7)).length);
 
     if (baselineVolume > 0) {
       const volumeRatio = weeklyVolume / baselineVolume;
@@ -157,12 +166,13 @@ export async function calculateFatigue(userId: string, days: number = 7): Promis
   }
 
   // Calculate total score (0-10)
-  const score = Math.min(10,
+  const score = Math.min(
+    10,
     factors.rpeCreep +
-    factors.performanceDrop +
-    factors.recoveryDebt +
-    factors.volumeLoad +
-    factors.streak
+      factors.performanceDrop +
+      factors.recoveryDebt +
+      factors.volumeLoad +
+      factors.streak
   );
 
   const status = getFatigueStatus(score);
@@ -230,20 +240,11 @@ export async function logFatigue(userId: string, result: FatigueResult): Promise
   const today = new Date();
   today.setHours(12, 0, 0, 0); // Normalize to noon
 
-  await db.insert(fatigueLogs).values({
-    userId,
-    date: today,
-    fatigueScore: result.score,
-    fatigueLevel: result.status.level,
-    rpeCreepScore: result.factors.rpeCreep,
-    performanceScore: result.factors.performanceDrop,
-    recoveryDebtScore: result.factors.recoveryDebt,
-    volumeLoadScore: result.factors.volumeLoad,
-    streakScore: result.factors.streak,
-    recommendations: result.recommendations,
-  }).onConflictDoUpdate({
-    target: [fatigueLogs.userId, fatigueLogs.date],
-    set: {
+  await db
+    .insert(fatigueLogs)
+    .values({
+      userId,
+      date: today,
       fatigueScore: result.score,
       fatigueLevel: result.status.level,
       rpeCreepScore: result.factors.rpeCreep,
@@ -252,22 +253,34 @@ export async function logFatigue(userId: string, result: FatigueResult): Promise
       volumeLoadScore: result.factors.volumeLoad,
       streakScore: result.factors.streak,
       recommendations: result.recommendations,
-    },
-  });
+    })
+    .onConflictDoUpdate({
+      target: [fatigueLogs.userId, fatigueLogs.date],
+      set: {
+        fatigueScore: result.score,
+        fatigueLevel: result.status.level,
+        rpeCreepScore: result.factors.rpeCreep,
+        performanceScore: result.factors.performanceDrop,
+        recoveryDebtScore: result.factors.recoveryDebt,
+        volumeLoadScore: result.factors.volumeLoad,
+        streakScore: result.factors.streak,
+        recommendations: result.recommendations,
+      },
+    });
 }
 
 /**
  * Get recent fatigue history
  */
-export async function getFatigueHistory(userId: string, days: number = 7): Promise<typeof fatigueLogs.$inferSelect[]> {
+export async function getFatigueHistory(
+  userId: string,
+  days: number = 7
+): Promise<(typeof fatigueLogs.$inferSelect)[]> {
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - days);
 
   return db.query.fatigueLogs.findMany({
-    where: and(
-      eq(fatigueLogs.userId, userId),
-      gte(fatigueLogs.date, cutoffDate)
-    ),
+    where: and(eq(fatigueLogs.userId, userId), gte(fatigueLogs.date, cutoffDate)),
     orderBy: [desc(fatigueLogs.date)],
   });
 }
@@ -293,16 +306,13 @@ async function getRecentRecovery(userId: string, days: number) {
   cutoffDate.setDate(cutoffDate.getDate() - days);
 
   return db.query.recoveryLogs.findMany({
-    where: and(
-      eq(recoveryLogs.userId, userId),
-      gte(recoveryLogs.date, cutoffDate)
-    ),
+    where: and(eq(recoveryLogs.userId, userId), gte(recoveryLogs.date, cutoffDate)),
     orderBy: [desc(recoveryLogs.date)],
     limit: days,
   });
 }
 
-function checkIncreasingTrend(values: number[]): boolean {
+export function checkIncreasingTrend(values: number[]): boolean {
   if (values.length < 3) return false;
 
   // Check if most recent values are higher than earlier ones
@@ -312,12 +322,12 @@ function checkIncreasingTrend(values: number[]): boolean {
   return recentAvg > earlierAvg + 0.5; // Need at least 0.5 RPE increase
 }
 
-function average(values: number[]): number {
+export function average(values: number[]): number {
   if (values.length === 0) return 0;
   return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
-function isWithinDays(date: Date | null, days: number): boolean {
+export function isWithinDays(date: Date | null, days: number): boolean {
   if (!date) return false;
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);
@@ -328,9 +338,9 @@ function getConsecutiveTrainingDays(sessions: { date: Date | null }[]): number {
   if (sessions.length === 0) return 0;
 
   const dates = sessions
-    .map(s => s.date)
+    .map((s) => s.date)
     .filter((d): d is Date => d !== null)
-    .map(d => {
+    .map((d) => {
       const date = new Date(d);
       date.setHours(0, 0, 0, 0);
       return date.getTime();

@@ -8,10 +8,10 @@
  * All personal data (name, DOB, gender, body metrics, health info) is encrypted.
  */
 
-import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
-import { encrypt, decrypt } from "@/lib/security/encryption";
+import { db } from '@/lib/db';
+import { users } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
+import { encrypt, decrypt } from '@/lib/security/encryption';
 
 export interface UserProfile {
   id: string;
@@ -21,7 +21,7 @@ export interface UserProfile {
   // Personal Info (encrypted)
   fullName: string | null;
   dateOfBirth: string | null; // ISO date string "YYYY-MM-DD"
-  gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | null;
+  gender: 'male' | 'female' | 'non_binary' | 'prefer_not_to_say' | null;
 
   // Body Metrics (encrypted)
   heightCm: number | null;
@@ -34,7 +34,7 @@ export interface UserProfile {
   medications: string | null; // Free text
 
   // Non-encrypted metadata
-  units: "imperial" | "metric";
+  units: 'imperial' | 'metric';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -42,14 +42,14 @@ export interface UserProfile {
 export interface UpdateProfileInput {
   fullName?: string;
   dateOfBirth?: string;
-  gender?: "male" | "female" | "non_binary" | "prefer_not_to_say";
+  gender?: 'male' | 'female' | 'non_binary' | 'prefer_not_to_say';
   heightCm?: number;
   currentWeight?: number;
   goalWeight?: number;
   injuryHistory?: string;
   chronicConditions?: string;
   medications?: string;
-  units?: "imperial" | "metric";
+  units?: 'imperial' | 'metric';
 }
 
 /**
@@ -96,7 +96,7 @@ export async function updateProfile(
   const encryptedUpdates = encryptProfileForDb(updates);
 
   // Non-encrypted updates
-  const nonEncryptedUpdates: Record<string, any> = {};
+  const nonEncryptedUpdates: { units?: 'imperial' | 'metric' } = {};
   if (updates.units !== undefined) nonEncryptedUpdates.units = updates.units;
 
   // Update user
@@ -111,7 +111,7 @@ export async function updateProfile(
 
   const profile = await getProfile(userId);
   if (!profile) {
-    throw new Error("Failed to retrieve updated profile");
+    throw new Error('Failed to retrieve updated profile');
   }
 
   return profile;
@@ -150,7 +150,9 @@ function encryptProfileForDb(profile: Partial<UpdateProfileInput>): Record<strin
     encrypted.injuryHistory = profile.injuryHistory ? encrypt(profile.injuryHistory) : null;
   }
   if (profile.chronicConditions !== undefined) {
-    encrypted.chronicConditions = profile.chronicConditions ? encrypt(profile.chronicConditions) : null;
+    encrypted.chronicConditions = profile.chronicConditions
+      ? encrypt(profile.chronicConditions)
+      : null;
   }
   if (profile.medications !== undefined) {
     encrypted.medications = profile.medications ? encrypt(profile.medications) : null;
@@ -162,7 +164,7 @@ function encryptProfileForDb(profile: Partial<UpdateProfileInput>): Record<strin
 /**
  * Helper: Decrypt profile data from database
  */
-function decryptProfileFromDb(user: any): UserProfile {
+function decryptProfileFromDb(user: typeof users.$inferSelect): UserProfile {
   return {
     id: user.id,
     clerkId: user.clerkId,
@@ -171,7 +173,7 @@ function decryptProfileFromDb(user: any): UserProfile {
     // Personal Info (decrypted)
     fullName: user.fullName ? decrypt(user.fullName) : null,
     dateOfBirth: user.dateOfBirth ? decrypt(user.dateOfBirth) : null,
-    gender: user.gender ? (decrypt(user.gender) as UserProfile["gender"]) : null,
+    gender: user.gender ? (decrypt(user.gender) as UserProfile['gender']) : null,
 
     // Body Metrics (decrypted)
     heightCm: user.heightCm ? Number(decrypt(user.heightCm)) : null,
@@ -184,7 +186,7 @@ function decryptProfileFromDb(user: any): UserProfile {
     medications: user.medications ? decrypt(user.medications) : null,
 
     // Non-encrypted metadata
-    units: user.units || "imperial",
+    units: user.units || 'imperial',
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };

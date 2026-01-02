@@ -1,69 +1,369 @@
 {
   "equipment": [
-    { "name": "Barbell", "slug": "barbell", "category": "barbell", "isCommon": true, "isHomeGym": false },
-    { "name": "EZ Bar", "slug": "ez-bar", "category": "barbell", "isCommon": true, "isHomeGym": false },
-    { "name": "Trap Bar", "slug": "trap-bar", "category": "barbell", "isCommon": true, "isHomeGym": false },
-    { "name": "Safety Squat Bar", "slug": "safety-squat-bar", "category": "specialty", "isCommon": false, "isHomeGym": false },
-    { "name": "Swiss Bar", "slug": "swiss-bar", "category": "specialty", "isCommon": false, "isHomeGym": false },
+    {
+      "name": "Barbell",
+      "slug": "barbell",
+      "category": "barbell",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "EZ Bar",
+      "slug": "ez-bar",
+      "category": "barbell",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Trap Bar",
+      "slug": "trap-bar",
+      "category": "barbell",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Safety Squat Bar",
+      "slug": "safety-squat-bar",
+      "category": "specialty",
+      "isCommon": false,
+      "isHomeGym": false
+    },
+    {
+      "name": "Swiss Bar",
+      "slug": "swiss-bar",
+      "category": "specialty",
+      "isCommon": false,
+      "isHomeGym": false
+    },
 
-    { "name": "Dumbbells", "slug": "dumbbells", "category": "dumbbell", "isCommon": true, "isHomeGym": true },
-    { "name": "Dumbbell", "slug": "dumbbell", "category": "dumbbell", "isCommon": true, "isHomeGym": true },
+    {
+      "name": "Dumbbells",
+      "slug": "dumbbells",
+      "category": "dumbbell",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Dumbbell",
+      "slug": "dumbbell",
+      "category": "dumbbell",
+      "isCommon": true,
+      "isHomeGym": true
+    },
 
-    { "name": "Kettlebell", "slug": "kettlebell", "category": "kettlebell", "isCommon": true, "isHomeGym": true },
-    { "name": "Kettlebells", "slug": "kettlebells", "category": "kettlebell", "isCommon": true, "isHomeGym": true },
+    {
+      "name": "Kettlebell",
+      "slug": "kettlebell",
+      "category": "kettlebell",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Kettlebells",
+      "slug": "kettlebells",
+      "category": "kettlebell",
+      "isCommon": true,
+      "isHomeGym": true
+    },
 
-    { "name": "Cable Machine", "slug": "cable-machine", "category": "cable", "isCommon": true, "isHomeGym": false },
+    {
+      "name": "Cable Machine",
+      "slug": "cable-machine",
+      "category": "cable",
+      "isCommon": true,
+      "isHomeGym": false
+    },
     { "name": "Cable", "slug": "cable", "category": "cable", "isCommon": true, "isHomeGym": false },
-    { "name": "Rope Attachment", "slug": "rope", "category": "cable", "isCommon": true, "isHomeGym": false },
-    { "name": "Lat Pulldown Bar", "slug": "lat-pulldown-bar", "category": "cable", "isCommon": true, "isHomeGym": false },
+    {
+      "name": "Rope Attachment",
+      "slug": "rope",
+      "category": "cable",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Lat Pulldown Bar",
+      "slug": "lat-pulldown-bar",
+      "category": "cable",
+      "isCommon": true,
+      "isHomeGym": false
+    },
     { "name": "V-Bar", "slug": "v-bar", "category": "cable", "isCommon": true, "isHomeGym": false },
-    { "name": "Straight Bar Attachment", "slug": "straight-bar", "category": "cable", "isCommon": true, "isHomeGym": false },
+    {
+      "name": "Straight Bar Attachment",
+      "slug": "straight-bar",
+      "category": "cable",
+      "isCommon": true,
+      "isHomeGym": false
+    },
 
-    { "name": "Leg Press Machine", "slug": "leg-press-machine", "category": "machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Leg Curl Machine", "slug": "leg-curl-machine", "category": "machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Leg Extension Machine", "slug": "leg-extension-machine", "category": "machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Calf Raise Machine", "slug": "calf-raise-machine", "category": "machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Smith Machine", "slug": "smith-machine", "category": "machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Chest Press Machine", "slug": "chest-press-machine", "category": "machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Pec Deck", "slug": "pec-deck", "category": "machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Lat Pulldown Machine", "slug": "lat-pulldown-machine", "category": "machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Seated Row Machine", "slug": "seated-row-machine", "category": "machine", "isCommon": true, "isHomeGym": false },
+    {
+      "name": "Leg Press Machine",
+      "slug": "leg-press-machine",
+      "category": "machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Leg Curl Machine",
+      "slug": "leg-curl-machine",
+      "category": "machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Leg Extension Machine",
+      "slug": "leg-extension-machine",
+      "category": "machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Calf Raise Machine",
+      "slug": "calf-raise-machine",
+      "category": "machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Smith Machine",
+      "slug": "smith-machine",
+      "category": "machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Chest Press Machine",
+      "slug": "chest-press-machine",
+      "category": "machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Pec Deck",
+      "slug": "pec-deck",
+      "category": "machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Lat Pulldown Machine",
+      "slug": "lat-pulldown-machine",
+      "category": "machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Seated Row Machine",
+      "slug": "seated-row-machine",
+      "category": "machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
     { "name": "GHD", "slug": "ghd", "category": "machine", "isCommon": false, "isHomeGym": false },
-    { "name": "Hack Squat Machine", "slug": "hack-squat", "category": "machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Hip Thrust Machine", "slug": "hip-thrust-machine", "category": "machine", "isCommon": false, "isHomeGym": false },
+    {
+      "name": "Hack Squat Machine",
+      "slug": "hack-squat",
+      "category": "machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Hip Thrust Machine",
+      "slug": "hip-thrust-machine",
+      "category": "machine",
+      "isCommon": false,
+      "isHomeGym": false
+    },
 
-    { "name": "Pull-up Bar", "slug": "pull-up-bar", "category": "bodyweight", "isCommon": true, "isHomeGym": true },
-    { "name": "Dip Bars", "slug": "dip-bars", "category": "bodyweight", "isCommon": true, "isHomeGym": true },
-    { "name": "Bench", "slug": "bench", "category": "bodyweight", "isCommon": true, "isHomeGym": true },
-    { "name": "Flat Bench", "slug": "flat-bench", "category": "bodyweight", "isCommon": true, "isHomeGym": true },
-    { "name": "Incline Bench", "slug": "incline-bench", "category": "bodyweight", "isCommon": true, "isHomeGym": true },
-    { "name": "Decline Bench", "slug": "decline-bench", "category": "bodyweight", "isCommon": true, "isHomeGym": false },
-    { "name": "Squat Rack", "slug": "squat-rack", "category": "bodyweight", "isCommon": true, "isHomeGym": false },
-    { "name": "Power Rack", "slug": "power-rack", "category": "bodyweight", "isCommon": true, "isHomeGym": false },
-    { "name": "Ab Wheel", "slug": "ab-wheel", "category": "bodyweight", "isCommon": true, "isHomeGym": true },
-    { "name": "Bodyweight", "slug": "bodyweight", "category": "bodyweight", "isCommon": true, "isHomeGym": true },
+    {
+      "name": "Pull-up Bar",
+      "slug": "pull-up-bar",
+      "category": "bodyweight",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Dip Bars",
+      "slug": "dip-bars",
+      "category": "bodyweight",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Bench",
+      "slug": "bench",
+      "category": "bodyweight",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Flat Bench",
+      "slug": "flat-bench",
+      "category": "bodyweight",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Incline Bench",
+      "slug": "incline-bench",
+      "category": "bodyweight",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Decline Bench",
+      "slug": "decline-bench",
+      "category": "bodyweight",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Squat Rack",
+      "slug": "squat-rack",
+      "category": "bodyweight",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Power Rack",
+      "slug": "power-rack",
+      "category": "bodyweight",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Ab Wheel",
+      "slug": "ab-wheel",
+      "category": "bodyweight",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Bodyweight",
+      "slug": "bodyweight",
+      "category": "bodyweight",
+      "isCommon": true,
+      "isHomeGym": true
+    },
 
-    { "name": "Resistance Bands", "slug": "resistance-bands", "category": "band", "isCommon": true, "isHomeGym": true },
+    {
+      "name": "Resistance Bands",
+      "slug": "resistance-bands",
+      "category": "band",
+      "isCommon": true,
+      "isHomeGym": true
+    },
     { "name": "Band", "slug": "band", "category": "band", "isCommon": true, "isHomeGym": true },
-    { "name": "Mini Bands", "slug": "mini-bands", "category": "band", "isCommon": true, "isHomeGym": true },
-    { "name": "Loop Band", "slug": "loop-band", "category": "band", "isCommon": true, "isHomeGym": true },
+    {
+      "name": "Mini Bands",
+      "slug": "mini-bands",
+      "category": "band",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Loop Band",
+      "slug": "loop-band",
+      "category": "band",
+      "isCommon": true,
+      "isHomeGym": true
+    },
 
     { "name": "TRX", "slug": "trx", "category": "suspension", "isCommon": true, "isHomeGym": true },
-    { "name": "Rings", "slug": "rings", "category": "suspension", "isCommon": false, "isHomeGym": true },
-    { "name": "Suspension Trainer", "slug": "suspension-trainer", "category": "suspension", "isCommon": true, "isHomeGym": true },
+    {
+      "name": "Rings",
+      "slug": "rings",
+      "category": "suspension",
+      "isCommon": false,
+      "isHomeGym": true
+    },
+    {
+      "name": "Suspension Trainer",
+      "slug": "suspension-trainer",
+      "category": "suspension",
+      "isCommon": true,
+      "isHomeGym": true
+    },
 
-    { "name": "Treadmill", "slug": "treadmill", "category": "cardio_machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Stationary Bike", "slug": "stationary-bike", "category": "cardio_machine", "isCommon": true, "isHomeGym": true },
-    { "name": "Rowing Machine", "slug": "rowing-machine", "category": "cardio_machine", "isCommon": true, "isHomeGym": false },
-    { "name": "Assault Bike", "slug": "assault-bike", "category": "cardio_machine", "isCommon": false, "isHomeGym": false },
+    {
+      "name": "Treadmill",
+      "slug": "treadmill",
+      "category": "cardio_machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Stationary Bike",
+      "slug": "stationary-bike",
+      "category": "cardio_machine",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Rowing Machine",
+      "slug": "rowing-machine",
+      "category": "cardio_machine",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Assault Bike",
+      "slug": "assault-bike",
+      "category": "cardio_machine",
+      "isCommon": false,
+      "isHomeGym": false
+    },
 
-    { "name": "Medicine Ball", "slug": "medicine-ball", "category": "other", "isCommon": true, "isHomeGym": true },
-    { "name": "Plyo Box", "slug": "plyo-box", "category": "other", "isCommon": true, "isHomeGym": true },
+    {
+      "name": "Medicine Ball",
+      "slug": "medicine-ball",
+      "category": "other",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Plyo Box",
+      "slug": "plyo-box",
+      "category": "other",
+      "isCommon": true,
+      "isHomeGym": true
+    },
     { "name": "Box", "slug": "box", "category": "other", "isCommon": true, "isHomeGym": true },
-    { "name": "Sled", "slug": "sled", "category": "specialty", "isCommon": false, "isHomeGym": false },
-    { "name": "Landmine", "slug": "landmine", "category": "specialty", "isCommon": true, "isHomeGym": false },
-    { "name": "Foam Roller", "slug": "foam-roller", "category": "other", "isCommon": true, "isHomeGym": true },
-    { "name": "Stability Ball", "slug": "stability-ball", "category": "other", "isCommon": true, "isHomeGym": true },
-    { "name": "Yoga Mat", "slug": "yoga-mat", "category": "other", "isCommon": true, "isHomeGym": true }
+    {
+      "name": "Sled",
+      "slug": "sled",
+      "category": "specialty",
+      "isCommon": false,
+      "isHomeGym": false
+    },
+    {
+      "name": "Landmine",
+      "slug": "landmine",
+      "category": "specialty",
+      "isCommon": true,
+      "isHomeGym": false
+    },
+    {
+      "name": "Foam Roller",
+      "slug": "foam-roller",
+      "category": "other",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Stability Ball",
+      "slug": "stability-ball",
+      "category": "other",
+      "isCommon": true,
+      "isHomeGym": true
+    },
+    {
+      "name": "Yoga Mat",
+      "slug": "yoga-mat",
+      "category": "other",
+      "isCommon": true,
+      "isHomeGym": true
+    }
   ]
 }

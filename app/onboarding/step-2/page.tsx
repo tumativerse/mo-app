@@ -102,9 +102,7 @@ export default function OnboardingStep2Page() {
       <Card>
         <CardHeader>
           <CardTitle>Your Training Goals</CardTitle>
-          <CardDescription>
-            Help us design the perfect workout plan for you
-          </CardDescription>
+          <CardDescription>Help us design the perfect workout plan for you</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Fitness Goals (Multi-select) */}
@@ -136,9 +134,7 @@ export default function OnboardingStep2Page() {
                 </button>
               ))}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Select all that apply
-            </p>
+            <p className="text-xs text-muted-foreground">Select all that apply</p>
           </div>
 
           {/* Experience Level */}
@@ -155,9 +151,7 @@ export default function OnboardingStep2Page() {
               placeholder="Select your experience level"
               width="100%"
             />
-            <p className="text-xs text-muted-foreground">
-              Helps us adjust workout intensity
-            </p>
+            <p className="text-xs text-muted-foreground">Helps us adjust workout intensity</p>
           </div>
 
           {/* Preferred Training Times (Multi-select) */}
@@ -189,9 +183,7 @@ export default function OnboardingStep2Page() {
                 </button>
               ))}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Select all times that work for you
-            </p>
+            <p className="text-xs text-muted-foreground">Select all times that work for you</p>
           </div>
 
           {/* Rest Days Per Week */}

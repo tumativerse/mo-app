@@ -1,27 +1,273 @@
-#!/bin/sh
-# Week 1: Pre-commit quality checks
-# Runs on EVERY commit - keeps checks under 60 seconds
+#!/bin/bash
+# Pre-commit quality checks - MANDATORY GATES
+# Runs on EVERY commit - NO COMPROMISES ON QUALITY
+# Target: ~35-45 seconds with parallel execution
 
 echo "🔍 Pre-commit: Running quality checks..."
+echo "   Quality is greater than time - all checks are MANDATORY"
+echo ""
 
-# 1. TypeScript type checking (~10 sec)
-echo "  → Checking TypeScript types..."
-npm run type-check || {
-  echo "❌ TypeScript errors found. Please fix and try again."
+# Step 1: File size check - INSTANT FAIL FAST
+echo "  → [1/6] Checking file sizes..."
+
+# Get all staged files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+
+if [ -n "$STAGED_FILES" ]; then
+  # Check for files that are too large
+  LARGE_FILES=""
+
+  for FILE in $STAGED_FILES; do
+    if [ -f "$FILE" ]; then
+      # Skip lockfiles (auto-generated, size not controllable)
+      case "$FILE" in
+        package-lock.json|pnpm-lock.yaml|yarn.lock|bun.lockb)
+          continue
+          ;;
+      esac
+
+      # Get file size in bytes
+      SIZE=$(wc -c < "$FILE" | tr -d ' ')
+
+      # Check based on file type
+      case "$FILE" in
+        # Source code files: max 100KB
+        *.ts|*.tsx|*.js|*.jsx|*.css|*.scss)
+          if [ "$SIZE" -gt 102400 ]; then
+            LARGE_FILES="$LARGE_FILES\n     - $FILE ($(($SIZE / 1024))KB, max 100KB for source files)"
+          fi
+          ;;
+        # Config files: max 500KB
+        *.json|*.yaml|*.yml)
+          if [ "$SIZE" -gt 512000 ]; then
+            LARGE_FILES="$LARGE_FILES\n     - $FILE ($(($SIZE / 1024))KB, max 500KB for config files)"
+          fi
+          ;;
+        # Images: max 2MB
+        *.png|*.jpg|*.jpeg|*.gif|*.webp|*.svg)
+          if [ "$SIZE" -gt 2097152 ]; then
+            LARGE_FILES="$LARGE_FILES\n     - $FILE ($(($SIZE / 1024 / 1024))MB, max 2MB for images)"
+          fi
+          ;;
+        # Other files: max 5MB
+        *)
+          if [ "$SIZE" -gt 5242880 ]; then
+            LARGE_FILES="$LARGE_FILES\n     - $FILE ($(($SIZE / 1024 / 1024))MB, max 5MB for misc files)"
+          fi
+          ;;
+      esac
+    fi
+  done
+
+  if [ -n "$LARGE_FILES" ]; then
+    echo "❌ MANDATORY: Files exceed size limits"
+    echo ""
+    echo "   Large files detected:"
+    echo -e "$LARGE_FILES"
+    echo ""
+    echo "   Please reduce file sizes or use Git LFS for large assets."
+    echo "   Tip: Use image compression tools or split large files."
+    exit 1
+  fi
+fi
+
+echo "     ✓ All files within size limits"
+
+# Step 2: Auto-format with Prettier (~5 sec)
+echo "  → [2/6] Auto-formatting code with Prettier..."
+npm run prettier:write || {
+  echo "❌ Prettier formatting failed. Please check the errors above."
   exit 1
 }
 
-# 2. ESLint - TEMPORARILY DISABLED for Week 1
-# TODO: Re-enable after fixing 88 existing issues (45 errors, 43 warnings)
-# echo "  → Running ESLint..."
-# npm run lint || exit 1
+# Auto-restage files that Prettier may have modified
+git add -u
 
-# 3. Secret detection (~5 sec)
-echo "  → Scanning for secrets..."
-npm run secretlint || {
-  echo "❌ Potential secrets detected. Please remove and try again."
+echo "     ✓ Code formatted and restaged"
+
+# Step 3: Check test files exist for changed source files (MANDATORY)
+echo "  → [3/6] Verifying test coverage for changed files..."
+
+# Get staged source files (excluding test files, config, and app routes)
+STAGED_SOURCE=$(git diff --cached --name-only --diff-filter=ACM | \
+  grep -E '\.(ts|tsx)$' | \
+  grep -v '\.test\.' | \
+  grep -v '\.spec\.' | \
+  grep -v 'app/' | \
+  grep -v 'components/ui/' | \
+  grep -v '.config' | \
+  grep -v 'middleware' | \
+  grep -v 'instrumentation' || true)
+
+# Get staged test files
+STAGED_TESTS=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(test|spec)\.(ts|tsx)$' || true)
+
+# Check if source files changed without corresponding test changes
+if [ -n "$STAGED_SOURCE" ] && [ -z "$STAGED_TESTS" ]; then
+  echo "❌ MANDATORY: Source files changed but no test files modified"
+  echo ""
+  echo "   Changed source files:"
+  echo "$STAGED_SOURCE" | sed 's/^/     - /'
+  echo ""
+  echo "   Please add or update tests for your changes."
+  echo "   100% test coverage is required for all business logic."
   exit 1
-}
+fi
 
-echo "✅ Pre-commit checks passed!"
-echo "📝 Note: ESLint temporarily disabled - will be enabled in Week 2 after cleanup"
+# Step 4: Verify ALL new tests execute properly (~10 sec)
+echo "  → [4/6] Verifying all new test files execute..."
+
+# Get new/modified Vitest test files (unit/integration/component)
+NEW_VITEST_TESTS=$(git diff --cached --name-only --diff-filter=AM | grep -E '\.(test|spec)\.(ts|tsx)$' | grep -v 'tests/' || true)
+
+if [ -n "$NEW_VITEST_TESTS" ]; then
+  echo "     Checking Vitest tests (unit/integration/component)..."
+
+  for TEST_FILE in $NEW_VITEST_TESTS; do
+    # Detect test type
+    if echo "$TEST_FILE" | grep -q "route.test.ts"; then
+      TEST_TYPE="Integration"
+    elif echo "$TEST_FILE" | grep -q "components/"; then
+      TEST_TYPE="Component"
+    else
+      TEST_TYPE="Unit"
+    fi
+
+    echo "       → $TEST_TYPE: $TEST_FILE"
+
+    # Run test file
+    vitest run "$TEST_FILE" --reporter=verbose 2>&1 | tee /tmp/vitest-output.txt
+    EXIT_CODE=${PIPESTATUS[0]}
+
+    if [ $EXIT_CODE -ne 0 ]; then
+      echo ""
+      echo "❌ MANDATORY: $TEST_TYPE test file failed: $TEST_FILE"
+      echo "   Please fix the test errors above."
+      exit 1
+    fi
+
+    # Count tests (simple grep for now)
+    TEST_COUNT=$(grep -c "✓" /tmp/vitest-output.txt 2>/dev/null || echo "0")
+    TEST_COUNT=$(echo "$TEST_COUNT" | tr -d '\n' | tr -d ' ')
+    SKIP_COUNT=$(grep -c "⚠" /tmp/vitest-output.txt 2>/dev/null || echo "0")
+    SKIP_COUNT=$(echo "$SKIP_COUNT" | tr -d '\n' | tr -d ' ')
+
+    if [ "$TEST_COUNT" -eq 0 ]; then
+      echo "❌ MANDATORY: $TEST_TYPE test file has no tests: $TEST_FILE"
+      echo "   Please add at least one test to this file."
+      exit 1
+    fi
+
+    if [ "$SKIP_COUNT" -gt 0 ]; then
+      echo "❌ MANDATORY: $TEST_TYPE test file has skipped tests: $TEST_FILE"
+      echo "   All tests must execute. Remove .skip or .todo modifiers."
+      exit 1
+    fi
+
+    echo "       ✓ $TEST_COUNT $TEST_TYPE test(s) executed successfully"
+  done
+
+  echo "   ✓ All new Vitest tests execute properly"
+else
+  echo "   ✓ No new Vitest test files to verify"
+fi
+
+# Get new/modified Playwright test files (E2E/Accessibility)
+NEW_PLAYWRIGHT_TESTS=$(git diff --cached --name-only --diff-filter=AM | grep 'tests/.*\.spec\.ts$' || true)
+
+if [ -n "$NEW_PLAYWRIGHT_TESTS" ]; then
+  echo "     Checking Playwright tests (E2E/Accessibility)..."
+
+  for TEST_FILE in $NEW_PLAYWRIGHT_TESTS; do
+    # Detect test type
+    if echo "$TEST_FILE" | grep -q "tests/e2e/"; then
+      TEST_TYPE="E2E"
+    elif echo "$TEST_FILE" | grep -q "tests/accessibility/"; then
+      TEST_TYPE="Accessibility"
+    else
+      TEST_TYPE="Playwright"
+    fi
+
+    echo "       → $TEST_TYPE: $TEST_FILE"
+
+    # Validate syntax and list tests
+    npx playwright test "$TEST_FILE" --list 2>&1 | tee /tmp/playwright-output.txt
+    EXIT_CODE=${PIPESTATUS[0]}
+
+    if [ $EXIT_CODE -ne 0 ]; then
+      echo ""
+      echo "❌ MANDATORY: $TEST_TYPE test file has syntax errors: $TEST_FILE"
+      exit 1
+    fi
+
+    # Count tests
+    TEST_COUNT=$(grep -c "^\s*\[" /tmp/playwright-output.txt || echo "0")
+
+    if [ "$TEST_COUNT" -eq 0 ]; then
+      echo "❌ MANDATORY: $TEST_TYPE test file has no tests: $TEST_FILE"
+      echo "   Please add at least one test() to this file."
+      exit 1
+    fi
+
+    # Check for .skip or .only
+    if grep -qE 'test\.(skip|only)|describe\.(skip|only)' "$TEST_FILE"; then
+      echo "❌ MANDATORY: $TEST_TYPE test file has .skip or .only modifiers: $TEST_FILE"
+      echo "   Remove these modifiers. All tests must execute in CI."
+      exit 1
+    fi
+
+    echo "       ✓ $TEST_COUNT $TEST_TYPE test(s) found and validated"
+  done
+
+  echo "   ✓ All new Playwright tests validated"
+else
+  echo "   ✓ No new Playwright test files to verify"
+fi
+
+# Step 5: Run parallel quality checks (~15-20 sec)
+echo "  → [5/6] Running parallel quality checks..."
+echo "          (Secrets, TypeScript, Tests, ESLint)"
+echo ""
+
+npm run check:all
+
+# Capture exit codes from all checks
+CHECK_EXIT=$?
+
+if [ $CHECK_EXIT -ne 0 ]; then
+  echo ""
+  echo "❌ One or more quality checks failed. See errors above."
+  echo "   Please fix all issues and try again."
+  exit 1
+fi
+
+# Step 6: Verify 100% coverage on changed files (MANDATORY)
+echo ""
+echo "  → [6/6] Verifying 100% test coverage on changed files..."
+
+# Only run coverage check if there are source files that need tests
+if [ -n "$STAGED_SOURCE" ]; then
+  # Run coverage on full codebase with 100% threshold
+  # Note: We run full suite because --changed flag doesn't work reliably in git hooks
+  # The 100% threshold will catch any uncovered code
+  vitest run --coverage \
+    --reporter=verbose 2>&1 | grep -E "(PASS|FAIL|Coverage|ERROR)" || true
+
+  COVERAGE_EXIT=${PIPESTATUS[0]}
+
+  if [ $COVERAGE_EXIT -ne 0 ]; then
+    echo ""
+    echo "❌ MANDATORY: Code does not meet 100% coverage threshold"
+    echo ""
+    echo "   All business logic must have complete test coverage."
+    echo "   Please add tests to cover all lines, functions, branches, and statements."
+    exit 1
+  fi
+else
+  echo "   ✓ No testable source files changed (UI components or config only)"
+fi
+
+echo ""
+echo "✅ All pre-commit quality gates passed!"
+echo "   Ready to commit with 100% quality assurance."
+echo ""

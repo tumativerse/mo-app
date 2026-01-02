@@ -32,6 +32,7 @@ You are a database specialist for the Mo fitness app using Drizzle ORM with Post
 ## Drizzle Patterns
 
 ### Column Types
+
 ```typescript
 import { pgTable, text, integer, timestamp, boolean, uuid, pgEnum } from 'drizzle-orm/pg-core';
 
@@ -45,6 +46,7 @@ export const myTable = pgTable('my_table', {
 ```
 
 ### Enums
+
 ```typescript
 export const statusEnum = pgEnum('status', ['pending', 'active', 'completed']);
 
@@ -54,6 +56,7 @@ export const myTable = pgTable('my_table', {
 ```
 
 ### Relations
+
 ```typescript
 export const parentRelations = relations(parentTable, ({ many }) => ({
   children: many(childTable),
@@ -77,6 +80,7 @@ export const childRelations = relations(childTable, ({ one }) => ({
 ## Current Schema
 
 Key tables:
+
 - `exercises` - Exercise library
 - `programTemplates`, `templateDays`, `templateSlots` - PPL program structure
 - `workoutSessions`, `sessionExercises`, `sessionSets` - User workout data

@@ -9,9 +9,9 @@
  */
 
 import { db } from '@/lib/db';
-import { exercises, sessionSets, sessionExercises, workoutSessions, userExerciseDefaults } from '@/lib/db/schema';
+import { exercises, sessionExercises, workoutSessions } from '@/lib/db/schema';
 import { eq, desc, and, gte } from 'drizzle-orm';
-import { calculateFatigue, type FatigueResult } from './fatigue';
+import { calculateFatigue } from './fatigue';
 
 // ============================================
 // TYPES
@@ -138,7 +138,7 @@ export async function checkProgressionGates(
   const rule = PROGRESSION_RULES[isCompound ? 'compound' : 'isolation'];
 
   // Check if hit target reps in recent sessions
-  const hitAllReps = recentPerformance.every(p => p.reps >= rule.minRepsForProgress);
+  const hitAllReps = recentPerformance.every((p) => p.reps >= rule.minRepsForProgress);
   if (!hitAllReps) {
     return {
       canProgress: false,
@@ -205,7 +205,7 @@ export async function getProgressionRecommendation(
   const currentWeight = performance[0].weight;
 
   // Count sessions at current weight
-  const sessionsAtWeight = performance.filter(p => p.weight === currentWeight).length;
+  const sessionsAtWeight = performance.filter((p) => p.weight === currentWeight).length;
 
   // Check for plateau (4+ sessions at same weight)
   if (sessionsAtWeight >= 4) {
@@ -221,10 +221,11 @@ export async function getProgressionRecommendation(
   // Check if ready to progress
   const qualifyingSessions = performance
     .slice(0, rule.sessionsRequired)
-    .filter(p =>
-      p.weight === currentWeight &&
-      p.reps >= rule.minRepsForProgress &&
-      p.rpe <= rule.maxRpeForProgress
+    .filter(
+      (p) =>
+        p.weight === currentWeight &&
+        p.reps >= rule.minRepsForProgress &&
+        p.rpe <= rule.maxRpeForProgress
     );
 
   if (qualifyingSessions.length >= rule.sessionsRequired) {
@@ -272,13 +273,15 @@ export function getPlateauStrategies(): typeof PLATEAU_STRATEGIES {
 export async function getExercisesReadyToProgress(
   userId: string,
   limit: number = 5
-): Promise<Array<{
-  exerciseId: string;
-  exerciseName: string;
-  currentWeight: number;
-  suggestedWeight: number;
-  message: string;
-}>> {
+): Promise<
+  Array<{
+    exerciseId: string;
+    exerciseName: string;
+    currentWeight: number;
+    suggestedWeight: number;
+    message: string;
+  }>
+> {
   // Get all exercises user has done recently
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - 14);
@@ -300,8 +303,8 @@ export async function getExercisesReadyToProgress(
 
   // Get unique exercises
   const exerciseMap = new Map<string, string>();
-  recentSessions.forEach(session => {
-    session.exercises.forEach(ex => {
+  recentSessions.forEach((session) => {
+    session.exercises.forEach((ex) => {
       if (ex.exercise) {
         exerciseMap.set(ex.exerciseId, ex.exercise.name);
       }
@@ -342,13 +345,15 @@ export async function getExercisesReadyToProgress(
 export async function getPlateauedExercises(
   userId: string,
   limit: number = 3
-): Promise<Array<{
-  exerciseId: string;
-  exerciseName: string;
-  currentWeight: number;
-  sessionsAtWeight: number;
-  suggestions: typeof PLATEAU_STRATEGIES;
-}>> {
+): Promise<
+  Array<{
+    exerciseId: string;
+    exerciseName: string;
+    currentWeight: number;
+    sessionsAtWeight: number;
+    suggestions: typeof PLATEAU_STRATEGIES;
+  }>
+> {
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - 30);
 
@@ -369,8 +374,8 @@ export async function getPlateauedExercises(
 
   // Get unique exercises
   const exerciseMap = new Map<string, string>();
-  recentSessions.forEach(session => {
-    session.exercises.forEach(ex => {
+  recentSessions.forEach((session) => {
+    session.exercises.forEach((ex) => {
       if (ex.exercise) {
         exerciseMap.set(ex.exerciseId, ex.exercise.name);
       }
@@ -406,7 +411,7 @@ export async function getPlateauedExercises(
 // HELPER FUNCTIONS
 // ============================================
 
-async function getExercisePerformance(
+export async function getExercisePerformance(
   userId: string,
   exerciseId: string,
   limit: number
@@ -438,7 +443,7 @@ async function getExercisePerformance(
   for (const session of sessions) {
     for (const ex of session.exercises) {
       // Get working sets only (non-warmup)
-      const workingSets = ex.sets.filter(s => !s.isWarmup && s.weight && s.reps);
+      const workingSets = ex.sets.filter((s) => !s.isWarmup && s.weight && s.reps);
 
       if (workingSets.length > 0) {
         // Use the heaviest set as the "performance" for this session
@@ -446,12 +451,12 @@ async function getExercisePerformance(
           const bestWeight = Number(best.weight) || 0;
           const currentWeight = Number(current.weight) || 0;
           return currentWeight > bestWeight ? current : best;
-        });
+        }, workingSets[0]);
 
         performance.push({
           exerciseId,
           exerciseName: ex.exercise?.name || 'Unknown',
-          sessionDate: session.date!,
+          sessionDate: session.date,
           weight: Number(bestSet.weight) || 0,
           reps: bestSet.reps || 0,
           rpe: Number(bestSet.rpe) || 0,

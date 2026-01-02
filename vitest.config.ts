@@ -9,17 +9,28 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
     include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    exclude: ['node_modules', '.next', 'archive'],
+    exclude: ['node_modules', '.next', 'archive', 'tests/**'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      reporter: ['text', 'json', 'html', 'lcov'],
       exclude: [
         'node_modules/',
         '.next/',
         'archive/',
         '**/*.config.*',
         '**/*.setup.*',
+        '**/*.d.ts',
+        'scripts/**',
+        'tests/**',
+        'lib/db/schema.ts', // Pure declarations - no executable logic to test
+        'lib/db/index.ts', // Re-exports of schema
       ],
+      thresholds: {
+        lines: 100,
+        functions: 100,
+        branches: 100,
+        statements: 100,
+      },
     },
   },
   resolve: {

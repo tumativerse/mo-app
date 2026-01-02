@@ -8,9 +8,9 @@
  * Automatically detects new PRs when sets are logged.
  */
 
-import { db } from "@/lib/db";
-import { personalRecords, exercises, workoutSets, sessionSets } from "@/lib/db/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { db } from '@/lib/db';
+import { personalRecords, exercises } from '@/lib/db/schema';
+import { eq, and, desc } from 'drizzle-orm';
 
 export interface PersonalRecord {
   id: string;
@@ -25,7 +25,7 @@ export interface PersonalRecord {
 
 export interface PRCheckResult {
   isNewPR: boolean;
-  prType: "weight" | "reps" | "estimated1rm" | null;
+  prType: 'weight' | 'reps' | 'estimated1rm' | null;
   newRecord: PersonalRecord | null;
   previousRecord: PersonalRecord | null;
   improvement: {
@@ -56,17 +56,12 @@ export async function checkAndRecordPR(
 ): Promise<PRCheckResult> {
   // Get current PR for this exercise
   const currentPR = await db.query.personalRecords.findFirst({
-    where: and(
-      eq(personalRecords.userId, userId),
-      eq(personalRecords.exerciseId, exerciseId)
-    ),
+    where: and(eq(personalRecords.userId, userId), eq(personalRecords.exerciseId, exerciseId)),
     orderBy: [desc(personalRecords.estimated1RM)],
   });
 
   const newEstimated1RM = calculateEstimated1RM(weight, reps);
-  const currentEstimated1RM = currentPR
-    ? parseFloat(currentPR.estimated1RM || "0")
-    : 0;
+  const currentEstimated1RM = currentPR ? Number.parseFloat(currentPR.estimated1RM || '0') : 0;
 
   // Check if this is a new PR (based on estimated 1RM)
   const isNewPR = newEstimated1RM > currentEstimated1RM;
@@ -80,8 +75,8 @@ export async function checkAndRecordPR(
         ? {
             id: currentPR.id,
             exerciseId: currentPR.exerciseId,
-            exerciseName: "",
-            weight: parseFloat(currentPR.weight),
+            exerciseName: '',
+            weight: Number.parseFloat(currentPR.weight),
             reps: currentPR.reps,
             estimated1RM: currentEstimated1RM,
             achievedAt: new Date(currentPR.achievedAt),
@@ -111,20 +106,20 @@ export async function checkAndRecordPR(
     .returning();
 
   // Determine PR type
-  let prType: PRCheckResult["prType"] = "estimated1rm";
+  let prType: PRCheckResult['prType'] = 'estimated1rm';
   if (currentPR) {
-    const currentWeight = parseFloat(currentPR.weight);
+    const currentWeight = Number.parseFloat(currentPR.weight);
     if (weight > currentWeight) {
-      prType = "weight";
+      prType = 'weight';
     } else if (reps > currentPR.reps && weight >= currentWeight) {
-      prType = "reps";
+      prType = 'reps';
     }
   }
 
   const newRecord: PersonalRecord = {
     id: newPR.id,
     exerciseId: newPR.exerciseId,
-    exerciseName: exercise?.name || "",
+    exerciseName: exercise?.name || '',
     weight,
     reps,
     estimated1RM: newEstimated1RM,
@@ -140,8 +135,8 @@ export async function checkAndRecordPR(
       ? {
           id: currentPR.id,
           exerciseId: currentPR.exerciseId,
-          exerciseName: exercise?.name || "",
-          weight: parseFloat(currentPR.weight),
+          exerciseName: exercise?.name || '',
+          weight: Number.parseFloat(currentPR.weight),
           reps: currentPR.reps,
           estimated1RM: currentEstimated1RM,
           achievedAt: new Date(currentPR.achievedAt),
@@ -149,7 +144,7 @@ export async function checkAndRecordPR(
       : null,
     improvement: currentPR
       ? {
-          weight: weight - parseFloat(currentPR.weight),
+          weight: weight - Number.parseFloat(currentPR.weight),
           reps: reps - currentPR.reps,
           estimated1RM: newEstimated1RM - currentEstimated1RM,
         }
@@ -170,11 +165,12 @@ export async function getAllPRs(userId: string): Promise<PersonalRecord[]> {
   const exerciseIds = [...new Set(records.map((r) => r.exerciseId))];
 
   // Get exercise names
-  const exerciseList = exerciseIds.length > 0
-    ? await db.query.exercises.findMany({
-        where: (ex, { inArray }) => inArray(ex.id, exerciseIds),
-      })
-    : [];
+  const exerciseList =
+    exerciseIds.length > 0
+      ? await db.query.exercises.findMany({
+          where: (ex, { inArray }) => inArray(ex.id, exerciseIds),
+        })
+      : [];
 
   const exerciseMap = new Map(exerciseList.map((e) => [e.id, e.name]));
 
@@ -184,8 +180,8 @@ export async function getAllPRs(userId: string): Promise<PersonalRecord[]> {
     const existing = bestPRs.get(record.exerciseId);
     if (
       !existing ||
-      parseFloat(record.estimated1RM || "0") >
-        parseFloat(existing.estimated1RM || "0")
+      Number.parseFloat(record.estimated1RM || '0') >
+        Number.parseFloat(existing.estimated1RM || '0')
     ) {
       bestPRs.set(record.exerciseId, record);
     }
@@ -194,10 +190,10 @@ export async function getAllPRs(userId: string): Promise<PersonalRecord[]> {
   return Array.from(bestPRs.values()).map((r) => ({
     id: r.id,
     exerciseId: r.exerciseId,
-    exerciseName: exerciseMap.get(r.exerciseId) || "",
-    weight: parseFloat(r.weight),
+    exerciseName: exerciseMap.get(r.exerciseId) || '',
+    weight: Number.parseFloat(r.weight),
     reps: r.reps,
-    estimated1RM: parseFloat(r.estimated1RM || "0"),
+    estimated1RM: Number.parseFloat(r.estimated1RM || '0'),
     achievedAt: new Date(r.achievedAt),
   }));
 }
@@ -210,10 +206,7 @@ export async function getExercisePRHistory(
   exerciseId: string
 ): Promise<PersonalRecord[]> {
   const records = await db.query.personalRecords.findMany({
-    where: and(
-      eq(personalRecords.userId, userId),
-      eq(personalRecords.exerciseId, exerciseId)
-    ),
+    where: and(eq(personalRecords.userId, userId), eq(personalRecords.exerciseId, exerciseId)),
     orderBy: [desc(personalRecords.achievedAt)],
   });
 
@@ -224,10 +217,10 @@ export async function getExercisePRHistory(
   return records.map((r) => ({
     id: r.id,
     exerciseId: r.exerciseId,
-    exerciseName: exercise?.name || "",
-    weight: parseFloat(r.weight),
+    exerciseName: exercise?.name || '',
+    weight: Number.parseFloat(r.weight),
     reps: r.reps,
-    estimated1RM: parseFloat(r.estimated1RM || "0"),
+    estimated1RM: Number.parseFloat(r.estimated1RM || '0'),
     achievedAt: new Date(r.achievedAt),
   }));
 }
@@ -240,10 +233,7 @@ export async function getCurrentPR(
   exerciseId: string
 ): Promise<PersonalRecord | null> {
   const record = await db.query.personalRecords.findFirst({
-    where: and(
-      eq(personalRecords.userId, userId),
-      eq(personalRecords.exerciseId, exerciseId)
-    ),
+    where: and(eq(personalRecords.userId, userId), eq(personalRecords.exerciseId, exerciseId)),
     orderBy: [desc(personalRecords.estimated1RM)],
   });
 
@@ -256,10 +246,10 @@ export async function getCurrentPR(
   return {
     id: record.id,
     exerciseId: record.exerciseId,
-    exerciseName: exercise?.name || "",
-    weight: parseFloat(record.weight),
+    exerciseName: exercise?.name || '',
+    weight: Number.parseFloat(record.weight),
     reps: record.reps,
-    estimated1RM: parseFloat(record.estimated1RM || "0"),
+    estimated1RM: Number.parseFloat(record.estimated1RM || '0'),
     achievedAt: new Date(record.achievedAt),
   };
 }
@@ -267,41 +257,35 @@ export async function getCurrentPR(
 /**
  * Get recent PRs (for dashboard/celebration)
  */
-export async function getRecentPRs(
-  userId: string,
-  days: number = 7
-): Promise<PersonalRecord[]> {
+export async function getRecentPRs(userId: string, days: number = 7): Promise<PersonalRecord[]> {
   const cutoffDate = new Date();
   cutoffDate.setDate(cutoffDate.getDate() - days);
 
   const records = await db.query.personalRecords.findMany({
-    where: and(
-      eq(personalRecords.userId, userId)
-    ),
+    where: and(eq(personalRecords.userId, userId)),
     orderBy: [desc(personalRecords.achievedAt)],
   });
 
   // Filter by date in JS (drizzle gte on timestamp can be tricky)
-  const recentRecords = records.filter(
-    (r) => new Date(r.achievedAt) >= cutoffDate
-  );
+  const recentRecords = records.filter((r) => new Date(r.achievedAt) >= cutoffDate);
 
   const exerciseIds = [...new Set(recentRecords.map((r) => r.exerciseId))];
-  const exerciseList = exerciseIds.length > 0
-    ? await db.query.exercises.findMany({
-        where: (ex, { inArray }) => inArray(ex.id, exerciseIds),
-      })
-    : [];
+  const exerciseList =
+    exerciseIds.length > 0
+      ? await db.query.exercises.findMany({
+          where: (ex, { inArray }) => inArray(ex.id, exerciseIds),
+        })
+      : [];
 
   const exerciseMap = new Map(exerciseList.map((e) => [e.id, e.name]));
 
   return recentRecords.map((r) => ({
     id: r.id,
     exerciseId: r.exerciseId,
-    exerciseName: exerciseMap.get(r.exerciseId) || "",
-    weight: parseFloat(r.weight),
+    exerciseName: exerciseMap.get(r.exerciseId) || '',
+    weight: Number.parseFloat(r.weight),
     reps: r.reps,
-    estimated1RM: parseFloat(r.estimated1RM || "0"),
+    estimated1RM: Number.parseFloat(r.estimated1RM || '0'),
     achievedAt: new Date(r.achievedAt),
   }));
 }

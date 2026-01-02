@@ -1,0 +1,41 @@
+#!/bin/sh
+# Commit message linting - MANDATORY
+# Enforces Conventional Commits format
+# Runs AFTER pre-commit, BEFORE commit is finalized
+
+echo "📝 Validating commit message format..."
+
+# Run commitlint
+npx --no -- commitlint --edit $1
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "❌ Commit message does not follow Conventional Commits format"
+  echo ""
+  echo "   Required format: <type>: <description>"
+  echo ""
+  echo "   Valid types:"
+  echo "     - feat:     New feature"
+  echo "     - fix:      Bug fix"
+  echo "     - docs:     Documentation changes"
+  echo "     - style:    Code formatting (no logic change)"
+  echo "     - refactor: Code refactoring"
+  echo "     - perf:     Performance improvements"
+  echo "     - test:     Adding or updating tests"
+  echo "     - build:    Build system or dependencies"
+  echo "     - ci:       CI/CD changes"
+  echo "     - chore:    Other changes"
+  echo ""
+  echo "   Examples:"
+  echo "     ✅ feat: add dark mode toggle"
+  echo "     ✅ fix: resolve TypeScript error in fatigue calculation"
+  echo "     ✅ test: add coverage for progression logic"
+  echo ""
+  echo "     ❌ updated stuff"
+  echo "     ❌ wip"
+  echo "     ❌ Fix bugs"
+  echo ""
+  exit 1
+fi
+
+echo "   ✓ Commit message format valid"

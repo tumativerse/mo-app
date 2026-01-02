@@ -3,7 +3,6 @@
 import { useTheme } from 'next-themes';
 import { Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
 
 /**
  * Theme Toggle Component
@@ -15,37 +14,20 @@ import { useEffect, useState } from 'react';
  * <ThemeToggle />
  */
 export function ThemeToggle() {
-  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme, systemTheme } = useTheme();
 
-  // Avoid hydration mismatch - only render after mount
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="h-11 w-11" /> // Placeholder to prevent layout shift
-    );
-  }
-
-  return <ThemeToggleButton />;
-}
-
-function ThemeToggleButton() {
-  const { theme, setTheme } = useTheme();
+  // Use systemTheme as fallback for SSR
+  const currentTheme = theme === 'system' ? systemTheme : theme;
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+      onClick={() => setTheme(currentTheme === 'dark' ? 'light' : 'dark')}
+      aria-label={`Switch to ${currentTheme === 'dark' ? 'light' : 'dark'} theme`}
+      suppressHydrationWarning
     >
-      {theme === 'dark' ? (
-        <Sun className="h-5 w-5" />
-      ) : (
-        <Moon className="h-5 w-5" />
-      )}
+      {currentTheme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
     </Button>
   );
 }

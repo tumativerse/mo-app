@@ -10,24 +10,28 @@
 ## ✨ Features
 
 ### 🏋️ Smart Workout System
+
 - **PPL Program:** Structured Push/Pull/Legs split with 6-day rotation
 - **Exercise Library:** 756+ exercises with movement pattern categorization
 - **Progressive Overload:** Automated weight/rep progression tracking
 - **Fatigue Management:** Intelligent recovery recommendations based on training load
 
 ### 📊 Progress Tracking
+
 - **Personal Records:** Track PRs across all exercises
 - **Workout History:** Complete session logs with detailed metrics
 - **Body Metrics:** Weight, measurements, and body composition tracking
 - **Visual Analytics:** Charts and graphs for long-term progress visualization
 
 ### 🎯 Personalization
+
 - **Smart Onboarding:** 5-step profile setup capturing goals, experience, equipment
 - **Custom Programs:** Tailored workout plans based on your fitness level
 - **Adaptive Training:** Recommendations adjust based on performance and recovery
 - **Encrypted Data:** All personal information is end-to-end encrypted
 
 ### 🎨 User Experience
+
 - **Dark/Light Mode:** Beautiful themes with custom accent colors
 - **Mobile-First:** Optimized for gym use on phones
 - **Responsive Design:** Works seamlessly on all devices
@@ -38,6 +42,7 @@
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Framework:** [Next.js 16](https://nextjs.org/) (App Router)
 - **Language:** TypeScript (strict mode)
 - **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
@@ -46,6 +51,7 @@
 - **State:** React Server Components + Client Components
 
 ### Backend
+
 - **Database:** [PostgreSQL](https://www.postgresql.org/) (hosted on [Neon](https://neon.tech/))
 - **ORM:** [Drizzle ORM](https://orm.drizzle.team/)
 - **Authentication:** [Clerk](https://clerk.com/)
@@ -53,6 +59,7 @@
 - **Encryption:** AES-256-GCM for sensitive data
 
 ### DevOps & Quality
+
 - **Deployment:** [Vercel](https://vercel.com/)
 - **Git Hooks:** [Husky](https://typicode.github.io/husky/)
 - **Testing:** Vitest + Playwright + axe-core
@@ -64,28 +71,34 @@
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - **Node.js:** 18.17 or higher
 - **npm/yarn/pnpm:** Latest version
 - **PostgreSQL:** Database instance (or use Neon free tier)
 
 ### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/YOUR_USERNAME/mo-app.git
 cd mo-app
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 npm install
 ```
 
 ### 3. Set Up Environment Variables
+
 Copy the example environment file:
+
 ```bash
 cp .env.example .env.local
 ```
 
 Edit `.env.local` with your credentials:
+
 ```bash
 # Database (Neon)
 DATABASE_URL="postgresql://user:pass@host/db?sslmode=require"
@@ -102,12 +115,15 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
 ### 4. Generate Encryption Key
+
 ```bash
 npm run security:generate-key
 ```
+
 Copy the generated key to `ENCRYPTION_KEY` in `.env.local`
 
 ### 5. Set Up Database
+
 ```bash
 # Push schema to database
 npm run db:push
@@ -117,6 +133,7 @@ npm run db:seed
 ```
 
 ### 6. Run Development Server
+
 ```bash
 npm run dev
 ```
@@ -159,6 +176,7 @@ mo-app/
 ## 🧪 Testing & Quality
 
 ### Run Tests
+
 ```bash
 # Unit tests
 npm run test
@@ -174,6 +192,7 @@ npm run test:coverage
 ```
 
 ### Code Quality
+
 ```bash
 # Type check
 npm run type-check
@@ -189,7 +208,9 @@ npm run secretlint
 ```
 
 ### Git Hooks
+
 Pre-commit and pre-push hooks automatically run quality checks:
+
 - ✅ TypeScript type checking
 - ✅ Secret detection (secretlint)
 - ✅ Production build verification
@@ -199,6 +220,7 @@ Pre-commit and pre-push hooks automatically run quality checks:
 ## 📊 Database Schema
 
 ### Core Tables
+
 - **users:** User profiles (encrypted: name, DOB, measurements)
 - **userPreferences:** Training preferences (encrypted: goals, equipment)
 - **programTemplates:** Workout program definitions
@@ -209,6 +231,7 @@ Pre-commit and pre-push hooks automatically run quality checks:
 - **sessionSets:** Individual sets logged
 
 ### Encryption
+
 All sensitive user data (PII, body metrics, training data) is encrypted using AES-256-GCM before storage.
 
 ---
@@ -216,6 +239,7 @@ All sensitive user data (PII, body metrics, training data) is encrypted using AE
 ## 🤝 Contributing
 
 Mo is currently in early development. Contributions are not being accepted at this time, but feel free to:
+
 - 🐛 **Open issues** for bugs
 - 💡 **Suggest features** via issues
 - ⭐ **Star the repo** if you find it interesting!
@@ -231,6 +255,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 Built with amazing open source tools:
+
 - [Next.js](https://nextjs.org/) - React framework
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
 - [Drizzle ORM](https://orm.drizzle.team/) - TypeScript ORM

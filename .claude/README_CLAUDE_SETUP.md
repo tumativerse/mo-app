@@ -10,16 +10,17 @@ This document ties together all the Claude Code configuration and DevOps infrast
 
 **Location:** `.claude/`
 
-| Component | Files | Purpose |
-|-----------|-------|---------|
-| **Settings** | `settings.json` | Permissions, hooks, security |
-| **Rules** | `rules/*.md` (4 files) | Auto-applied coding standards |
-| **Agents** | `agents/*.md` (8 files) | Specialized task assistants |
-| **Skills** | `skills/*.md` (5 files) | Code generation templates |
-| **Commands** | `commands/*.md` (7 files) | Workflow automation |
-| **Documentation** | `CLAUDE.md`, `MEMORY.md`, etc. | Project context |
+| Component         | Files                          | Purpose                       |
+| ----------------- | ------------------------------ | ----------------------------- |
+| **Settings**      | `settings.json`                | Permissions, hooks, security  |
+| **Rules**         | `rules/*.md` (4 files)         | Auto-applied coding standards |
+| **Agents**        | `agents/*.md` (8 files)        | Specialized task assistants   |
+| **Skills**        | `skills/*.md` (5 files)        | Code generation templates     |
+| **Commands**      | `commands/*.md` (7 files)      | Workflow automation           |
+| **Documentation** | `CLAUDE.md`, `MEMORY.md`, etc. | Project context               |
 
 **Model Strategy:**
+
 - **Opus:** Complex architecture, difficult problems
 - **Sonnet:** Daily development (default)
 - **Haiku:** Quick questions
@@ -31,6 +32,7 @@ This document ties together all the Claude Code configuration and DevOps infrast
 **Location:** `.claude/WORKFLOW.md`
 
 **Two-Phase Testing Approach:**
+
 ```
 1. Research
 2. Plan Architecture (if complex)
@@ -44,6 +46,7 @@ This document ties together all the Claude Code configuration and DevOps infrast
 ```
 
 **Why Two Phases?**
+
 - **Phase 1 (Before Build):** Defines requirements, acceptance criteria
 - **Phase 2 (After Build):** Verifies implementation, coverage
 
@@ -56,6 +59,7 @@ This document ties together all the Claude Code configuration and DevOps infrast
 **Host:** vault.tumati.me
 
 **Components:**
+
 1. **Jenkins** - CI/CD pipeline
 2. **Grafana + Prometheus** - Metrics & dashboards
 3. **Loki** - Log aggregation
@@ -158,6 +162,7 @@ This document ties together all the Claude Code configuration and DevOps infrast
 ## Quick Commands Reference
 
 ### Development
+
 ```bash
 # Use agents automatically
 "Research the workout system"  # Uses Explore agent
@@ -178,6 +183,7 @@ This document ties together all the Claude Code configuration and DevOps infrast
 ```
 
 ### CI/CD (Once Deployed)
+
 ```bash
 # Check build status
 https://vault.tumati.me/jenkins/job/mo-app-test/
@@ -222,22 +228,26 @@ mo-app/
 ## Next Steps
 
 ### Immediate (Now)
+
 - [x] Claude Code configuration complete
 - [x] Workflow documented
 - [x] DevOps plan created
 
 ### Short-term (This Week)
+
 - [ ] Start using two-phase testing for new features
 - [ ] Practice workflow on next feature
 - [ ] Review and refine as needed
 
 ### Medium-term (Next Month)
+
 - [ ] Set up Jenkins on vault.tumati.me
 - [ ] Configure basic CI pipeline
 - [ ] Add E2E tests with Playwright
 - [ ] Set up Prometheus + Grafana
 
 ### Long-term (Next Quarter)
+
 - [ ] Full monitoring dashboards
 - [ ] Alert system with Slack
 - [ ] Automated deployments
@@ -248,6 +258,7 @@ mo-app/
 ## Benefits of This Setup
 
 ### For Development
+
 ✅ **Faster development** - Code generation, auto-formatting
 ✅ **Higher quality** - Agents review code, tests verify
 ✅ **Consistency** - Rules enforce standards
@@ -255,12 +266,14 @@ mo-app/
 ✅ **Knowledge retention** - MEMORY.md preserves decisions
 
 ### For Testing
+
 ✅ **Better test coverage** - Two-phase approach
 ✅ **Clearer requirements** - Phase 1 defines behavior
 ✅ **Faster debugging** - Tests fail at right level
 ✅ **Confidence** - Multiple test layers
 
 ### For Operations
+
 ✅ **Visibility** - Metrics, logs, errors all in one place
 ✅ **Faster incident response** - Alerts + runbooks
 ✅ **Data-driven decisions** - Analytics on usage
@@ -271,15 +284,16 @@ mo-app/
 
 ## Cost Summary
 
-| Category | Tool | Cost |
-|----------|------|------|
-| **Claude** | API usage | ~$50-100/mo |
-| **DevOps** | vault.tumati.me | $24/mo |
-| **DevOps** | Storage/backups | $5/mo |
-| **Monitoring** | Sentry free tier | $0 |
-| **Total** | | **~$80-130/mo** |
+| Category       | Tool             | Cost            |
+| -------------- | ---------------- | --------------- |
+| **Claude**     | API usage        | ~$50-100/mo     |
+| **DevOps**     | vault.tumati.me  | $24/mo          |
+| **DevOps**     | Storage/backups  | $5/mo           |
+| **Monitoring** | Sentry free tier | $0              |
+| **Total**      |                  | **~$80-130/mo** |
 
 **ROI:**
+
 - Faster development (saves hours)
 - Fewer bugs (saves customer support time)
 - Better uptime (fewer incidents)
@@ -300,6 +314,7 @@ mo-app/
 ## Questions?
 
 Ask Claude:
+
 - "How do I use the test-runner agent?"
 - "What's the workflow for adding a new feature?"
 - "How do I set up monitoring?"

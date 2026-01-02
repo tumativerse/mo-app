@@ -5,33 +5,41 @@ This file contains persistent context about the Mo app that should be preserved 
 ## Current State
 
 ### Active Development
+
 - PPL (Push/Pull/Legs) workout system is the primary focus
 - Old workout system is deprecated but tables still exist
 - 756 exercises seeded from mo-docs
 
 ### Recent Changes
+
 - Fixed PPL API endpoints and frontend integration
 - Set up Claude Code configuration (agents, skills, commands)
 - Phase 4 frontend plan exists at `~/.claude/plans/`
 
 ### Known Issues
+
 - None currently tracked
 
 ## Architecture Decisions
 
 ### Why PPL?
+
 Push/Pull/Legs split provides:
+
 - Balanced muscle recovery
 - Flexible scheduling (3-6 days/week)
 - Clear exercise categorization
 
 ### Why Template Slots?
+
 Movement pattern slots instead of fixed exercises:
+
 - Allows exercise variation within patterns
 - Supports different equipment levels
 - Enables intelligent substitutions
 
 ### Database Design
+
 - `templateSlots` define movement patterns, not specific exercises
 - `sessionExercises` link to the actual exercise performed
 - This separation enables flexible workout customization
@@ -56,4 +64,4 @@ Movement pattern slots instead of fixed exercises:
 
 ---
 
-*Update this file when discovering important context that should persist.*
+_Update this file when discovering important context that should persist._

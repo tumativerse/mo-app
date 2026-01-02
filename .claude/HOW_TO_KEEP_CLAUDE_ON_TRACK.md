@@ -1,9 +1,11 @@
 # How to Keep Claude Code On Track
 
 ## The Problem
+
 Claude Code (or any AI) can sometimes "get carried away" and ignore the rules when building features quickly.
 
 ## The Solution
+
 This project has a **6-layer enforcement system** to prevent that.
 
 ---
@@ -13,24 +15,31 @@ This project has a **6-layer enforcement system** to prevent that.
 If I ever deviate from the rules, just say one of these:
 
 ### 1. "Follow the checklist"
+
 I'll immediately read `.claude/PRE_BUILD_CHECKLIST.md` and follow it step-by-step.
 
 ### 2. "Check the design system rules"
+
 I'll read `.claude/rules/design-system.md` and verify my code follows it.
 
 ### 3. "Did you use tokens and variants?"
+
 I'll check if I imported from `lib/design/tokens.ts` and `lib/design/variants.ts` instead of hardcoding.
 
 ### 4. "Run the enforcement checks"
+
 I'll run:
+
 ```bash
 npm run build && npm run type-check && npm run lint
 ```
 
 ### 5. "Test both themes"
+
 I'll verify the component works in light AND dark mode.
 
 ### 6. "Test on mobile"
+
 I'll verify it works at 375px width with 44px touch targets.
 
 ---
@@ -38,18 +47,21 @@ I'll verify it works at 375px width with 44px touch targets.
 ## What I Do Automatically
 
 ### Before Starting Any Work:
+
 ✅ I read `.claude/PRE_BUILD_CHECKLIST.md`
 ✅ I read the relevant rule files
 ✅ I check if variants already exist
 ✅ I plan the component structure
 
 ### While Building:
+
 ✅ I import from `lib/design/*` only
 ✅ I use TypeScript interfaces
 ✅ I use semantic HTML
 ✅ I make components mobile-friendly
 
 ### Before Finishing:
+
 ✅ I search for hardcoded values
 ✅ I search for `any` types
 ✅ I test in both themes
@@ -119,6 +131,7 @@ If I've built something that violates too many rules, say:
 **"Stop. Read PRE_BUILD_CHECKLIST.md and rebuild this properly."**
 
 I'll:
+
 1. Stop what I'm doing
 2. Read the entire checklist
 3. Delete the violating code
@@ -139,20 +152,21 @@ You should:
 
 ## The Files That Control Me
 
-| File | Purpose | When to Read |
-|------|---------|--------------|
-| `.claude/PRE_BUILD_CHECKLIST.md` | Master checklist | Before every page/component |
-| `.claude/rules/design-system.md` | Design rules | Before any UI work |
-| `.claude/rules/architecture.md` | Code organization | When structuring features |
-| `.claude/rules/typescript.md` | Type safety rules | When writing TypeScript |
-| `lib/design/tokens.ts` | All values | When adding spacing/colors |
-| `lib/design/variants.ts` | All styles | When styling components |
+| File                             | Purpose           | When to Read                |
+| -------------------------------- | ----------------- | --------------------------- |
+| `.claude/PRE_BUILD_CHECKLIST.md` | Master checklist  | Before every page/component |
+| `.claude/rules/design-system.md` | Design rules      | Before any UI work          |
+| `.claude/rules/architecture.md`  | Code organization | When structuring features   |
+| `.claude/rules/typescript.md`    | Type safety rules | When writing TypeScript     |
+| `lib/design/tokens.ts`           | All values        | When adding spacing/colors  |
+| `lib/design/variants.ts`         | All styles        | When styling components     |
 
 ---
 
 ## Examples of Staying On Track
 
 ### ✅ Good Workflow:
+
 ```
 You: "Build a workout card for the dashboard"
 
@@ -167,6 +181,7 @@ Me:
 ```
 
 ### ❌ Bad Workflow (What We're Preventing):
+
 ```
 You: "Build a workout card for the dashboard"
 
@@ -183,11 +198,13 @@ Me:
 ## Bottom Line
 
 **I will follow the rules IF:**
+
 1. The rule files exist (✅ they do now)
 2. You remind me when I deviate
 3. The automated checks are in place (✅ they are now)
 
 **The system guarantees:**
+
 - No hardcoded values
 - No TypeScript errors
 - Theme works everywhere

@@ -11,7 +11,7 @@ import { resolve } from 'path';
 // Load .env.local
 config({ path: resolve(__dirname, '../.env.local') });
 
-import { encrypt, decrypt, testEncryption } from '../lib/security/encryption';
+import { encrypt, decrypt } from '../lib/security/encryption';
 
 console.log('🔐 Testing MO:SELF Encryption Setup\n');
 
@@ -64,7 +64,9 @@ try {
         }
       }
     } catch (error) {
-      console.log(`  ❌ "${testCase}": ERROR - ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.log(
+        `  ❌ "${testCase}": ERROR - ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
       failed++;
     }
   }
@@ -79,7 +81,6 @@ try {
     console.log('❌ Some tests failed. Check your encryption setup.\n');
     process.exit(1);
   }
-
 } catch (error) {
   console.log('❌ Encryption test failed:');
   console.log(`   ${error instanceof Error ? error.message : 'Unknown error'}\n`);

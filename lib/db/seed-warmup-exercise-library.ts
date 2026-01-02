@@ -16,7 +16,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Jumping Jacks',
     slug: 'jumping-jacks',
-    description: 'A classic cardio warmup exercise that elevates heart rate and warms up the entire body through coordinated arm and leg movements.',
+    description:
+      'A classic cardio warmup exercise that elevates heart rate and warms up the entire body through coordinated arm and leg movements.',
     category: 'cardio' as const,
     movementPattern: 'cardio' as const,
     primaryMuscles: ['full_body'],
@@ -37,7 +38,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Arm Circles',
     slug: 'arm-circles',
-    description: 'Dynamic shoulder warmup that increases blood flow and mobility in the shoulder joints through circular arm movements.',
+    description:
+      'Dynamic shoulder warmup that increases blood flow and mobility in the shoulder joints through circular arm movements.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['shoulders'],
@@ -58,7 +60,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Wall Slides',
     slug: 'wall-slide',
-    description: 'Shoulder mobility exercise performed against a wall that activates the rotator cuff and improves overhead mobility.',
+    description:
+      'Shoulder mobility exercise performed against a wall that activates the rotator cuff and improves overhead mobility.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['shoulders', 'upper_back'],
@@ -79,7 +82,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Dead Hang',
     slug: 'dead-hang',
-    description: 'Passive hang from a bar that decompresses the spine, stretches the lats, and improves grip strength.',
+    description:
+      'Passive hang from a bar that decompresses the spine, stretches the lats, and improves grip strength.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['lats', 'forearms'],
@@ -100,7 +104,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Scapular Pull-ups',
     slug: 'scapular-pull-up',
-    description: 'Activation exercise that engages the scapular muscles by depressing and retracting the shoulder blades while hanging.',
+    description:
+      'Activation exercise that engages the scapular muscles by depressing and retracting the shoulder blades while hanging.',
     category: 'compound' as const,
     movementPattern: 'vertical_pull' as const,
     primaryMuscles: ['upper_back', 'lats'],
@@ -121,7 +126,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'High Knees',
     slug: 'high-knees',
-    description: 'Dynamic cardio exercise that elevates heart rate while warming up the hip flexors and legs.',
+    description:
+      'Dynamic cardio exercise that elevates heart rate while warming up the hip flexors and legs.',
     category: 'cardio' as const,
     movementPattern: 'cardio' as const,
     primaryMuscles: ['hip_flexors', 'quads'],
@@ -142,7 +148,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Leg Swings',
     slug: 'leg-swing',
-    description: 'Dynamic hip mobility exercise that warms up the hip flexors and hamstrings through controlled swinging motions.',
+    description:
+      'Dynamic hip mobility exercise that warms up the hip flexors and hamstrings through controlled swinging motions.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['hip_flexors', 'hamstrings'],
@@ -163,7 +170,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Hip Circles',
     slug: 'hip-circle',
-    description: 'Standing hip mobility exercise that lubricates the hip joint and improves range of motion in all directions.',
+    description:
+      'Standing hip mobility exercise that lubricates the hip joint and improves range of motion in all directions.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['hip_flexors', 'glutes'],
@@ -190,7 +198,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Butt Kicks',
     slug: 'butt-kicks',
-    description: 'Dynamic warmup exercise that elevates heart rate and warms up the quadriceps and hamstrings.',
+    description:
+      'Dynamic warmup exercise that elevates heart rate and warms up the quadriceps and hamstrings.',
     category: 'cardio' as const,
     movementPattern: 'cardio' as const,
     primaryMuscles: ['hamstrings', 'quads'],
@@ -211,7 +220,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Jump Rope',
     slug: 'jump-rope',
-    description: 'Classic cardio warmup that improves coordination, footwork, and cardiovascular readiness.',
+    description:
+      'Classic cardio warmup that improves coordination, footwork, and cardiovascular readiness.',
     category: 'cardio' as const,
     movementPattern: 'cardio' as const,
     primaryMuscles: ['calves', 'shoulders'],
@@ -234,7 +244,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Shoulder Dislocates',
     slug: 'shoulder-dislocate',
-    description: 'Shoulder mobility exercise using a band or stick to improve overhead range of motion.',
+    description:
+      'Shoulder mobility exercise using a band or stick to improve overhead range of motion.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['shoulders'],
@@ -297,7 +308,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Wrist Circles',
     slug: 'wrist-circles',
-    description: 'Simple joint warmup that prepares the wrists for pressing and gripping movements.',
+    description:
+      'Simple joint warmup that prepares the wrists for pressing and gripping movements.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['forearms'],
@@ -320,7 +332,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Ankle Circles',
     slug: 'ankle-circles',
-    description: 'Joint mobility exercise that warms up the ankles before squatting or jumping movements.',
+    description:
+      'Joint mobility exercise that warms up the ankles before squatting or jumping movements.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['calves'],
@@ -335,13 +348,18 @@ const WARMUP_EXERCISES = [
       'Complete circles in both directions',
       'Repeat on other ankle',
     ],
-    tips: ['Make full, controlled circles', 'Include dorsiflexion practice', 'Do before leg training'],
+    tips: [
+      'Make full, controlled circles',
+      'Include dorsiflexion practice',
+      'Do before leg training',
+    ],
     commonMistakes: ['Circles too small', 'Rushing', 'Skipping one direction'],
   },
   {
-    name: 'World\'s Greatest Stretch',
+    name: "World's Greatest Stretch",
     slug: 'worlds-greatest-stretch',
-    description: 'Comprehensive dynamic stretch that opens hips, thoracic spine, and hip flexors in one movement.',
+    description:
+      'Comprehensive dynamic stretch that opens hips, thoracic spine, and hip flexors in one movement.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['hip_flexors', 'upper_back', 'hamstrings'],
@@ -363,7 +381,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Inchworm',
     slug: 'inchworm',
-    description: 'Dynamic full-body warmup that stretches hamstrings and engages core through a walking movement.',
+    description:
+      'Dynamic full-body warmup that stretches hamstrings and engages core through a walking movement.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['hamstrings', 'core'],
@@ -429,7 +448,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Bird Dog',
     slug: 'bird-dog',
-    description: 'Core stability exercise that activates the posterior chain and improves coordination.',
+    description:
+      'Core stability exercise that activates the posterior chain and improves coordination.',
     category: 'mobility' as const,
     movementPattern: 'core' as const,
     primaryMuscles: ['core', 'glutes'],
@@ -450,7 +470,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Fire Hydrant',
     slug: 'fire-hydrant',
-    description: 'Hip abduction exercise that activates the glute medius and improves hip stability.',
+    description:
+      'Hip abduction exercise that activates the glute medius and improves hip stability.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['glutes'],
@@ -465,7 +486,7 @@ const WARMUP_EXERCISES = [
       'Raise until thigh is parallel to floor',
       'Lower with control and repeat',
     ],
-    tips: ['Keep hips level', 'Don\'t rotate torso', 'Squeeze glute at top'],
+    tips: ['Keep hips level', "Don't rotate torso", 'Squeeze glute at top'],
     commonMistakes: ['Rotating hips', 'Arching back', 'Not lifting high enough'],
   },
   {
@@ -486,13 +507,14 @@ const WARMUP_EXERCISES = [
       'Rotate top knee toward ceiling, keeping feet touching',
       'Lower with control and repeat',
     ],
-    tips: ['Don\'t roll hips back', 'Add band for more resistance', 'Keep feet together'],
+    tips: ["Don't roll hips back", 'Add band for more resistance', 'Keep feet together'],
     commonMistakes: ['Rolling hips backward', 'Lifting too fast', 'Not enough range'],
   },
   {
     name: 'Banded Walk',
     slug: 'banded-walk',
-    description: 'Lateral walking exercise with a resistance band to activate glutes and hip stabilizers.',
+    description:
+      'Lateral walking exercise with a resistance band to activate glutes and hip stabilizers.',
     category: 'isolation' as const,
     movementPattern: 'isolation_legs' as const,
     primaryMuscles: ['glutes'],
@@ -507,7 +529,7 @@ const WARMUP_EXERCISES = [
       'Step laterally, keeping tension on band',
       'Take small, controlled steps',
     ],
-    tips: ['Stay low throughout', 'Keep toes forward', 'Don\'t let knees cave'],
+    tips: ['Stay low throughout', 'Keep toes forward', "Don't let knees cave"],
     commonMistakes: ['Standing too tall', 'Steps too big', 'Knees caving inward'],
   },
   {
@@ -534,7 +556,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'Glute Kickback',
     slug: 'glute-kickback',
-    description: 'Kneeling hip extension exercise that activates the glutes before lower body training.',
+    description:
+      'Kneeling hip extension exercise that activates the glutes before lower body training.',
     category: 'isolation' as const,
     movementPattern: 'isolation_legs' as const,
     primaryMuscles: ['glutes'],
@@ -549,7 +572,7 @@ const WARMUP_EXERCISES = [
       'Squeeze glute at top of movement',
       'Lower with control and repeat',
     ],
-    tips: ['Keep core braced', 'Don\'t arch lower back', 'Focus on glute squeeze'],
+    tips: ['Keep core braced', "Don't arch lower back", 'Focus on glute squeeze'],
     commonMistakes: ['Arching lower back', 'Kicking too high', 'Using momentum'],
   },
 
@@ -622,7 +645,8 @@ const WARMUP_EXERCISES = [
   {
     name: 'YTW Raises',
     slug: 'ytw-raises',
-    description: 'Shoulder activation exercise forming Y, T, and W shapes to warm up all rotator cuff muscles.',
+    description:
+      'Shoulder activation exercise forming Y, T, and W shapes to warm up all rotator cuff muscles.',
     category: 'isolation' as const,
     movementPattern: 'isolation_push' as const,
     primaryMuscles: ['shoulders', 'upper_back'],
@@ -637,13 +661,18 @@ const WARMUP_EXERCISES = [
       'T: Raise arms out to sides in T shape',
       'W: Pull elbows back into W shape, squeezing shoulder blades',
     ],
-    tips: ['Use light weight or bodyweight', 'Focus on scapular control', 'Hold each position briefly'],
+    tips: [
+      'Use light weight or bodyweight',
+      'Focus on scapular control',
+      'Hold each position briefly',
+    ],
     commonMistakes: ['Using too much weight', 'Rushing', 'Not engaging upper back'],
   },
   {
     name: 'Prone Snow Angel',
     slug: 'prone-snow-angel',
-    description: 'Lying face-down shoulder mobility exercise that improves overhead range of motion.',
+    description:
+      'Lying face-down shoulder mobility exercise that improves overhead range of motion.',
     category: 'mobility' as const,
     movementPattern: 'mobility' as const,
     primaryMuscles: ['shoulders', 'upper_back'],
@@ -720,7 +749,6 @@ async function seedWarmupExerciseLibrary() {
     // Now run the warmup exercise linker
     console.log('\n' + '═'.repeat(60));
     console.log('\n🔗 Now linking warmup exercises to phases...\n');
-
   } catch (error) {
     console.error('\n❌ Error seeding warmup exercises:', error);
     throw error;
