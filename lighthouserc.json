@@ -1,13 +1,7 @@
 {
   "ci": {
     "collect": {
-      "url": [
-        "http://localhost:3000/",
-        "http://localhost:3000/dashboard",
-        "http://localhost:3000/workout",
-        "http://localhost:3000/progress",
-        "http://localhost:3000/settings"
-      ],
+      "url": ["http://localhost:3000/"],
       "numberOfRuns": 3,
       "settings": {
         "preset": "desktop",

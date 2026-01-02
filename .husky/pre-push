@@ -114,11 +114,11 @@ for i in $(seq 1 30); do
   sleep 1
 done
 
-# Run E2E, accessibility, and Lighthouse in parallel
+# Run E2E and accessibility tests in parallel
+# Note: Lighthouse runs in CI only (requires production build for accurate results)
 npx npm-run-all --parallel \
   test:e2e:critical \
-  test:axe \
-  lighthouse:ci
+  test:axe
 
 INTEGRATION_EXIT=$?
 
@@ -130,17 +130,17 @@ fi
 
 if [ $INTEGRATION_EXIT -ne 0 ]; then
   echo ""
-  echo "❌ Phase 2b failed - E2E, accessibility, or Lighthouse tests failed"
+  echo "❌ Phase 2b failed - E2E or accessibility tests failed"
   echo "   Please fix the errors above and try again."
   echo ""
   echo "   Check logs:"
   echo "   - E2E: See Playwright test output above"
   echo "   - Accessibility: See axe-core violations above"
-  echo "   - Lighthouse: See performance metrics above"
+  echo "   Note: Lighthouse runs in CI (requires production build)"
   exit 1
 fi
 
-echo "  ✓ E2E, accessibility, and Lighthouse tests passed"
+echo "  ✓ E2E and accessibility tests passed (Lighthouse runs in CI)"
 echo ""
 
 echo "✅ Phase 2 complete - All heavy validation passed"
