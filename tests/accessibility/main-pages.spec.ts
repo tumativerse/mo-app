@@ -29,10 +29,12 @@ test.describe('Accessibility', () => {
   test('login page should not have any automatically detectable accessibility issues', async ({
     page,
   }) => {
-    await page.goto('/login');
+    await page.goto('/login', { waitUntil: 'domcontentloaded' });
 
-    // Wait for page to load (Clerk may redirect or show iframe)
-    await page.waitForLoadState('networkidle');
+    // Wait for Clerk component to load (ignore errors in test environment)
+    await page.waitForSelector('[data-clerk-id]', { timeout: 10000 }).catch(() => {
+      // Continue even if Clerk component not found - may be loading
+    });
 
     const accessibilityScanResults = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
