@@ -9,6 +9,8 @@ import AxeBuilder from '@axe-core/playwright';
  */
 
 test.describe('Accessibility', () => {
+  // Increase timeout for accessibility scans (Clerk pages can be slow to load)
+  test.setTimeout(60000);
   test('home page should not have any automatically detectable accessibility issues', async ({
     page,
   }) => {
