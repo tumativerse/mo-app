@@ -315,6 +315,29 @@ Automatically switch models based on task complexity:
 
 ---
 
+## Development Workflow
+
+**IMPORTANT:** Always follow the established workflow for code changes.
+
+### Quick Workflow (Solo Dev)
+
+```bash
+git add .
+git commit -m "feat: description"  # Pre-commit: 6 checks (~45 sec)
+git push origin main                # Pre-push: 21 checks (~3 min)
+```
+
+**Details:** See `.claude/WORKFLOW_GUIDE.md` for complete workflow documentation.
+
+### Quality Gates
+
+- **27 total quality gates** across 4 layers (pre-commit, pre-push, CI, post-merge)
+- **100% test coverage** enforced on all business logic
+- **No PR requirement** - Direct pushes to main allowed for solo development
+- **Conventional commits** enforced via commitlint
+
+---
+
 ## Automatic Behaviors
 
 When performing these tasks, automatically follow the patterns in the corresponding skill/command files:

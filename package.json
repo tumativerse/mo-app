@@ -48,6 +48,7 @@
     "check:a11y-coverage": "node scripts/check-a11y-coverage.js",
     "check:api-coverage": "node scripts/check-api-coverage.js",
     "check:coverage-count": "bash scripts/check-coverage-count.sh",
+    "update-coverage-baseline": "bash scripts/update-coverage-baseline.sh",
     "lighthouse:ci": "lhci autorun --config=lighthouserc.json",
     "setup:verify": "bash scripts/verify-workflow-setup.sh",
     "check:shell": "bash scripts/check-shell-scripts.sh",
