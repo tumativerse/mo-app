@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextFetchEvent } from 'next/server';
 
 /**
  * Middleware Unit Tests
@@ -13,10 +13,15 @@ const mockProtect = vi.fn();
 const mockAuth = vi.fn();
 
 vi.mock('@clerk/nextjs/server', () => ({
-  clerkMiddleware: (callback: (auth: any, req: NextRequest) => Promise<any>) => {
+  clerkMiddleware: (
+    callback: (
+      auth: typeof mockAuth & { protect: typeof mockProtect },
+      req: NextRequest
+    ) => Promise<unknown>
+  ) => {
     return async (req: NextRequest) => {
       // Create auth function with protect method
-      const auth = mockAuth as any;
+      const auth = mockAuth as typeof mockAuth & { protect: typeof mockProtect };
       auth.protect = mockProtect;
       return callback(auth, req);
     };
@@ -47,6 +52,9 @@ vi.mock('next/server', async () => {
 });
 
 describe('Middleware', () => {
+  // Mock NextFetchEvent
+  const mockEvent = {} as NextFetchEvent;
+
   beforeEach(async () => {
     vi.clearAllMocks();
     vi.resetModules(); // Clear module cache to ensure mocks are applied
@@ -60,7 +68,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(mockProtect).not.toHaveBeenCalled();
     });
@@ -69,7 +77,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/login', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(mockProtect).not.toHaveBeenCalled();
     });
@@ -78,7 +86,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/signup', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(mockProtect).not.toHaveBeenCalled();
     });
@@ -87,7 +95,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/api/webhooks/clerk', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(mockProtect).not.toHaveBeenCalled();
     });
@@ -96,7 +104,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/test-theme', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(mockProtect).not.toHaveBeenCalled();
     });
@@ -113,7 +121,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/dashboard', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(mockProtect).toHaveBeenCalled();
     });
@@ -128,7 +136,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/workout', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(mockProtect).toHaveBeenCalled();
     });
@@ -143,7 +151,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/onboarding/step-1', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(mockProtect).toHaveBeenCalled();
     });
@@ -161,7 +169,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/dashboard', { method: 'GET' });
 
-      const result = await middleware(req);
+      const result = await middleware(req, mockEvent);
 
       expect(NextResponse.redirect).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -182,7 +190,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/workout', { method: 'GET' });
 
-      const result = await middleware(req);
+      const result = await middleware(req, mockEvent);
 
       expect(NextResponse.redirect).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -203,7 +211,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/dashboard', { method: 'GET' });
 
-      const result = await middleware(req);
+      const result = await middleware(req, mockEvent);
 
       expect(NextResponse.redirect).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -224,7 +232,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/progress', { method: 'GET' });
 
-      const result = await middleware(req);
+      const result = await middleware(req, mockEvent);
 
       expect(NextResponse.redirect).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -247,7 +255,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/onboarding/step-2', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(NextResponse.redirect).not.toHaveBeenCalled();
     });
@@ -263,7 +271,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/api/user/profile', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(NextResponse.redirect).not.toHaveBeenCalled();
     });
@@ -281,7 +289,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/onboarding/step-1', { method: 'GET' });
 
-      const result = await middleware(req);
+      const result = await middleware(req, mockEvent);
 
       expect(NextResponse.redirect).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -302,7 +310,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/onboarding/step-3', { method: 'GET' });
 
-      const result = await middleware(req);
+      const result = await middleware(req, mockEvent);
 
       expect(NextResponse.redirect).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -323,7 +331,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/dashboard', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(NextResponse.redirect).not.toHaveBeenCalled();
     });
@@ -339,7 +347,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/workout', { method: 'GET' });
 
-      await middleware(req);
+      await middleware(req, mockEvent);
 
       expect(NextResponse.redirect).not.toHaveBeenCalled();
     });
@@ -355,7 +363,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/dashboard', { method: 'GET' });
 
-      const result = await middleware(req);
+      const result = await middleware(req, mockEvent);
 
       // Should redirect to onboarding when sessionClaims is null
       expect(NextResponse.redirect).toHaveBeenCalledWith(
@@ -377,7 +385,7 @@ describe('Middleware', () => {
       const middleware = (await import('./middleware')).default;
       const req = new NextRequest('http://localhost:3000/dashboard', { method: 'GET' });
 
-      const result = await middleware(req);
+      const result = await middleware(req, mockEvent);
 
       // Should redirect to onboarding when onboardingCompleted is not set
       expect(NextResponse.redirect).toHaveBeenCalledWith(
