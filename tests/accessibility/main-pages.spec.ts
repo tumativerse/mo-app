@@ -64,4 +64,20 @@ test.describe('Accessibility', () => {
 
     expect(accessibilityScanResults.violations).toEqual([]);
   });
+
+  test('workout page should not have any automatically detectable accessibility issues', async ({
+    page,
+  }) => {
+    // TODO: Add authenticated session
+    await page.goto('/workout');
+
+    const accessibilityScanResults = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+      // Exclude html-has-lang and document-title - Next.js sets these in layout.tsx
+      // Clerk may render error page before Next.js hydration causing false positives
+      .disableRules(['html-has-lang', 'document-title'])
+      .analyze();
+
+    expect(accessibilityScanResults.violations).toEqual([]);
+  });
 });
