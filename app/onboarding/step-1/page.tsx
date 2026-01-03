@@ -42,29 +42,39 @@ export default function OnboardingStep1Page() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate all fields are filled
-    if (!formData.fullName || !formData.dateOfBirth || !formData.gender) {
-      toast.error('Please fill in all fields');
+    // Validate required fields with specific error messages
+    if (!formData.fullName) {
+      toast.error('Please enter your full name');
+      return;
+    }
+
+    if (!formData.dateOfBirth) {
+      toast.error('Please select your date of birth');
+      return;
+    }
+
+    if (!formData.gender) {
+      toast.error('Please select your gender');
       return;
     }
 
     // Validate height based on units
     if (units === 'metric' && !formData.heightCm) {
-      toast.error('Please enter your height');
+      toast.error('Please enter your height in cm');
       return;
     }
     if (units === 'imperial' && (!formData.heightFt || !formData.heightIn)) {
-      toast.error('Please enter your height');
+      toast.error('Please enter your height (feet and inches)');
       return;
     }
 
     // Validate weight based on units
     if (units === 'metric' && !formData.weightKg) {
-      toast.error('Please enter your weight');
+      toast.error('Please enter your weight in kg');
       return;
     }
     if (units === 'imperial' && !formData.weightLbs) {
-      toast.error('Please enter your weight');
+      toast.error('Please enter your weight in lbs');
       return;
     }
 
