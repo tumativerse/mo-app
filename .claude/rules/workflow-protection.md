@@ -3,6 +3,7 @@
 ## CRITICAL: Never Modify These Files Without User Permission
 
 **BLOCKED FILES:**
+
 - `.husky/*` - Git hooks (pre-commit, pre-push)
 - `.github/workflows/*` - GitHub Actions workflows
 - `scripts/check-*.js` - Quality gate check scripts
@@ -113,6 +114,7 @@ But **NEVER** modify the hook file without permission.
 ## NEVER Bypass This Rule
 
 Workflow stability is critical. These files control:
+
 - 6 pre-commit checks (~45 seconds)
 - 21 pre-push checks (~3 minutes)
 - All CI/CD quality gates
