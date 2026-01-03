@@ -48,11 +48,12 @@ describe('ComponentName', () => {
 
 ### 100% Enforcement
 
-**Required on:**
+**Required on ALL files:**
 
 - All API routes (`app/api/**/*.ts`)
 - All business logic (`lib/mo-*/**`)
 - All utility functions (`lib/utils/**`)
+- All UI components (`components/**/*.tsx`)
 - Security code (`lib/security/**`)
 
 **Why 100%?**
@@ -60,19 +61,30 @@ describe('ComponentName', () => {
 - Fitness data is sensitive - bugs can cause injury
 - Solo developer - automated safety net required
 - Prevents regressions during rapid development
+- UI bugs can cause incorrect data entry or display
 
 **Enforced by:**
 
-- Vitest: 100% on files that are tested (Gate 1.6, 2.13)
+- Vitest: 100% on all files with unit tests (Gate 1.6, 2.13)
 - Coverage count: Minimum file baseline (Gate 2.14)
-- SonarCloud: 80% overall (Gate 2.18)
+- SonarCloud: 80% overall project coverage (Gate 2.18)
 
-### What's Excluded
+**Coverage Strategy:**
 
-- Page/layout files (tested via E2E)
-- Pure UI components (tested via E2E)
-- Config files
-- Database schema declarations
+- **UI Components**: 100% unit test coverage on all branches, statements, functions, and lines
+- **Pages/Layouts**: E2E tests only (excluded from unit test coverage via vitest.config.ts)
+- **API Routes**: 100% unit test coverage including all error paths
+- **Business Logic**: 100% unit test coverage including edge cases
+
+### What's Excluded from Unit Test Coverage
+
+- Page files (`app/**/page.tsx`) - tested via E2E only
+- Layout files (`app/**/layout.tsx`) - tested via E2E only
+- Config files (`*.config.ts`, `*.config.js`)
+- Setup files (`*.setup.ts`)
+- Type declarations (`*.d.ts`)
+- Database schema declarations (`lib/db/schema.ts`, `lib/db/index.ts`)
+- Scripts (`scripts/**`)
 
 ---
 

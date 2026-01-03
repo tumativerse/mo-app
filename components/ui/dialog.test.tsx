@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogClose,
 } from './dialog';
 
 describe('Dialog Components', () => {
@@ -123,6 +124,77 @@ describe('Dialog Components', () => {
 
       expect(screen.getByText('Cancel')).toBeInTheDocument();
       expect(screen.getByText('OK')).toBeInTheDocument();
+    });
+  });
+
+  describe('DialogClose', () => {
+    it('should render close button', () => {
+      render(
+        <Dialog open>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Title</DialogTitle>
+              <DialogDescription>Description</DialogDescription>
+            </DialogHeader>
+            <DialogClose>Close</DialogClose>
+          </DialogContent>
+        </Dialog>
+      );
+
+      expect(screen.getAllByText('Close').length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('DialogContent with showCloseButton', () => {
+    it('should not render close button when showCloseButton is false', () => {
+      render(
+        <Dialog open>
+          <DialogContent showCloseButton={false}>
+            <DialogHeader>
+              <DialogTitle>Title</DialogTitle>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      );
+
+      expect(screen.queryByText('Close')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('DialogOverlay', () => {
+    it('should render overlay', () => {
+      render(
+        <Dialog open>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Title</DialogTitle>
+              <DialogDescription>Description</DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      );
+
+      // DialogContent includes DialogOverlay by default
+      const overlay = document.querySelector('[data-slot="dialog-overlay"]');
+      expect(overlay).toBeTruthy();
+    });
+  });
+
+  describe('DialogPortal', () => {
+    it('should render portal', () => {
+      render(
+        <Dialog open>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Title</DialogTitle>
+              <DialogDescription>Description</DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      );
+
+      // DialogContent renders inside a portal
+      expect(screen.getByText('Title')).toBeInTheDocument();
     });
   });
 });

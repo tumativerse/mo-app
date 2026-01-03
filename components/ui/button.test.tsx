@@ -71,4 +71,15 @@ describe('Button', () => {
     expect(button).toHaveAttribute('type', 'submit');
     expect(button).toHaveAttribute('aria-label', 'Submit form');
   });
+
+  it('should render as Slot when asChild is true', () => {
+    render(
+      <Button asChild>
+        <a href="/test">Link Button</a>
+      </Button>
+    );
+    const link = screen.getByRole('link', { name: 'Link Button' });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/test');
+  });
 });
