@@ -47,19 +47,19 @@ test.describe('Authentication - Unauthenticated Users', () => {
 
     // Should be on a Clerk-related page (may redirect through handshake)
     const url = page.url();
-    expect(url.includes('sign-in') || url.includes('clerk')).toBeTruthy();
+    expect(url.includes('login') || url.includes('clerk')).toBeTruthy();
   });
 
-  test('can access sign-up page', async ({ page }) => {
+  test('can access signup page', async ({ page }) => {
     skipAuth(); // This test doesn't require authentication
 
-    await page.goto('/sign-up');
+    await page.goto('/signup');
 
     // Wait for page to load
     await page.waitForTimeout(2000);
 
     // Should be on a Clerk-related page (may redirect through handshake)
     const url = page.url();
-    expect(url.includes('sign-up') || url.includes('clerk')).toBeTruthy();
+    expect(url.includes('signup') || url.includes('clerk')).toBeTruthy();
   });
 });
