@@ -22,6 +22,8 @@ export default defineConfig({
         '**/*.d.ts',
         'scripts/**',
         'tests/**',
+        'app/**/page.tsx', // Pages tested via E2E only
+        'app/**/layout.tsx', // Layouts tested via E2E only
         'lib/db/schema.ts', // Pure declarations - no executable logic to test
         'lib/db/index.ts', // Re-exports of schema
       ],
