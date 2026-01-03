@@ -35,6 +35,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased transition-colors duration-200`}
       >
         <ClerkProvider
+          signInUrl="/login"
+          signUpUrl="/signup"
           appearance={{
             baseTheme: dark,
             variables: {

@@ -16,10 +16,10 @@ test.describe('Authentication - Unauthenticated Users', () => {
     // Wait for Clerk redirect
     await page.waitForTimeout(2000);
 
-    // Should redirect to Clerk (either /sign-in or Clerk's handshake URL)
+    // Should redirect to Clerk (either /login or Clerk's handshake URL)
     const url = page.url();
     expect(
-      url.includes('sign-in') || url.includes('clerk.accounts.dev') || url.includes('clerk')
+      url.includes('login') || url.includes('clerk.accounts.dev') || url.includes('clerk')
     ).toBeTruthy();
   });
 
@@ -33,14 +33,14 @@ test.describe('Authentication - Unauthenticated Users', () => {
     // Should redirect to Clerk authentication
     const url = page.url();
     expect(
-      url.includes('sign-in') || url.includes('clerk.accounts.dev') || url.includes('clerk')
+      url.includes('login') || url.includes('clerk.accounts.dev') || url.includes('clerk')
     ).toBeTruthy();
   });
 
-  test('can access sign-in page', async ({ page }) => {
+  test('can access login page', async ({ page }) => {
     skipAuth(); // This test doesn't require authentication
 
-    await page.goto('/sign-in');
+    await page.goto('/login');
 
     // Wait for page to load
     await page.waitForTimeout(2000);

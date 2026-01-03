@@ -33,8 +33,8 @@ export async function signIn(
   email: string = TEST_USER.email,
   password: string = TEST_USER.password
 ): Promise<void> {
-  // Navigate to sign-in page
-  await page.goto('/sign-in');
+  // Navigate to login page
+  await page.goto('/login');
 
   // Wait for Clerk to load (it may redirect through handshake)
   await page.waitForTimeout(2000);
@@ -103,8 +103,8 @@ export async function signOut(page: Page): Promise<void> {
     const signOutButton = page.locator('text=/sign out/i');
     await signOutButton.click();
 
-    // Wait for redirect to home or sign-in
-    await page.waitForURL(/\/(sign-in|$)/, { timeout: 10000 });
+    // Wait for redirect to home or login
+    await page.waitForURL(/\/(login|$)/, { timeout: 10000 });
   } catch {
     console.log('Sign-out button not found, user may already be signed out');
   }
