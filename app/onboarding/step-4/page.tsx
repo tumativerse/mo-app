@@ -1,22 +1,23 @@
 'use client';
 
-export const dynamic = 'force-dynamic';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { CustomDropdown } from '@/components/ui/custom-dropdown';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { CheckCircle2, ChevronLeft } from 'lucide-react';
 import { toast } from 'sonner';
 
 /**
- * Onboarding Step 4: Lifestyle
+ * Onboarding Step 4: Lifestyle (Final Step)
  *
  * Collects lifestyle and recovery information:
  * - Activity level (daily activity outside of training)
  * - Average sleep hours per night
  * - Stress level
+ *
+ * Then submits all onboarding data to the API.
  */
 export default function OnboardingStep4Page() {
   const router = useRouter();
@@ -26,6 +27,30 @@ export default function OnboardingStep4Page() {
     sleepHours: '',
     stressLevel: '',
   });
+
+  // Load saved data from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('onboarding_step4');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        setFormData({
+          activityLevel: data.activityLevel || '',
+          sleepHours: data.sleepHours ? data.sleepHours.toString() : '',
+          stressLevel: data.stressLevel || '',
+        });
+      } catch (error) {
+        console.error('Failed to load saved data:', error);
+      }
+    }
+  }, []);
+
+  // Auto-save to localStorage when form data changes
+  useEffect(() => {
+    if (formData.activityLevel || formData.sleepHours || formData.stressLevel) {
+      localStorage.setItem('onboarding_step4', JSON.stringify(formData));
+    }
+  }, [formData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,20 +73,68 @@ export default function OnboardingStep4Page() {
 
     setLoading(true);
     try {
-      const dataToSave = {
+      // Gather all data from localStorage
+      const step1Data = JSON.parse(localStorage.getItem('onboarding_step1') || '{}');
+      const step2Data = JSON.parse(localStorage.getItem('onboarding_step2') || '{}');
+      const step3Data = JSON.parse(localStorage.getItem('onboarding_step3') || '{}');
+
+      // Combine all data
+      const onboardingData = {
+        // Step 1: Profile
+        fullName: step1Data.fullName,
+        preferredName: step1Data.preferredName || undefined, // Convert empty string to undefined
+        dateOfBirth: step1Data.dateOfBirth,
+        gender: step1Data.gender,
+        heightCm: step1Data.heightCm,
+        weightKg: step1Data.currentWeight, // Saved as 'currentWeight' in Step 1
+        unitSystem: step1Data.units, // Saved as 'units' in Step 1
+
+        // Step 2: Training
+        fitnessGoals: step2Data.fitnessGoals,
+        experienceLevel: step2Data.experienceLevel,
+        trainingTimes: step2Data.trainingTimes || [],
+        restDaysPerWeek: step2Data.restDaysPerWeek || undefined,
+
+        // Step 3: Equipment
+        equipmentLevel: step3Data.equipmentLevel,
+        availableEquipment: step3Data.availableEquipment,
+
+        // Step 4: Lifestyle (Final Step)
         activityLevel: formData.activityLevel,
         sleepHours: parseFloat(formData.sleepHours),
         stressLevel: formData.stressLevel,
       };
 
-      // Save to localStorage for now (will save to DB at the end)
-      localStorage.setItem('onboarding_step4', JSON.stringify(dataToSave));
+      // Submit to API
+      const response = await fetch('/api/onboarding', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(onboardingData),
+      });
 
-      // Navigate to next step
-      router.push('/onboarding/step-5');
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Onboarding API error:', error);
+        throw new Error(error.error || 'Failed to save onboarding data');
+      }
+
+      // Clear localStorage
+      localStorage.removeItem('onboarding_step1');
+      localStorage.removeItem('onboarding_step2');
+      localStorage.removeItem('onboarding_step3');
+      localStorage.removeItem('onboarding_step4');
+
+      toast.success('Welcome to Mo! Your profile is all set up.');
+
+      // Redirect to dashboard
+      router.push('/dashboard');
     } catch (error) {
-      console.error('Error saving step 4:', error);
-      toast.error('Failed to save lifestyle preferences. Please try again.');
+      console.error('Error completing onboarding:', error);
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to complete onboarding. Please try again.'
+      );
     } finally {
       setLoading(false);
     }
@@ -153,6 +226,25 @@ export default function OnboardingStep4Page() {
             </p>
           </div>
 
+          {/* Summary Info */}
+          <div className="rounded-lg border border-border bg-muted/30 p-3 sm:p-4">
+            <h3 className="text-sm font-medium text-foreground mb-1 sm:mb-2">What happens next?</h3>
+            <ul className="space-y-1 text-sm text-muted-foreground">
+              <li className="flex items-start gap-1 sm:gap-2">
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+                <span>Mo will create your personalized workout program</span>
+              </li>
+              <li className="flex items-start gap-1 sm:gap-2">
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+                <span>Your training will adapt based on your progress and feedback</span>
+              </li>
+              <li className="flex items-start gap-1 sm:gap-2">
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+                <span>Track your workouts, PRs, and overall progress</span>
+              </li>
+            </ul>
+          </div>
+
           {/* Navigation Buttons */}
           <div className="flex justify-between items-center pt-2 sm:pt-4">
             <Button
@@ -172,8 +264,8 @@ export default function OnboardingStep4Page() {
               disabled={loading}
               className="flex items-center gap-1 sm:gap-2"
             >
-              <span>{loading ? 'Saving...' : 'Continue'}</span>
-              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span>{loading ? 'Setting up...' : 'Complete Setup'}</span>
+              <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </div>
         </CardContent>

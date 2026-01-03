@@ -5,14 +5,11 @@ import { usePathname } from 'next/navigation';
 import { type ReactNode } from 'react';
 import { ThemeToggle } from '@/components/theme-toggle';
 
-export const dynamic = 'force-dynamic';
-
 const STEPS = [
   { number: 1, name: 'Profile', path: '/onboarding/step-1' },
   { number: 2, name: 'Training', path: '/onboarding/step-2' },
   { number: 3, name: 'Equipment', path: '/onboarding/step-3' },
   { number: 4, name: 'Lifestyle', path: '/onboarding/step-4' },
-  { number: 5, name: 'Preferences', path: '/onboarding/step-5' },
 ];
 
 interface OnboardingLayoutProps {

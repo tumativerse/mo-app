@@ -73,9 +73,54 @@ export async function getOrCreateUser() {
     return newUser;
   } catch (error: unknown) {
     // If duplicate key error (webhook created user while we were checking)
-    const dbError = error as { code?: string; constraint?: string };
-    if (dbError?.code === '23505' && dbError?.constraint === 'users_clerk_id_unique') {
-      // Query again to get the user created by webhook
+    // Check multiple possible error structures
+    const dbError = error as {
+      code?: string;
+      constraint?: string;
+      cause?: { code?: string; constraint?: string; detail?: string };
+      detail?: string;
+    };
+
+    const errorCode = dbError?.code || dbError?.cause?.code;
+    const errorConstraint = dbError?.constraint || dbError?.cause?.constraint;
+    const errorDetail = dbError?.detail || dbError?.cause?.detail;
+
+    // Check if this is a duplicate key error
+    const isDuplicateError =
+      errorCode === '23505' ||
+      errorDetail?.includes('already exists') ||
+      errorDetail?.includes('duplicate key');
+
+    const isUserConstraint =
+      errorConstraint === 'users_clerk_id_unique' ||
+      errorConstraint === 'users_email_unique' ||
+      errorDetail?.includes('clerk_id') ||
+      errorDetail?.includes('email');
+
+    if (isDuplicateError && isUserConstraint) {
+      // If email constraint was violated, query by email and update clerkId
+      // This handles the case where user deleted Clerk account and re-registered with same email
+      if (errorConstraint === 'users_email_unique' || errorDetail?.includes('email')) {
+        const existingEmail = clerkUser.emailAddresses[0]?.emailAddress;
+        if (existingEmail) {
+          const existingUser = await db.query.users.findFirst({
+            where: eq(users.email, existingEmail),
+          });
+
+          if (existingUser) {
+            // Update clerkId to match current Clerk session (Clerk is source of truth)
+            const [updatedUser] = await db
+              .update(users)
+              .set({ clerkId: userId, updatedAt: new Date() })
+              .where(eq(users.id, existingUser.id))
+              .returning();
+
+            return updatedUser;
+          }
+        }
+      }
+
+      // Otherwise query by clerkId (handles clerk_id constraint violation)
       const user = await db.query.users.findFirst({
         where: eq(users.clerkId, userId),
       });
@@ -86,6 +131,7 @@ export async function getOrCreateUser() {
     }
 
     // Re-throw any other error
+    console.error('Rethrowing error:', error);
     throw error;
   }
 }

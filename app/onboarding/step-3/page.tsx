@@ -1,7 +1,7 @@
 'use client';
 
 export const dynamic = 'force-dynamic';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,18 +25,28 @@ export default function OnboardingStep3Page() {
     availableEquipment: [] as string[],
   });
 
+  // Load saved data from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('onboarding_step3');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        setFormData({
+          equipmentLevel: data.equipmentLevel || '',
+          availableEquipment: data.availableEquipment || [],
+        });
+      } catch (error) {
+        console.error('Failed to load saved data:', error);
+      }
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate required fields
     if (!formData.equipmentLevel) {
       toast.error('Please select your equipment level');
-      return;
-    }
-
-    // If not bodyweight, must select at least one equipment item
-    if (formData.equipmentLevel !== 'bodyweight' && formData.availableEquipment.length === 0) {
-      toast.error('Please select at least one available equipment item');
       return;
     }
 
@@ -73,8 +83,7 @@ export default function OnboardingStep3Page() {
     }));
   };
 
-  const showEquipmentSelection =
-    formData.equipmentLevel && formData.equipmentLevel !== 'bodyweight';
+  const showEquipmentSelection = formData.equipmentLevel === 'home_gym';
 
   return (
     <form onSubmit={handleSubmit}>
@@ -108,7 +117,7 @@ export default function OnboardingStep3Page() {
           {/* Available Equipment (Multi-select) - Only show if not bodyweight */}
           {showEquipmentSelection && (
             <div className="space-y-2">
-              <Label>What equipment do you have access to? *</Label>
+              <Label>What equipment do you have access to?</Label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                 {[
                   { value: 'barbell', label: 'Barbell' },

@@ -71,19 +71,16 @@ body {
     'calt' 1;
 }
 
-/* Smooth theme transitions */
-* {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
+/* Removed global theme transitions - was causing flicker on theme toggle */
+/* Only apply transitions to interactive elements */
 button,
 input,
 select,
 textarea {
   transition-property:
     background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 
 /* Hide number input spinners/incrementers */

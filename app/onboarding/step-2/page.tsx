@@ -1,7 +1,7 @@
 'use client';
 
 export const dynamic = 'force-dynamic';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -29,6 +29,24 @@ export default function OnboardingStep2Page() {
     restDaysPerWeek: '',
   });
 
+  // Load saved data from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('onboarding_step2');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        setFormData({
+          fitnessGoals: data.fitnessGoals || [],
+          experienceLevel: data.experienceLevel || '',
+          trainingTimes: data.trainingTimes || [],
+          restDaysPerWeek: data.restDaysPerWeek ? data.restDaysPerWeek.toString() : '',
+        });
+      } catch (error) {
+        console.error('Failed to load saved data:', error);
+      }
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -43,23 +61,13 @@ export default function OnboardingStep2Page() {
       return;
     }
 
-    if (formData.trainingTimes.length === 0) {
-      toast.error('Please select at least one preferred training time');
-      return;
-    }
-
-    if (!formData.restDaysPerWeek) {
-      toast.error('Please select number of rest days per week');
-      return;
-    }
-
     setLoading(true);
     try {
       const dataToSave = {
         fitnessGoals: formData.fitnessGoals,
         experienceLevel: formData.experienceLevel,
         trainingTimes: formData.trainingTimes,
-        restDaysPerWeek: parseInt(formData.restDaysPerWeek),
+        restDaysPerWeek: formData.restDaysPerWeek ? parseInt(formData.restDaysPerWeek) : undefined,
       };
 
       // Save to localStorage for now (will save to DB at the end)
@@ -110,12 +118,12 @@ export default function OnboardingStep2Page() {
             <Label>What are your fitness goals? *</Label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
               {[
-                { value: 'strength', label: 'Build Strength' },
-                { value: 'muscle', label: 'Build Muscle' },
-                { value: 'endurance', label: 'Improve Endurance' },
-                { value: 'weight_loss', label: 'Lose Weight' },
-                { value: 'general_fitness', label: 'General Fitness' },
-                { value: 'athletic_performance', label: 'Athletic Performance' },
+                { value: 'get_stronger', label: 'Get Stronger' },
+                { value: 'lose_weight', label: 'Lose Weight' },
+                { value: 'gain_weight', label: 'Gain Weight' },
+                { value: 'improve_fitness', label: 'Improve Fitness' },
+                { value: 'look_better', label: 'Look Better' },
+                { value: 'stay_active', label: 'Stay Active' },
               ].map((goal) => (
                 <button
                   key={goal.value}
@@ -156,7 +164,7 @@ export default function OnboardingStep2Page() {
 
           {/* Preferred Training Times (Multi-select) */}
           <div className="space-y-2">
-            <Label>When do you prefer to train? *</Label>
+            <Label>When do you prefer to train?</Label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
               {[
                 { value: 'early_morning', label: 'Early Morning' },
@@ -188,7 +196,7 @@ export default function OnboardingStep2Page() {
 
           {/* Rest Days Per Week */}
           <div className="space-y-2">
-            <Label htmlFor="restDaysPerWeek">Rest Days Per Week *</Label>
+            <Label htmlFor="restDaysPerWeek">Rest Days Per Week</Label>
             <CustomDropdown
               value={formData.restDaysPerWeek}
               options={[

@@ -58,16 +58,15 @@ describe('/api/onboarding', () => {
     heightCm: 180,
     weightKg: 75,
     unitSystem: 'metric' as const,
-    fitnessGoals: ['strength', 'muscle_building'],
+    fitnessGoals: ['get_stronger', 'lose_weight'], // Updated to new goal values
     experienceLevel: 'intermediate' as const,
-    trainingTimes: ['morning', 'evening'],
-    restDaysPerWeek: 2,
+    trainingTimes: ['morning', 'evening'], // Now optional
+    restDaysPerWeek: 2, // Now optional
     equipmentLevel: 'full_gym' as const,
     availableEquipment: ['barbell', 'dumbbells', 'squat_rack'],
     activityLevel: 'moderately_active' as const,
     sleepHours: 7,
     stressLevel: 'moderate' as const,
-    theme: 'dark' as const,
   };
 
   beforeEach(() => {
@@ -110,14 +109,13 @@ describe('/api/onboarding', () => {
 
       // Verify updatePreferences was called
       expect(moSelfModule.updatePreferences).toHaveBeenCalledWith(mockUser.id, {
-        fitnessGoal: JSON.stringify(['strength', 'muscle_building']),
+        fitnessGoal: JSON.stringify(['get_stronger', 'lose_weight']),
         experienceLevel: 'intermediate',
         preferredTrainingTimes: ['morning', 'evening'],
         restDaysPreference: ['2'],
         defaultEquipmentLevel: 'full_gym',
         availableEquipment: ['barbell', 'dumbbells', 'squat_rack'],
         activityLevel: 'moderately_active',
-        theme: 'dark',
         weightUnit: 'kg',
       });
 
@@ -305,6 +303,36 @@ describe('/api/onboarding', () => {
         mockUser.id,
         expect.objectContaining({
           availableEquipment: undefined,
+        })
+      );
+    });
+
+    it('should handle missing optional training fields (trainingTimes and restDaysPerWeek)', async () => {
+      vi.mocked(moSelfModule.getCurrentUser).mockResolvedValue(mockUser);
+      vi.mocked(moSelfModule.updateProfile).mockResolvedValue(undefined as never);
+      vi.mocked(moSelfModule.updatePreferences).mockResolvedValue(undefined as never);
+
+      const dataWithoutOptionalFields = {
+        ...validOnboardingData,
+      };
+      delete (dataWithoutOptionalFields as Partial<typeof validOnboardingData>).trainingTimes;
+      delete (dataWithoutOptionalFields as Partial<typeof validOnboardingData>).restDaysPerWeek;
+
+      const request = new NextRequest('http://localhost:3000/api/onboarding', {
+        method: 'POST',
+        body: JSON.stringify(dataWithoutOptionalFields),
+      });
+
+      const response = await POST(request);
+
+      expect(response.status).toBe(200);
+
+      // Verify optional fields default to empty arrays
+      expect(moSelfModule.updatePreferences).toHaveBeenCalledWith(
+        mockUser.id,
+        expect.objectContaining({
+          preferredTrainingTimes: [],
+          restDaysPreference: [],
         })
       );
     });

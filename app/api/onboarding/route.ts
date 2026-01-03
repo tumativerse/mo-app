@@ -23,8 +23,8 @@ const onboardingSchema = z.object({
   // Step 2: Training
   fitnessGoals: z.array(z.string()).min(1), // Array of goals
   experienceLevel: z.enum(['beginner', 'intermediate', 'advanced']),
-  trainingTimes: z.array(z.string()).min(1), // Array of preferred training times
-  restDaysPerWeek: z.number().min(1).max(7),
+  trainingTimes: z.array(z.string()).optional(), // Optional array of preferred training times
+  restDaysPerWeek: z.number().min(1).max(7).optional(), // Optional rest days
 
   // Step 3: Equipment
   equipmentLevel: z.enum(['full_gym', 'home_gym', 'bodyweight']),
@@ -40,9 +40,6 @@ const onboardingSchema = z.object({
   ]),
   sleepHours: z.number().min(3).max(12),
   stressLevel: z.enum(['low', 'moderate', 'high']),
-
-  // Step 5: Preferences
-  theme: z.enum(['light', 'dark']),
 });
 
 /**
@@ -100,8 +97,8 @@ export async function POST(request: NextRequest) {
       // Training preferences (Step 2)
       fitnessGoal: JSON.stringify(data.fitnessGoals), // Store full array as JSON
       experienceLevel: data.experienceLevel,
-      preferredTrainingTimes: data.trainingTimes,
-      restDaysPreference: [String(data.restDaysPerWeek)], // Store as array for consistency
+      preferredTrainingTimes: data.trainingTimes || [],
+      restDaysPreference: data.restDaysPerWeek ? [String(data.restDaysPerWeek)] : [], // Store as array for consistency
 
       // Equipment preferences (Step 3)
       defaultEquipmentLevel: data.equipmentLevel,
@@ -111,8 +108,7 @@ export async function POST(request: NextRequest) {
       activityLevel: mapActivityLevel(data.activityLevel),
       // Note: sleepHours and stressLevel could be added to preferences or used for initial recovery log
 
-      // App preferences (Step 5)
-      theme: data.theme,
+      // App preferences
       weightUnit: data.unitSystem === 'metric' ? 'kg' : 'lbs',
     });
 

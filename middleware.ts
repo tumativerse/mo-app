@@ -13,6 +13,11 @@ const isOnboardingRoute = createRouteMatcher(['/onboarding(.*)']);
 const isApiRoute = createRouteMatcher(['/api(.*)']);
 
 export default clerkMiddleware(async (auth, req) => {
+  // Skip protection for API routes - they handle their own auth
+  if (isApiRoute(req)) {
+    return;
+  }
+
   // Protect all non-public routes
   if (!isPublicRoute(req)) {
     await auth.protect();
@@ -25,8 +30,7 @@ export default clerkMiddleware(async (auth, req) => {
     const onboardingCompleted = publicMetadata?.onboardingCompleted;
 
     // If user hasn't completed onboarding, redirect to onboarding
-    // Skip for: onboarding routes themselves and API routes
-    if (!isOnboardingRoute(req) && !isApiRoute(req)) {
+    if (!isOnboardingRoute(req)) {
       if (!onboardingCompleted) {
         const onboardingUrl = new URL('/onboarding/step-1', req.url);
         return NextResponse.redirect(onboardingUrl);

@@ -77,6 +77,13 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  // Theme Toggle Exception
+  {
+    files: ['components/theme-toggle.tsx'],
+    rules: {
+      'react-hooks/set-state-in-effect': 'off', // Recommended pattern by next-themes to prevent hydration mismatch
+    },
+  },
 ]);
 
 export default eslintConfig;

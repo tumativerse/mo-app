@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const dynamic = 'force-dynamic';
 import { useRouter } from 'next/navigation';
@@ -38,6 +38,50 @@ export default function OnboardingStep1Page() {
     weightKg: '',
     weightLbs: '',
   });
+
+  // Load saved data from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('onboarding_step1');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+
+        // Set units from saved data
+        if (data.units) {
+          setUnits(data.units);
+        }
+
+        // Convert metric back to imperial if needed
+        let heightFt = '';
+        let heightIn = '';
+        let weightLbs = '';
+
+        if (data.units === 'imperial' && data.heightCm) {
+          const totalInches = data.heightCm / 2.54;
+          heightFt = Math.floor(totalInches / 12).toString();
+          heightIn = Math.round(totalInches % 12).toString();
+        }
+
+        if (data.units === 'imperial' && data.currentWeight) {
+          weightLbs = (data.currentWeight / 0.453592).toFixed(1);
+        }
+
+        setFormData({
+          fullName: data.fullName || '',
+          preferredName: data.preferredName || '',
+          dateOfBirth: data.dateOfBirth || '',
+          gender: data.gender || '',
+          heightCm: data.units === 'metric' ? data.heightCm?.toString() || '' : '',
+          heightFt,
+          heightIn,
+          weightKg: data.units === 'metric' ? data.currentWeight?.toString() || '' : '',
+          weightLbs,
+        });
+      } catch (error) {
+        console.error('Failed to load saved data:', error);
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
