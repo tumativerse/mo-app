@@ -278,7 +278,7 @@ describe('Middleware', () => {
   });
 
   describe('Onboarding Redirects - Completed Onboarding', () => {
-    it('should redirect to /dashboard when completed user tries to access /onboarding', async () => {
+    it('should redirect to /goals when completed user tries to access /onboarding', async () => {
       mockAuth.mockResolvedValue({
         sessionClaims: {
           publicMetadata: { onboardingCompleted: true },
@@ -293,13 +293,13 @@ describe('Middleware', () => {
 
       expect(NextResponse.redirect).toHaveBeenCalledWith(
         expect.objectContaining({
-          href: 'http://localhost:3000/dashboard',
+          href: 'http://localhost:3000/goals',
         })
       );
-      expect(result).toEqual({ redirected: true, url: 'http://localhost:3000/dashboard' });
+      expect(result).toEqual({ redirected: true, url: 'http://localhost:3000/goals' });
     });
 
-    it('should redirect to /dashboard when completed user tries to access /onboarding/step-3', async () => {
+    it('should redirect to /goals when completed user tries to access /onboarding/step-3', async () => {
       mockAuth.mockResolvedValue({
         sessionClaims: {
           publicMetadata: { onboardingCompleted: true },
@@ -314,10 +314,10 @@ describe('Middleware', () => {
 
       expect(NextResponse.redirect).toHaveBeenCalledWith(
         expect.objectContaining({
-          href: 'http://localhost:3000/dashboard',
+          href: 'http://localhost:3000/goals',
         })
       );
-      expect(result).toEqual({ redirected: true, url: 'http://localhost:3000/dashboard' });
+      expect(result).toEqual({ redirected: true, url: 'http://localhost:3000/goals' });
     });
 
     it('should allow access to /dashboard when onboarding is completed', async () => {

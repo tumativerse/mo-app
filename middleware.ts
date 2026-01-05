@@ -37,10 +37,10 @@ export default clerkMiddleware(async (auth, req) => {
       }
     }
 
-    // If user has completed onboarding but is trying to access onboarding, redirect to dashboard
+    // If user has completed onboarding but is trying to access onboarding, redirect to goals
     if (isOnboardingRoute(req) && onboardingCompleted) {
-      const dashboardUrl = new URL('/dashboard', req.url);
-      return NextResponse.redirect(dashboardUrl);
+      const goalsUrl = new URL('/goals', req.url);
+      return NextResponse.redirect(goalsUrl);
     }
   }
 });

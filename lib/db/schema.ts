@@ -9,6 +9,7 @@ import {
   boolean,
   pgEnum,
   uniqueIndex,
+  index,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -488,6 +489,66 @@ export const weightEntries = pgTable(
 );
 
 // ============================================
+// GOALS (MO:JOURNEY)
+// ============================================
+
+export const goals = pgTable(
+  'goals',
+  {
+    // Identity
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+
+    // Goal Configuration
+    goalType: varchar('goal_type', { length: 50 }).notNull(), // 'muscle_building' | 'fat_loss' | 'recomp'
+    status: varchar('status', { length: 20 }).notNull().default('active'), // 'active' | 'paused' | 'completed' | 'archived'
+
+    // Metrics
+    startDate: timestamp('start_date').notNull().defaultNow(),
+    targetDate: timestamp('target_date').notNull(),
+    startingWeight: decimal('starting_weight', { precision: 5, scale: 2 }).notNull(),
+    targetWeight: decimal('target_weight', { precision: 5, scale: 2 }).notNull(),
+
+    // Metadata
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  (table) => [
+    index('goals_user_id_idx').on(table.userId),
+    index('goals_status_idx').on(table.status),
+  ]
+);
+
+export const measurements = pgTable(
+  'measurements',
+  {
+    // Identity
+    id: uuid('id').defaultRandom().primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    goalId: uuid('goal_id').references(() => goals.id, { onDelete: 'set null' }),
+
+    // Measurement Data
+    date: timestamp('date').notNull().defaultNow(),
+    weight: decimal('weight', { precision: 5, scale: 2 }).notNull(),
+
+    // Metadata
+    notes: text('notes'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('measurements_user_date_idx').on(table.userId, table.date),
+    index('measurements_user_id_idx').on(table.userId),
+    index('measurements_goal_id_idx').on(table.goalId),
+    index('measurements_date_idx').on(table.date),
+  ]
+);
+
+// ============================================
 // PERSONAL RECORDS
 // ============================================
 
@@ -939,6 +1000,9 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   // Phase 5: Fatigue & Deload
   fatigueLogs: many(fatigueLogs),
   deloadPeriods: many(deloadPeriods),
+  // MO:JOURNEY
+  goals: many(goals),
+  measurements: many(measurements),
 }));
 
 export const programsRelations = relations(programs, ({ many }) => ({
@@ -1038,6 +1102,25 @@ export const weightEntriesRelations = relations(weightEntries, ({ one }) => ({
   user: one(users, {
     fields: [weightEntries.userId],
     references: [users.id],
+  }),
+}));
+
+export const goalsRelations = relations(goals, ({ one, many }) => ({
+  user: one(users, {
+    fields: [goals.userId],
+    references: [users.id],
+  }),
+  measurements: many(measurements),
+}));
+
+export const measurementsRelations = relations(measurements, ({ one }) => ({
+  user: one(users, {
+    fields: [measurements.userId],
+    references: [users.id],
+  }),
+  goal: one(goals, {
+    fields: [measurements.goalId],
+    references: [goals.id],
   }),
 }));
 

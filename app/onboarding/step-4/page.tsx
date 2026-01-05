@@ -120,16 +120,12 @@ export default function OnboardingStep4Page() {
         throw new Error(error.error || 'Failed to save onboarding data');
       }
 
-      // Clear localStorage
-      localStorage.removeItem('onboarding_step1');
-      localStorage.removeItem('onboarding_step2');
-      localStorage.removeItem('onboarding_step3');
-      localStorage.removeItem('onboarding_step4');
+      // Don't clear localStorage yet - welcome screen will do it
+      // Just show success and redirect to welcome screen
+      toast.success('Profile saved! Preparing your welcome...');
 
-      toast.success('Welcome to Mo! Your profile is all set up.');
-
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Redirect to welcome screen
+      router.push('/onboarding/welcome');
     } catch (error) {
       console.error('Error completing onboarding:', error);
       toast.error(

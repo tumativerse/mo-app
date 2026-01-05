@@ -10,10 +10,19 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const { userId } = await auth();
+  const { userId, sessionClaims } = await auth();
 
   if (userId) {
-    redirect('/onboarding');
+    const publicMetadata = sessionClaims?.publicMetadata as
+      | { onboardingCompleted?: boolean }
+      | undefined;
+    const onboardingCompleted = publicMetadata?.onboardingCompleted;
+
+    if (onboardingCompleted) {
+      redirect('/goals');
+    } else {
+      redirect('/onboarding');
+    }
   }
 
   return (

@@ -267,6 +267,231 @@ When building any new page or component, ensure:
 - [ ] Colored borders with opacity
 - [ ] Page transitions with pageTransition variant
 
+## Loading States
+
+### Skeleton Loaders
+
+```tsx
+import { Skeleton } from '@/components/ui/skeleton';
+
+// Card skeleton
+<Card>
+  <CardHeader>
+    <Skeleton className="h-6 w-40" />
+    <Skeleton className="h-4 w-64 mt-2" />
+  </CardHeader>
+  <CardContent className="space-y-3">
+    <Skeleton className="h-10 w-full" />
+    <Skeleton className="h-10 w-full" />
+    <Skeleton className="h-10 w-3/4" />
+  </CardContent>
+</Card>
+
+// List skeleton
+<div className="space-y-3">
+  {[1, 2, 3].map((i) => (
+    <div key={i} className="flex items-center gap-4">
+      <Skeleton className="h-12 w-12 rounded-full" />
+      <div className="flex-1 space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-2/3" />
+      </div>
+    </div>
+  ))}
+</div>
+```
+
+### Loading Buttons
+
+```tsx
+import { Loader2 } from 'lucide-react';
+
+<Button disabled={isLoading} className="min-h-[44px] min-w-[120px]">
+  {isLoading ? (
+    <>
+      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+      Loading...
+    </>
+  ) : (
+    'Continue'
+  )}
+</Button>;
+```
+
+### Progressive Loading
+
+```tsx
+// Show skeleton first, then content
+{
+  isLoading ? (
+    <CardSkeleton />
+  ) : (
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+      <Card>{/* Content */}</Card>
+    </motion.div>
+  );
+}
+```
+
+---
+
+## Feedback & Notifications
+
+### Toast Notifications
+
+```tsx
+import { toast } from 'sonner';
+
+// Success
+toast.success('Workout completed! 💪');
+
+// Error
+toast.error('Failed to save. Please try again.');
+
+// Loading (auto-dismiss on completion)
+const toastId = toast.loading('Saving workout...');
+// Later...
+toast.success('Workout saved!', { id: toastId });
+
+// With action
+toast('Workout skipped', {
+  action: {
+    label: 'Undo',
+    onClick: () => console.log('Undo'),
+  },
+});
+```
+
+### Inline Success Indicators
+
+```tsx
+import { Check } from 'lucide-react';
+
+{
+  saved && (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex items-center gap-2 text-green-600 dark:text-green-400"
+    >
+      <Check className="h-4 w-4" />
+      <span className="text-sm">Saved</span>
+    </motion.div>
+  );
+}
+```
+
+### Celebration Animations
+
+```tsx
+import { celebrateWorkoutComplete } from '@/lib/celebrations';
+
+// Trigger confetti on achievement
+const handleComplete = () => {
+  celebrateWorkoutComplete();
+  toast.success('Workout complete! 🎉');
+};
+```
+
+---
+
+## Collapsible Sections
+
+### Accordion Pattern
+
+```tsx
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+
+<Accordion type="multiple" defaultValue={['section1']}>
+  <AccordionItem value="section1">
+    <AccordionTrigger className="text-lg font-semibold">Section Title</AccordionTrigger>
+    <AccordionContent>
+      <p>Content goes here...</p>
+    </AccordionContent>
+  </AccordionItem>
+
+  <AccordionItem value="section2">
+    <AccordionTrigger className="text-lg font-semibold">Another Section</AccordionTrigger>
+    <AccordionContent>
+      <p>More content...</p>
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>;
+```
+
+---
+
+## Empty States
+
+### No Data Pattern
+
+```tsx
+import { Inbox } from 'lucide-react';
+
+<motion.div
+  variants={staggerItem}
+  className="flex flex-col items-center justify-center py-12 sm:py-16 text-center"
+>
+  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-muted flex items-center justify-center mb-4">
+    <Inbox className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
+  </div>
+  <h3 className="text-lg sm:text-xl font-semibold mb-2">No workouts yet</h3>
+  <p className="text-sm sm:text-base text-muted-foreground mb-6 max-w-md">
+    Start your first workout to begin tracking your progress
+  </p>
+  <Button className="min-h-[44px]">
+    <Plus className="mr-2 h-5 w-5" />
+    Start Workout
+  </Button>
+</motion.div>;
+```
+
+---
+
+## Error States
+
+### Error Message Pattern
+
+```tsx
+import { AlertCircle } from 'lucide-react';
+
+<motion.div
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  className="p-4 bg-destructive/10 border border-destructive rounded-lg"
+>
+  <div className="flex items-start gap-3">
+    <AlertCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+    <div>
+      <p className="font-medium text-destructive">Error</p>
+      <p className="text-sm text-destructive/90 mt-1">Failed to load data. Please try again.</p>
+    </div>
+  </div>
+</motion.div>;
+```
+
+### Error with Retry
+
+```tsx
+<div className="flex flex-col items-center justify-center py-12 text-center">
+  <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+  <h3 className="text-lg font-semibold mb-2">Failed to Load</h3>
+  <p className="text-sm text-muted-foreground mb-6">Something went wrong. Please try again.</p>
+  <Button onClick={handleRetry} variant="outline" className="min-h-[44px]">
+    <RefreshCw className="mr-2 h-4 w-4" />
+    Try Again
+  </Button>
+</div>
+```
+
+---
+
 ## Examples
 
 See these files for reference:
@@ -274,6 +499,8 @@ See these files for reference:
 - `/app/(app)/dashboard/page.tsx` - Gold standard for energy and motion
 - `/lib/animations.ts` - All animation variants
 - `/app/globals.css` - Theme variables and semantic tokens
+- `.claude/rules/settings-patterns.md` - Settings page patterns
+- `.claude/rules/form-patterns.md` - Form and input patterns
 
 ---
 
